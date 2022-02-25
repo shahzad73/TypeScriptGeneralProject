@@ -50,10 +50,7 @@ export const find = async (id: number): Promise<Item> => items[id];
 export const create = async (newItem: BaseItem): Promise<Item> => {
   const id = new Date().valueOf();
 
-  items[id] = {
-    id,
-    ...newItem,
-  };
+  items[id] = { id, ...newItem };
 
   return items[id];
 };
@@ -65,15 +62,15 @@ export const update = async (
   id: number,
   itemUpdate: BaseItem
 ): Promise<Item | null> => {
-  const item = await find(id);
+	  const item = await find(id);
 
-  if (!item) {
-    return null;
-  }
+	  if (!item) {
+		return null;
+	  }
 
-  items[id] = { id, ...itemUpdate };
+	  items[id] = { id, ...itemUpdate };
 
-  return items[id];
+	  return items[id];
 };
 
 
