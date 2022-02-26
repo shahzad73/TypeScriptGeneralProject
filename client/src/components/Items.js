@@ -4,7 +4,7 @@ import AppContext from './AppContext';
 export default function Items() {
   const [data, dataSet] = useState(null);
 
-  const myContext = useContext(AppContext);
+  const appContext = useContext(AppContext);
 
    React.useEffect((props) => {
 
@@ -34,7 +34,7 @@ export default function Items() {
 
         <br /><br />
         <p>You clicked {myContext.count} times</p>
-        <button onClick={() => myContext.tickCounter()}>
+        <button onClick={() => appContext.tickCounter()}>
             Click me
         </button>
     </div>

@@ -3,7 +3,7 @@ import AppContext from '../AppContext';
 
 export default function Example() {
 
-    const myContext = useContext(AppContext);
+    const appContext = useContext(AppContext);
 
     React.useEffect(() => {
 
@@ -18,7 +18,7 @@ export default function Example() {
         Use of Hooks and state variable 
         <br /><br />
         <p>You clicked {myContext.count} times</p>
-        <button onClick={() => myContext.tickCounter()}>
+        <button onClick={() => appContext.tickCounter()}>
             Click me
         </button>
         </div>

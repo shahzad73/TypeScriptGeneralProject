@@ -14,6 +14,11 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const hpp = require('hpp');
 
+
+
+
+
+
 dotenv.config();
 
 if (!process.env.PORT) {
@@ -69,8 +74,14 @@ app.use(bodyParser.json({limit: "2mb"}));
 app.use(bodyParser.urlencoded({limit: "2mb", extended: false}));
 
 
-// Import all routes here  and then 
-import { itemsRouter } from "./items/items.router";
+
+
+const jwtSecret = 'secret123';
+app.get('/jwt', (req, res) => {
+  res.json({
+    token: jsonwebtoken.sign({ user: 'johndoe' }, jwtSecret)
+  });
+});
 // Routes settings with URL
 app.use("/api/menu/items", itemsRouter);
 
