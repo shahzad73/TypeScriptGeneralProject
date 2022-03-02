@@ -1,9 +1,8 @@
 import Main from "./components/Main";
 import React, { useState } from "react";
-import AppContext from './components/AppContext';
+import AppContext from './components/common/AppContext';
 import axios from 'axios';
 
-import "./index.css";
    
 export default function App() {
 
@@ -12,27 +11,43 @@ export default function App() {
     const tickCounter = () => {
         setCount(count + 1)
     };
+    const [jwtToken, setJwtToken] = useState("");
+    const globalSetJwtToken = (token) => {
+      setJwtToken(token)
+    };
 
     const globalSettings = {
       count: count,
-      tickCounter
+      tickCounter,
+      jwtToken: jwtToken,
+      globalSetJwtToken
     };
-    
 
-    /*axios.interceptors.request.use(
-      config => {
-        const { origin } = new URL(config.url);
-        const allowedOrigins = [apiUrl];
-        const token = localStorage.getItem('token');
-        if (allowedOrigins.includes(origin)) {
-          config.headers.authorization = `Bearer ${token}`;
+
+    axios.defaults.baseURL = 'http://localhost:7000';
+    axios.interceptors.request.use(
+        config => {
+          if(jwtToken != "") {
+              config.headers.authorization = `Bearer ${jwtToken}`;
+          }
+
+          return config
+        },
+        error => {
+          alert(error);
+          return Promise.reject(error);
         }
-        return config;
+    );
+
+    axios.interceptors.response.use(
+      config => {
+        return config
       },
       error => {
+        alert(error);
         return Promise.reject(error);
       }
-    );*/
+    );
 
 
     return (

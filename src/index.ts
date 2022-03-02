@@ -8,16 +8,13 @@ import { notFoundHandler } from "./middleware/not-found.middleware";
 import { createConnection, Connection } from "typeorm"; 
 import { findMany } from './core/mysql';
 
+import {updates} from "./entity/updates"; 
+
 const flash = require('connect-flash');
 const compression = require('compression');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const hpp = require('hpp');
-
-
-
-
-
 
 dotenv.config();
 
@@ -73,19 +70,7 @@ app.use(hpp());
 app.use(bodyParser.json({limit: "2mb"}));
 app.use(bodyParser.urlencoded({limit: "2mb", extended: false}));
 
-
-
-
-const jwtSecret = 'secret123';
-app.get('/jwt', (req, res) => {
-  res.json({
-    token: jsonwebtoken.sign({ user: 'johndoe' }, jwtSecret)
-  });
-});
-// Routes settings with URL
-app.use("/api/menu/items", itemsRouter);
-
-
+require('./core/routes')(app);
 
 //Custom error handling
 app.use(errorHandler);
@@ -93,7 +78,11 @@ app.use(notFoundHandler);
 
 
 (async () => {
+
 	const connection = await createConnection();
+
+	
+
 
 	/*
 		import {updates} from "./entity/updates"; 	
@@ -104,9 +93,9 @@ app.use(notFoundHandler);
 		await connection.manager.save(upd); 
 		console.log("Saved a new user with id: " + upd.ID);
 	*/
-
+ 
 	findMany("select * from updates", []).then(data=>{
-		console.log(data);
+		//console.log(data);
 	})
 
 	app.listen(PORT, () => {

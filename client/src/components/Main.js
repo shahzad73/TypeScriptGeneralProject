@@ -1,46 +1,37 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useContext } from "react";
 import {
-  Routes,
-  Route,
-  NavLink
+  NavLink,
+  Navigate
 } from "react-router-dom";
-import Home from "./Home";
-import Stuff from "./Stuff";
-import Contact from "./Contact";
-import Items from "./Items";
-import Example from "./test/Example";
+import { Route, Routes } from "react-router";
+import AppContext from './common/AppContext';
+import AdminMain from "./AdminMain";
+import Login from './Login';
+import {useNavigate} from "react-router-dom";
+
+import "./index.css";
 
 export default function Main() {
-  React.useEffect(() => {
-      //alert("Hello");
 
-      return () => {
-          //alert("Bye");
-      };
-
-  }, []);
+    const appContext = useContext(AppContext);
+    const navigate = useNavigate();
 
 
-  return (  
-    <div>
-      <h1>Simple SPA</h1>
-      <ul className="header">
-        <li><NavLink to="/">Home</NavLink></li>
-        <li><NavLink to="/stuff">Stuff</NavLink></li>
-        <li><NavLink to="/contact">Contact</NavLink></li>
-        <li><NavLink to="/items">Items</NavLink></li>   
-        <li><NavLink to="/example">Example</NavLink></li>                        
-      </ul>
+    React.useEffect(() => {
 
-      <div className="content">
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/stuff" element={<Stuff />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/items" element={<Items />} />
-            <Route path="/example" element={<Example />} />                
-        </Routes>
+        return () => {
+            //alert("Bye");
+        };
+    }, []);
+
+
+    return (  
+      <div>
+          <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/adminmain/*" element={<AdminMain />} />
+          </Routes>
       </div>
-    </div>
-  );    
+    );
+
 }
