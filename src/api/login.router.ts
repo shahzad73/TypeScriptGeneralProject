@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { createConnection, Connection } from "typeorm"; 
 import {getConnection} from "typeorm";
-import {updates} from "../../entity/updates"; 	
+import {updates} from "../entity/updates"; 	
 var jsonwebtoken = require('jsonwebtoken');
 
 

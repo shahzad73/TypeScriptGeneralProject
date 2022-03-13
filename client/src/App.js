@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import AppContext from './components/common/AppContext';
 import axios from 'axios';
 
-   
+import $ from 'jquery';
+
 export default function App() {
 
     // declare all global state varibales here
@@ -22,7 +23,6 @@ export default function App() {
       jwtToken: jwtToken,
       globalSetJwtToken
     };
-
 
     axios.defaults.baseURL = 'http://localhost:7000';
     axios.interceptors.request.use(
@@ -48,7 +48,6 @@ export default function App() {
         return Promise.reject(error);
       }
     );
-
 
     return (
       <AppContext.Provider value={globalSettings}>

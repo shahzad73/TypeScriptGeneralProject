@@ -8,8 +8,8 @@ import AppContext from './common/AppContext';
 import AdminMain from "./AdminMain";
 import Login from './Login';
 import {useNavigate} from "react-router-dom";
+import $ from 'jquery';
 
-import "./index.css";
 
 export default function Main() {
 

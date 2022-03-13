@@ -8,9 +8,8 @@ export default function Example() {
     const navigate = useNavigate();
 
     function redir() {
-        navigate('/adminmain/contact', { replace: true })
-    }
 
+    }
 
     React.useEffect(() => {
         //alert ("loaded control")
@@ -20,7 +19,6 @@ export default function Example() {
         };
     }, []);
         
-
 
     return (    
         <div>
@@ -32,10 +30,6 @@ export default function Example() {
             <button onClick={() => redir()}> Naviage </button>            
         </div>
     );
-
-
-
-
 
 
 }

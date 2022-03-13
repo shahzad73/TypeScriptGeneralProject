@@ -1,5 +1,6 @@
 import { itemsRouter } from "../api/items/items.router";
-import { loginRouter } from "../api/login/login.router";
+import { bckendDataRouter } from "../api/backendData";
+import { loginRouter } from "../api/login.router";
 const jwt = require('express-jwt');
 
 module.exports = function(app: any){
@@ -8,7 +9,7 @@ module.exports = function(app: any){
 
     //Under JWT security 
     app.use(jwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }));
-    app.use("/api/menu/items", itemsRouter);
+    app.use("/api/backend", bckendDataRouter);    
 
 }
 
