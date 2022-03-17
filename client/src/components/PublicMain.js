@@ -4,13 +4,11 @@ import {
   Route,
   useNavigate
 } from "react-router-dom";
-import Dashboard from "./admin/Dashboard";
-import Update from "./admin/Update";
-import Items from "./admin/test/Items";
-import UpdateNew from "./admin/Update-New";
+import Login from "./public/Login";
+import Dashboard from "./public/Dashboard";
 import AppContext from './common/AppContext';
-import SideBar from './admin/common/sidebar';
-import Test from './admin/test/Example2';
+import Contact from './public/Contact';
+import MenuBar from './public/common/menubar';
 import $ from 'jquery';
 
 
@@ -56,7 +54,7 @@ export default function Main() {
                         <a class="mobile-menu" style={{"cursor": "pointer"}} id="mobile-collapse" onClick={toggleNavbarFloat} ><span></span></a>
                     </div>
                     <div class="navbar-content scroll-div" style={{overflow: "auto"}}>
-                         <SideBar />
+                         <MenuBar />
                     </div>
                 </div>
             </nav>
@@ -92,10 +90,8 @@ export default function Main() {
                                 <div class="page-wrapper">
                                     <Routes>
                                         <Route path="/" element={<Dashboard />} />
-                                        <Route path="/update" element={<Update />} />    
-                                        <Route path="/addNewUpdate" element={<UpdateNew />} />
-                                        <Route path="/items" element={<Items />} /> 
-                                        <Route path="/test" element={<Test />} /> 
+                                        <Route path="/contact" element={<Contact />} />
+                                        <Route path="/login" element={<Login />} />
                                     </Routes>
                                 </div>
                             </div>

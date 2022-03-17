@@ -1,22 +1,15 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
-import {Button, Modal} from 'react-bootstrap'
-import { useNavigate, Link } from "react-router-dom";
-import $ from 'jquery';
+import {Modal} from 'react-bootstrap'
+import { Link } from "react-router-dom";
+import { Button } from 'semantic-ui-react'
 
 export default function Home(props) {
   const [updateDataSet, setUpdateDataSet] = useState([]);
-  const navigate = useNavigate();
   const [deleteModelShow, setDeleteModelShow] = useState(false);
   const [deleteRecordID, setDeleteRecordID] = useState(0);
 
   const handleDeleteModelClose = () => setDeleteModelShow(false);  
-
-  const getUpdates = async () => {
-    const { data } = await axios.get(`/api/updates/getAllUpdates`);
-    setUpdateDataSet(data);  	  
-  }
-
 
   function handleDeleteModelEvent() {
       setDeleteModelShow(false);
@@ -32,10 +25,6 @@ export default function Home(props) {
   function deleteRecord(id) {
       setDeleteRecordID(id);
       setDeleteModelShow(true);
-  }
-
-  function AddNewRecord() {
-    navigate('/adminmain/addNewUpdate', { replace: true })
   }
 
   React.useEffect((props) => {
@@ -67,7 +56,7 @@ export default function Home(props) {
                            </div>
                            <div className="col-xl-3">
                                 <Link to="/adminmain/addNewUpdate" 
-                                  state = {{update: 0}}> <Button variant="primary">Add New Record</Button> </Link>
+                                  state = {{update: 0}}> <Button positive size='medium'>Add New Update</Button> </Link>
                             </div>
                           </div>
                     </div>
@@ -98,9 +87,9 @@ export default function Home(props) {
                                             <td >
                                                 <Link to="/adminmain/addNewUpdate" 
                                                     state = {{id: update.ID, update: 1}} >
-                                                <a href="" className="label theme-bg text-black f-12">Update</a> </Link>
+                                                <Button positive size='tiny'>Update</Button> </Link>
                                                 &nbsp;&nbsp;&nbsp;
-                                                <a href="#!" onClick= {() => deleteRecord(update.ID)}   className="label theme-bg2 text-black f-12">Delete</a>
+                                                <Button onClick= {() => deleteRecord(update.ID)}   color='orange' size='tiny'>Delete</Button>
                                             </td>
                                         </tr>
                                       );
@@ -117,12 +106,16 @@ export default function Home(props) {
                     <Modal.Header closeButton>
                     <Modal.Title>Delete Record</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Do you want to delete this record id {deleteRecordID} ?</Modal.Body>
+                    <Modal.Body>
+                      <br />
+                      Do you want to delete this record id {deleteRecordID} ?
+                      <br /><br />
+                    </Modal.Body>
                     <Modal.Footer>
-                    <Button variant="secondary" onClick={handleDeleteModelClose}>
+                    <Button positive onClick={handleDeleteModelClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleDeleteModelEvent}>
+                    <Button color="orange" onClick={handleDeleteModelEvent}>
                         Yes Delete
                     </Button>
                     </Modal.Footer>

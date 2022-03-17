@@ -217,7 +217,7 @@ export default function Example() {
                                 </p>
                             </Alert>
 
-                                {!showAlert && <Button onClick={() => setShowAlert(true)}>Show Alert</Button>}
+                            {!showAlert && <Button onClick={() => setShowAlert(true)}>Show Alert</Button>}
                                                                             
 
 

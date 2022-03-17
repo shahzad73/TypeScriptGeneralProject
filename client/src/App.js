@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import AppContext from './components/common/AppContext';
 import axios from 'axios';
 
-import $ from 'jquery';
-
 export default function App() {
 
     // declare all global state varibales here

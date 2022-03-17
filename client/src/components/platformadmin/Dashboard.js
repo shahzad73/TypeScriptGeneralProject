@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default function Stuff() {
+export default function Dashboard() {
   React.useEffect(() => {
       //alert("Hello");
 

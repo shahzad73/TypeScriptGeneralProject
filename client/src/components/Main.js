@@ -1,21 +1,10 @@
-import React, { Component, useState, useContext } from "react";
-import {
-  NavLink,
-  Navigate
-} from "react-router-dom";
+import React from "react";
 import { Route, Routes } from "react-router";
-import AppContext from './common/AppContext';
 import AdminMain from "./AdminMain";
-import Login from './Login';
-import {useNavigate} from "react-router-dom";
-import $ from 'jquery';
+import PublicMain from './PublicMain';
 
 
 export default function Main() {
-
-    const appContext = useContext(AppContext);
-    const navigate = useNavigate();
-
 
     React.useEffect(() => {
 
@@ -28,8 +17,8 @@ export default function Main() {
     return (  
       <div>
           <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/adminmain/*" element={<AdminMain />} />
+                <Route path="/adminmain/*" element={<AdminMain />} />
+                <Route path="/*" element={<PublicMain />} />
           </Routes>
       </div>
     );

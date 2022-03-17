@@ -1,32 +1,30 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import {Contains, IsInt, Length, IsEmail, IsFQDN, IsDateString, IsDate, Min, Max} from "class-validator";
 
-
-@Entity('updates') 
-export class updates extends BaseEntity {   
+@Entity('users') 
+export class users extends BaseEntity {   
 
    @PrimaryGeneratedColumn() 
    ID: number; 
    
    @Column() 
-   @Length(10, 200)
-   TITLE: string; 
-
+   @Length(10, 100)
+   username: string; 
 
    @Column() 
-   @IsInt()
-   @Min(0)
-   @Max(1000)   
-   stoid: number; 
+   @Length(10, 100)
+   password: string; 
 
+   @Column() 
+   @Length(10, 200)
+   firstname: string; 
+
+   @Column() 
+   @Length(10, 200)
+   lastname: string; 
    
    @Column() 
-   @Length(10, 200)   
-   details: string; 
-
-
-   @Column() 
-   @IsDateString()
-   UpdateDate: string; 
+   @Length(10, 200)
+   email: string; 
 
 }

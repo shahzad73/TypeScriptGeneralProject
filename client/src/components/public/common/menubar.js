@@ -16,48 +16,39 @@ export default function Main() {
     <div>
         <ul class="nav pcoded-inner-navbar">
             <li data-username="" class="nav-item">
-                <Link to={`/adminmain`} activeClassName="active">
+                <Link to={`/`} activeClassName="active">
                     <span class="pcoded-micon">
                         <i class="feather icon-file-text"></i>
                     </span>
                     <span class="pcoded-mtext">
-                        Dashboard-A
-                    </span> 
-                </Link>
-            </li>
-
-            <li data-username="" class="nav-item">
-                <Link to={`/adminmain/update`} activeClassName="active">
-                    <span class="pcoded-micon">
-                        <i class="feather icon-file-text"></i>
-                    </span>
-                    <span class="pcoded-mtext">
-                        Update
+                        Dashboard
                     </span>
                 </Link>
             </li>
 
             <li data-username="" class="nav-item">
-                <Link to={`/adminmain/items`} activeClassName="active">
+                <Link to={`/contact`} activeClassName="active">
                     <span class="pcoded-micon">
                         <i class="feather icon-file-text"></i>
                     </span>
                     <span class="pcoded-mtext">
-                        Items
+                        Contact
                     </span>
-                </Link>
-            </li>  
+                </Link>               
+            </li>      
+
 
             <li data-username="" class="nav-item">
-                <Link to={`/adminmain/test`} activeClassName="active">
+                <Link to={`/login`} activeClassName="active">
                     <span class="pcoded-micon">
                         <i class="feather icon-file-text"></i>
                     </span>
                     <span class="pcoded-mtext">
-                        Test
+                        Login
                     </span>
-                </Link>
-            </li>                                   
+                </Link>            
+            </li>       
+    
 
         </ul>
     </div>

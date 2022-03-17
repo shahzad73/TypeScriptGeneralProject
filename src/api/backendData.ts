@@ -1,12 +1,16 @@
 import express, { Request, Response } from "express";
 import {updates} from "../entity/updates";
-import { createConnection, Connection, getConnection } from "typeorm"; 
-import { update } from "src/core/mysql";
+import { getConnection, getManager } from "typeorm"; 
+import {validate} from "class-validator";
+
 
 export const bckendDataRouter = express.Router();
 
 bckendDataRouter.get("/getAllUpdates", async (req: Request, res: Response) => {
-    res.send ( await updates.find() );
+    res.send ( await updates.find({  
+            skip: 0,    // page
+            take: 100 })  // number of items
+    );
 });
 
 bckendDataRouter.get("/getUpdate", async (req: Request, res: Response) => {
@@ -16,8 +20,20 @@ bckendDataRouter.get("/getUpdate", async (req: Request, res: Response) => {
 });
 
 bckendDataRouter.post("/addNewUpdates", async (req: Request, res: Response) => {
-    const data = await updates.insert ( req.body );
-    res.json({id: data.raw.insertId});
+
+    const manager = getManager();
+    const newUpdates = manager.create(updates, req.body);    
+    newUpdates.stoid = 0;
+    newUpdates.UpdateDate = "2000-10-10";
+
+    const errors = await validate(newUpdates);
+
+    if (errors.length > 0) {
+        res.json({id: -1, error: errors});
+    } else {
+        const data = await updates.insert ( req.body );
+        res.json({id: data.raw.insertId});
+    }
 });
 
 bckendDataRouter.get("/deleteUpdates", async (req: Request, res: Response) => {
@@ -33,15 +49,26 @@ bckendDataRouter.get("/deleteUpdates", async (req: Request, res: Response) => {
 });
 
 bckendDataRouter.post("/updateUpdates", async (req: Request, res: Response) => {
+    
     const tid = req.body.ID
     delete req.body.ID;
 
-    await getConnection()
-    .createQueryBuilder()
-    .update(updates)
-    .set(req.body)
-    .where("id = :id", { id: tid })
-    .execute();
+    const manager = getManager();
+    const newUpdates = manager.create(updates, req.body);    
 
-    res.send("done")
+    const errors = await validate(newUpdates);
+
+    if (errors.length > 0) {
+        res.json({id: -1, error: errors});
+    } else {
+        await getConnection()
+        .createQueryBuilder()
+        .update(updates)
+        .set(req.body)
+        .where("id = :id", { id: tid })
+        .execute();
+    
+        res.send("done");
+    }
+
 });
