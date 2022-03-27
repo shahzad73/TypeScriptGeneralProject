@@ -1,9 +1,10 @@
 import React, { useContext, useState,  } from 'react';
 import AppContext from '../common/AppContext';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 import {
-  useNavigate
-} from "react-router-dom";
+    Link
+  } from "react-router-dom";
 
 
 export default function Items() {
@@ -55,6 +56,7 @@ export default function Items() {
   return (  
 
     <div className="auth-wrapper">
+        <br /><br /><br /><br />
         <div className="auth-content">
             <div className="auth-bg">
                 <span className="r"></span>
@@ -84,8 +86,8 @@ export default function Items() {
                     <br />
                     <span style={{"color": "red"}}> {message} </span>
                     <br /><br />
-                    <p className="mb-2 text-muted">Forgot password? <a href="auth-reset-password.html">Reset</a></p>
-                    <p className="mb-0 text-muted">Don’t have an account? <a href="auth-signup.html">Signup</a></p>
+                    <p className="mb-2 text-muted">Forgot password &nbsp;&nbsp; <Link to={`/`}>Recover</Link> </p>
+                    <p className="mb-0 text-muted">Don’t have an account &nbsp;&nbsp;  <Link to={`/signup`}>Signup</Link> </p>
                 </div>
             </div>
         </div>

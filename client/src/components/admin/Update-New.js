@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import axios from 'axios';
-import InfoAlert from './common/InfoAlert'
 import { useNavigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 import { Form, Button } from 'semantic-ui-react';
@@ -8,6 +7,12 @@ import { useForm } from "react-hook-form";
 import commons from "../common/commons";
 import Modal from "react-bootstrap/Modal";
 import AppContext from '../common/AppContext';
+import DatePicker from "react-datepicker";
+import $ from 'jquery';
+import "react-datepicker/dist/react-datepicker.css";
+import addDays from 'date-fns/addDays'
+
+
 
 
 export default function Home(props) {
@@ -16,12 +21,15 @@ export default function Home(props) {
     const navigate = useNavigate();
     const location = useLocation()
 
+    const [startDate, setStartDate] = useState(new Date());
+
     const [inputs, setInputs] = useState({});
     const [isUpdateOperation, setIsUpdateOperation] = useState(0);
     const [showErrorMessage, setShowErrorMessage] = useState(0);
     const [errorMessage, setErrorMessage] = useState("");        
     
     const { register, handleSubmit, formState: { errors } } = useForm();
+
     
     const onFormSubmit = (data) => {
         
@@ -103,11 +111,22 @@ export default function Home(props) {
                                                         {...register("TITLE", { required: true, maxLength: 100 })}
                                                      />
                                                 </Form.Field>
-                                                {errors.TITLE && <p>Please enter title</p>}
+                                                {errors.TITLE && <p>Please enter title 11</p>}
                                             </div>
 
+
+                                            <DatePicker   
+                                                showTimeSelect
+                                                timeFormat="HH:mm"
+                                                timeIntervals={30}
+                                                timeCaption="Select Time"
+                                                dateFormat="MMMM d, yyyy h:mm aa"
+                                                yearDropdownItemNumber={12}
+                                            selected={startDate} onChange={(date) => setStartDate(date)} />
+
+
                                             <div className="form-group">
-                                                <label>Details</label>
+                                                <label>Detailsa</label>
                                                 <Form.Field>
                                                     <textarea className="form-control" rows="3"
                                                         name="details"
@@ -119,6 +138,7 @@ export default function Home(props) {
                                                 </Form.Field>
                                                 {errors.details && <p>Please enter details</p>}
                                             </div>
+                                          
 
                                     </div>
                                 </div>
@@ -133,7 +153,6 @@ export default function Home(props) {
                     </div>
                 </div>
             </div>
-
 
             <Modal  show={showErrorMessage} onHide={handleCloseErrorMessage}>
                 <Modal.Header closeButton>

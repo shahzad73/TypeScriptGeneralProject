@@ -36,7 +36,6 @@ export default function App() {
           return Promise.reject(error);
         }
     );
-
     axios.interceptors.response.use(
       config => {
         return config
