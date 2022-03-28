@@ -52,16 +52,19 @@ export default function Home(props) {
                     <div className="card-header">
                         <div className="row">
                           <div className="col-xl-9">
-                            <h4>List of Updates</h4>
-                           </div>
-                           <div className="col-xl-3">
-                                <Link to="/adminmain/addNewUpdate" 
-                                  state = {{update: 0}}> <Button positive size='medium'>Add New Update</Button> </Link>
-                            </div>
+                              <img src="/img/list-icon.jpg" width="35px" />
+                              &nbsp;&nbsp;&nbsp; 
+                              <h5>LIst of Updates</h5>
                           </div>
+                          <div className="col-xl-3">
+                              <Link to="/adminmain/addNewUpdate" 
+                                  state = {{update: 0}}> <Button positive size='medium'>Add New Update</Button> </Link>                            
+                            </div>
+                        </div>
                     </div>
-                    <div className="card-block table-border-style">
 
+
+                    <div className="card-block table-border-style">
                         <div className="table-responsive">
                             <table className="table">
                                 <thead>

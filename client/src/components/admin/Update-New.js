@@ -13,8 +13,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import addDays from 'date-fns/addDays'
 
 
-
-
 export default function Home(props) {
 
     const appContext = useContext(AppContext);
@@ -94,6 +92,8 @@ export default function Home(props) {
                 <div className="col-xl-12">
                     <div className="card">
                         <div className="card-header">
+                              <img src="/img/newrecord-icon.png" width="35px" />
+                              &nbsp;&nbsp;&nbsp;                             
                             <h5>Add New Updates</h5>
                         </div>
                         <div className="card-block table-border-style">
@@ -114,19 +114,20 @@ export default function Home(props) {
                                                 {errors.TITLE && <p>Please enter title 11</p>}
                                             </div>
 
-
-                                            <DatePicker   
-                                                showTimeSelect
-                                                timeFormat="HH:mm"
-                                                timeIntervals={30}
-                                                timeCaption="Select Time"
-                                                dateFormat="MMMM d, yyyy h:mm aa"
-                                                yearDropdownItemNumber={12}
-                                            selected={startDate} onChange={(date) => setStartDate(date)} />
-
+                                            <div className="form-group">
+                                                <label>Select Date</label>
+                                                    <DatePicker   
+                                                        showTimeSelect
+                                                        timeFormat="HH:mm"
+                                                        timeIntervals={30}
+                                                        timeCaption="Select Time"
+                                                        dateFormat="MMMM d, yyyy h:mm aa"
+                                                        yearDropdownItemNumber={12}
+                                                    selected={startDate} onChange={(date) => setStartDate(date)} />
+                                            </div>
 
                                             <div className="form-group">
-                                                <label>Detailsa</label>
+                                                <label>Details</label>
                                                 <Form.Field>
                                                     <textarea className="form-control" rows="3"
                                                         name="details"
@@ -148,7 +149,7 @@ export default function Home(props) {
                                 <Button color="orange" onClick={cancel}>Cancel</Button> 
 
                             </Form>
-        
+
                         </div>
                     </div>
                 </div>

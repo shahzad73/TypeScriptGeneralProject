@@ -86,7 +86,7 @@ export default function Items() {
                     <br />
                     <span style={{"color": "red"}}> {message} </span>
                     <br /><br />
-                    <p className="mb-2 text-muted">Forgot password &nbsp;&nbsp; <Link to={`/`}>Recover</Link> </p>
+                    <p className="mb-2 text-muted">Forgot password &nbsp;&nbsp; <Link to={`/recoverpassword`}>Recover</Link> </p>
                     <p className="mb-0 text-muted">Don’t have an account &nbsp;&nbsp;  <Link to={`/signup`}>Signup</Link> </p>
                 </div>
             </div>

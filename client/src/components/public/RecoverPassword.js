@@ -5,7 +5,7 @@ import {
 
   import { Button, Form, Segment, Checkbox } from 'semantic-ui-react'
 
-export default function Register() {
+export default function RecoverPassword() {
     
   React.useEffect(() => {
       //alert("Hello");
@@ -40,25 +40,16 @@ export default function Register() {
                 <div class="col-5">
                     <br />
                     <div class="section-title">
-                    <h2>Register</h2>
+                    <h2>Recover</h2>
                     <p>Magnam dolores commodi suscipit eius consequatur ex aliquid fuga</p>
                     </div>
 
                     <Form>
                         <Form.Field>
-                            <label>First Name</label>
+                            <label>Enter Email Address</label>
                             <input placeholder='First Name' />
                         </Form.Field>
                         
-                        <Form.Field>
-                            <label>Last Name</label>
-                            <input placeholder='Last Name' />
-                        </Form.Field>
-                        
-                        <Form.Field>
-                            <Checkbox label='I agree to the Terms and Conditions' />
-                        </Form.Field>
-
                         <Button type='submit'>Submit</Button>
                     </Form>
 

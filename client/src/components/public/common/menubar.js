@@ -23,9 +23,8 @@ export default function MenuBar() {
           <nav id="navbar" class="navbar order-last order-lg-0">
               <ul>
                 <li><Link to={`/`}>Home</Link></li>
-                <li><a class="nav-link scrollto" href="#about">About</a></li>
-                <li><a class="nav-link scrollto" href="#services">Services</a></li>
-                <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li>
+                <li><Link to={`/about`}>About</Link></li>
+                <li><Link to={`/service`}>Services</Link></li>
                 <li><Link to={`/login`}>Login</Link></li>
                 <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>

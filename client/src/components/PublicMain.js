@@ -11,6 +11,9 @@ import MenuBar from './public/common/menubar';
 import Footer from './public/common/footer';
 import Login from './public/Login';
 import Register from './public/Register';
+import RecoverPassword from './public/RecoverPassword';
+import About from './public/About';
+import Services from './public/Services';
 
 
 export default function PublicMain() {
@@ -37,6 +40,9 @@ export default function PublicMain() {
                 <Route path="/contact" element={<Contact />} />       
                 <Route path="/login" element={<Login />} />  
                 <Route path="/signup" element={<Register />} />  
+                <Route path="/recoverpassword" element={<RecoverPassword />} /> 
+                <Route path="/about" element={<About />} />                  
+                <Route path="/service" element={<Services />} />                                  
             </Routes>
 
             <Footer />
