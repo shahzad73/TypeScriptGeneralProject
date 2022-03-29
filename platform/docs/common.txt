@@ -1,0 +1,109 @@
+    <Link to="/adminmain/addNewUpdate" 
+        state = {{id: update.ID}}
+    > <a href=""  class="label theme-bg text-white f-12">Update</a> </Link>
+
+
+    Email
+    <div class="form-group">
+            <Form.Field>
+                <label>Email</label>
+                <input class="form-control"
+                    placeholder='Email'
+                    type="email"
+                    {...register("email", 
+                    { 
+                        required: true,  
+                        pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ 
+                    })}
+                />
+            </Form.Field>
+            {errors.email && <p>Please enter email</p>}
+    </div>
+
+
+
+
+    put this handleChange on every component and at the end the JSON will contain all elements
+    const handleChange = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setInputs(values => ({...values, [name]: value}))
+    }
+
+
+
+    const getUpdates = async () => {
+        const { data } = await axios.get(`/api/updates/getAllUpdates`);
+        setUpdateDataSet(data);  	  
+    }
+
+
+    import { useNavigate } from "react-router-dom";
+    const navigate = useNavigate();
+    function AddNewRecord() {
+        navigate('/adminmain/addNewUpdate', { replace: true })
+    }
+
+
+
+
+
+Using Dropdown and it's event
+
+import React, { useState } from "react";
+function CustomSelect(props) {
+  const [data] = useState(props.data);
+  const [selectedData, updateSelectedData] = useState("");
+  function handleChange(event) {
+    updateSelectedData(event.target.value);
+    if (props.onSelectChange) props.onSelectChange(selectedData);
+  }
+  let options = data.map(data => (
+    <option key={data.id} value={data.id}>
+      {data.name}
+    </option>
+  ));
+  return (
+    <select
+      name="customSearch"
+      className="custom-search-select"
+      onChange={handleChange}
+    >
+      <option>Select Item</option>
+      {options}
+    </select>
+  );
+}
+export default CustomSelect;
+
+
+
+
+
+
+
+
+  const connection = getConnection();
+	const rec = await connection
+    .getRepository(updates)
+    .createQueryBuilder("updates")
+    .where("updates.id = :id", { id: 103 })
+    .getOne();
+
+     connection
+    .createQueryBuilder()
+    .update("updates")
+    .set({ 
+        TITLE: "111....updated .....", 
+        details: "22222........ iiiii",
+    })
+    .where("id = :id", { id: 100 })
+    .execute();
+
+    await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from("updates")
+    //.where("id = :id", { id: 100 })
+    .execute();
+    

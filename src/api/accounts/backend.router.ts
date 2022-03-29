@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import {updates} from "../entity/updates";
+import {updates} from "../../entity/updates";
 import { getConnection, getManager } from "typeorm"; 
 import {validate} from "class-validator";
 
