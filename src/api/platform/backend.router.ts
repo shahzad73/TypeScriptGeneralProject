@@ -31,7 +31,7 @@ bckendDataRouter.post("/addNewUpdates", async (req: Request, res: Response) => {
     if (errors.length > 0) {
         res.json({id: -1, error: errors});
     } else {
-        const data = await updates.insert ( req.body );
+        const data = await updates.insert ( newUpdates );
         res.json({id: data.raw.insertId});
     }
 });
@@ -49,14 +49,15 @@ bckendDataRouter.get("/deleteUpdates", async (req: Request, res: Response) => {
 });
 
 bckendDataRouter.post("/updateUpdates", async (req: Request, res: Response) => {
-    
     const tid = req.body.ID
     delete req.body.ID;
-
+    
     const manager = getManager();
     const newUpdates = manager.create(updates, req.body);    
 
     const errors = await validate(newUpdates);
+
+    console.log(errors)
 
     if (errors.length > 0) {
         res.json({id: -1, error: errors});

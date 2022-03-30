@@ -1,9 +1,5 @@
 
-module.exports = function(app: any){
-
-    //app.use("/public", publicRouter);
-    //app.use("/backend/accounts", accountsRouter);    
-    //app.use("/backend/platform", platformRouter);        
+module.exports = function(app: any) {
 
     require('./routes.public')(app);
     require('./routes.platform')(app);

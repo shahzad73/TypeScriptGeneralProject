@@ -34,7 +34,7 @@ export default function Items() {
   async function getJwt() {
       //const { data } = await axios.get(`/api/login?username=shahzad&password=aaa`);
 
-      axios.post('/public/login', {
+      axios.post('/public/loginplatform', {
         email: inputs.email,
         password: inputs.password
       })

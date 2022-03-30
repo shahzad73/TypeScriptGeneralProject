@@ -26,7 +26,6 @@ export default function Home(props) {
     
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    
     const onFormSubmit = (data) => {
         
         if( isUpdateOperation == 0) {
@@ -37,14 +36,15 @@ export default function Home(props) {
                 } else {
                     navigate('/platformmain/update', { replace: true });
                 }
-
             }).catch(function(error) {
                 console.log(error);
             }); 
         } else {
+
             data.ID = inputs.ID;
             data.stoid = inputs.stoid;
-            data.UpdateDate = inputs.UpdateDate;
+            data.UpdateDate = inputs.startDate;
+
             axios.post("/platform/backend/updateUpdates", data).then(response => {
                 if(response.data.id == -1) {
                     setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
@@ -55,7 +55,7 @@ export default function Home(props) {
                 console.log(error);
             });
         }
-    }    
+    }
 
     function handleCloseErrorMessage() {
         setShowErrorMessage(0)
@@ -72,6 +72,8 @@ export default function Home(props) {
         if(location.state.update == 1) {
             const id = location.state.id;
             axios.get("/platform/backend/getUpdate?id=" + id).then(response => {
+                let dd = new Date( response.data[0].UpdateDate );
+                alert(dd.dateFormat("MMMM dd, yyyy"));
                 setInputs( response.data[0] );             
             }).catch(function(error) {
                 console.log(error);
@@ -115,13 +117,11 @@ export default function Home(props) {
                                             <div className="form-group">
                                                 <label>Select Date</label>
                                                     <DatePicker   
-                                                        showTimeSelect
-                                                        timeFormat="HH:mm"
-                                                        timeIntervals={30}
-                                                        timeCaption="Select Time"
-                                                        dateFormat="MMMM d, yyyy h:mm aa"
-                                                        yearDropdownItemNumber={12}
-                                                    selected={startDate} onChange={(date) => setStartDate(date)} />
+                                                        placeholderText="Select Date"
+                                                        dateFormat="MMMM d, yyyy"
+                                                        yearDropdownItemNumber={80}
+                                                        selected={startDate} 
+                                                        onChange={(date) => setStartDate(date)} />
                                             </div>
 
                                             <div className="form-group">
@@ -155,7 +155,7 @@ export default function Home(props) {
 
             <Modal  show={showErrorMessage} onHide={handleCloseErrorMessage}>
                 <Modal.Header closeButton>
-                <Modal.Title>Delete Record</Modal.Title>
+                <Modal.Title>Update Record</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <br />

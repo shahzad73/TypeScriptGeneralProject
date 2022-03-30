@@ -14,7 +14,7 @@ export default function Home(props) {
   function handleDeleteModelEvent() {
       setDeleteModelShow(false);
 
-      axios.get("/api/backend/deleteUpdates?id=" + deleteRecordID).then(response => {
+      axios.get("/platform/backend/deleteUpdates?id=" + deleteRecordID).then(response => {
         // This will also get all remaining records after deletion
         setUpdateDataSet(response.data);
       }).catch(function(error) {

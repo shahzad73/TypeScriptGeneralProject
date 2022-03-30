@@ -37,8 +37,9 @@ loginRouter.post("/login", async (req: Request, res: Response) => {
 
 
 
+
 loginRouter.post("/loginplatform", async (req: Request, res: Response) => {
-         
+
     const usr = await users.find({
         where: {  email: req.body.email,   password: req.body.password  }
     });
