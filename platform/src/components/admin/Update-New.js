@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Button } from 'semantic-ui-react';
 import { useForm } from "react-hook-form";
 import commons from "../common/commons";
@@ -9,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import AppContext from '../common/AppContext';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 
 export default function Home(props) {
@@ -17,33 +17,31 @@ export default function Home(props) {
     const navigate = useNavigate();
     const location = useLocation()
 
-    const [startDate, setStartDate] = useState(new Date());
+    const [startDate, setStartDate] = useState("");
 
     const [inputs, setInputs] = useState({});
     const [isUpdateOperation, setIsUpdateOperation] = useState(0);
     const [showErrorMessage, setShowErrorMessage] = useState(0);
     const [errorMessage, setErrorMessage] = useState("");        
-    
-    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
 
     const onFormSubmit = (data) => {
-        
+        data.UpdateDate =  new Date(  moment(startDate).format('YYYY-MM-DD')  )         
+
         if( isUpdateOperation == 0) {
             axios.post("/platform/backend/addNewUpdates", data).then(response => {
                 if(response.data.id == -1) {                    
                     setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
                     setShowErrorMessage(1)
-                } else {
-                    navigate('/platformmain/update', { replace: true });
-                }
+                } else 
+                    navigate('/platformmain/update', { replace: true });                
             }).catch(function(error) {
                 console.log(error);
             }); 
         } else {
-
             data.ID = inputs.ID;
-            data.stoid = inputs.stoid;
-            data.UpdateDate = inputs.startDate;
+            data.stoid = 0;
 
             axios.post("/platform/backend/updateUpdates", data).then(response => {
                 if(response.data.id == -1) {
@@ -62,7 +60,6 @@ export default function Home(props) {
     }
 
     function cancel() {
-        appContext.globalSetJwtToken("");
         navigate('/platformmain/update', { replace: true })
     } 
 
@@ -72,9 +69,12 @@ export default function Home(props) {
         if(location.state.update == 1) {
             const id = location.state.id;
             axios.get("/platform/backend/getUpdate?id=" + id).then(response => {
-                let dd = new Date( response.data[0].UpdateDate );
-                alert(dd.dateFormat("MMMM dd, yyyy"));
-                setInputs( response.data[0] );             
+                setInputs( response.data[0] );
+                reset ({
+                    "TITLE": response.data[0].TITLE,
+                    "details": response.data[0].details
+                });
+                setStartDate (  new Date(  moment(response.data[0].UpdateDate).format('MMMM DD, YYYY')  )  )
             }).catch(function(error) {
                 console.log(error);
             });     
@@ -101,6 +101,8 @@ export default function Home(props) {
                             <Form onSubmit={handleSubmit(onFormSubmit)}>
                                 <div className="row">
                                     <div className="col-md-12">
+
+
                                             <div className="form-group">
                                                 <label>Title</label>
                                                 <Form.Field>
@@ -114,15 +116,18 @@ export default function Home(props) {
                                                 {errors.TITLE && <p>Please enter title 11</p>}
                                             </div>
 
+
                                             <div className="form-group">
                                                 <label>Select Date</label>
-                                                    <DatePicker   
+                                                    <DatePicker 
+                                                        id="dateUpdate"  
                                                         placeholderText="Select Date"
                                                         dateFormat="MMMM d, yyyy"
                                                         yearDropdownItemNumber={80}
                                                         selected={startDate} 
-                                                        onChange={(date) => setStartDate(date)} />
+                                                        onChange={(date) => setStartDate(  date  )} />
                                             </div>
+
 
                                             <div className="form-group">
                                                 <label>Details</label>

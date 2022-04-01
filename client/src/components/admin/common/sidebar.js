@@ -18,29 +18,18 @@ export default function Main() {
             <li data-username="" class="nav-item">
                 <Link to={`/adminmain`} activeClassName="active">
                     <span class="pcoded-micon">
-                        <i class="feather icon-file-text"></i>
+                        <i class="feather icon-alert-triangle"></i>
                     </span>
                     <span class="pcoded-mtext">
-                        Dashboard-A
+                        Dashboard
                     </span> 
-                </Link>
-            </li>
-
-            <li data-username="" class="nav-item">
-                <Link to={`/adminmain/update`} activeClassName="active">
-                    <span class="pcoded-micon">
-                        <i class="feather icon-file-text"></i>
-                    </span>
-                    <span class="pcoded-mtext">
-                        Update
-                    </span>
                 </Link>
             </li>
 
             <li data-username="" class="nav-item">
                 <Link to={`/adminmain/items`} activeClassName="active">
                     <span class="pcoded-micon">
-                        <i class="feather icon-file-text"></i>
+                        <i class="feather icon-monitor"></i>
                     </span>
                     <span class="pcoded-mtext">
                         Items
@@ -51,7 +40,7 @@ export default function Main() {
             <li data-username="" class="nav-item">
                 <Link to={`/adminmain/test`} activeClassName="active">
                     <span class="pcoded-micon">
-                        <i class="feather icon-file-text"></i>
+                        <i class="feather icon-cloud-snow"></i>
                     </span>
                     <span class="pcoded-mtext">
                         Test

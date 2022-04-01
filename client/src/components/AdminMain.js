@@ -5,9 +5,7 @@ import {
   useNavigate
 } from "react-router-dom";
 import Dashboard from "./admin/Dashboard";
-import Update from "./admin/Update";
 import Items from "./admin/test/Items";
-import UpdateNew from "./admin/Update-New";
 import AppContext from './common/AppContext';
 import SideBar from './admin/common/sidebar';
 import Test from './admin/test/Example2';
@@ -92,8 +90,6 @@ export default function Main() {
                                 <div class="page-wrapper">
                                     <Routes>
                                         <Route path="/" element={<Dashboard />} />
-                                        <Route path="/update" element={<Update />} />    
-                                        <Route path="/addNewUpdate" element={<UpdateNew />} />
                                         <Route path="/items" element={<Items />} /> 
                                         <Route path="/test" element={<Test />} /> 
                                     </Routes>

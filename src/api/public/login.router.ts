@@ -26,16 +26,13 @@ loginRouter.post("/login", async (req: Request, res: Response) => {
             status:0
         });
     } else {
-        const data = { id: usr[0].ID, name: usr[0].firstname + " " + usr[0].lastname };
-        console.log(data);
+        const data = { id: usr[0].ID,  role:"account",  name: usr[0].firstname + " " + usr[0].lastname };
+
         res.json({
-            status:1, token: jsonwebtoken.sign(data, process.env.JWT_SECRET)
+            status:1, token: jsonwebtoken.sign(data, process.env.JWT_SECRET),
         });
     }
 });
-
-
-
 
 
 loginRouter.post("/loginplatform", async (req: Request, res: Response) => {
@@ -49,10 +46,10 @@ loginRouter.post("/loginplatform", async (req: Request, res: Response) => {
             status:0
         });
     } else {
-        const data = { id: usr[0].ID, name: usr[0].firstname + " " + usr[0].lastname };
-        console.log(data);
+        const data = { id: usr[0].ID, role:"platform",  name: usr[0].firstname + " " + usr[0].lastname };
+
         res.json({
-            status:1, token: jsonwebtoken.sign(data, process.env.JWT_PLATFORM_SECRET)
+            status:1, token: jsonwebtoken.sign(data, process.env.JWT_SECRET)
         });
     }
 });

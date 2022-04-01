@@ -1,10 +1,26 @@
 import { bckendDataRouter } from "../api/accounts/backend.router";
+var jwt = require('jsonwebtoken');
 
-const jwt = require('express-jwt');
 
 module.exports = function(app: any){
-    //JWT security
-    app.use(jwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }));
 
-    app.use("/accounts/backend", bckendDataRouter);    
+    app.use("/accounts/backend", securityAccount,  bckendDataRouter);    
+}
+
+
+const securityAccount = function (req: any, res: any, next: any) {
+
+    const tok = req.headers.authorization.split(' ')[1];
+
+    jwt.verify(tok, process.env.JWT_SECRET, function(err: any, decoded: any) {
+            if (err) {
+                console.log("error . . ..  " + err)
+            } else { 
+                if(decoded.role == "account") {
+                    next();
+                } else 
+                    console.log("not correct tole")
+            }
+      });
+
 }
