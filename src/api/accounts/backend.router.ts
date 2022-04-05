@@ -6,6 +6,6 @@ import {validate} from "class-validator";
 export const bckendDataRouter = express.Router();
 
 bckendDataRouter.get("/test", async (req: Request, res: Response) => {
-    res.json ( {"data": "1"} )  
+    res.json ( {"data": "1", "uuu": "2"} )  
 });
 

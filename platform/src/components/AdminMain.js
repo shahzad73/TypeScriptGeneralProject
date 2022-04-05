@@ -5,11 +5,13 @@ import {
   useNavigate
 } from "react-router-dom";
 import Dashboard from "./admin/Dashboard";
-import Update from "./admin/Update";
+import Update from "./admin/management/Update";
+import UpdateNew from "./admin/management/Update-New";
 import Items from "./admin/test/Items";
-import UpdateNew from "./admin/Update-New";
 import AppContext from './common/AppContext';
 import SideBar from './admin/common/sidebar';
+import Accounts from './admin/management/Accounts';
+import AccountsView from "./admin/management/AccountsView.js";
 import Test from './admin/test/Example2';
 import $ from 'jquery';
 
@@ -94,6 +96,8 @@ export default function Main() {
                                         <Route path="/" element={<Dashboard />} />
                                         <Route path="/update" element={<Update />} />    
                                         <Route path="/addNewUpdate" element={<UpdateNew />} />
+                                        <Route path="/accounts" element={<Accounts />} />     
+                                        <Route path="/viewaccounts" element={<AccountsView />} />
                                         <Route path="/items" element={<Items />} /> 
                                         <Route path="/test" element={<Test />} /> 
                                     </Routes>

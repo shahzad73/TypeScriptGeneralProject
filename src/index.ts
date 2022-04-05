@@ -81,9 +81,6 @@ app.use(notFoundHandler);
 
 	const connection = await createConnection();
 
-	
-
-
 	/*
 		import {updates} from "./entity/updates"; 	
 		const upd = new updates(); 
@@ -92,20 +89,17 @@ app.use(notFoundHandler);
 		upd.stoid = 1;
 		await connection.manager.save(upd); 
 		console.log("Saved a new user with id: " + upd.ID);
-	*/
  
-	findMany("select * from updates", []).then(data=>{
-		//console.log(data);
-	})
+		findMany("select * from updates", []).then(data=>{
+			//console.log(data);
+		})
+	*/		
 
 	app.listen(PORT, () => {
 		console.log(`Listening on port ${PORT}`);
 	});
 
 })();
-
-
-
 
 
 

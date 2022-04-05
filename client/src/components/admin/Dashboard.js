@@ -6,7 +6,7 @@ export default function Dashboard() {
     React.useEffect(() => {
 
         axios.get("/accounts/backend/test").then(response => {
-            alert(response.data);
+            alert(   JSON.stringify( response.data )   );
         }).catch(function(error) {
             console.log(error);
         });   

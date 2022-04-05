@@ -1,10 +1,12 @@
 import express, { Request, Response } from "express";
 import {updates} from "../../entity/updates";
+import {users} from "../../entity/users";
 import { getConnection, getManager } from "typeorm"; 
 import {validate} from "class-validator";
 import moment from "moment";
 
 export const bckendDataRouter = express.Router();
+
 
 bckendDataRouter.get("/getAllUpdates", async (req: Request, res: Response) => {
     res.send ( await updates.find({  
@@ -89,4 +91,33 @@ bckendDataRouter.post("/updateUpdates", async (req: Request, res: Response) => {
         res.send("done");
     }
 
+});
+
+
+
+
+
+bckendDataRouter.get("/getAllAccounts", async (req: Request, res: Response) => {
+    res.send ( await users.find({  
+            skip: 0,    // page
+            take: 100 })  // number of items
+    );
+});
+
+
+bckendDataRouter.get("/getAccount", async (req: Request, res: Response) => {
+
+    var dat = await getConnection()
+    .createQueryBuilder()
+    .select([
+        'ID',
+        'firstname',
+        'lastname',
+        'email'
+    ])
+    .from(users)
+    .where("id = :id", { id: req.query.id })
+    .execute();
+
+    res.send( dat );
 });

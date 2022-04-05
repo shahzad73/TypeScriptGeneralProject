@@ -21,7 +21,7 @@ export default function Main() {
                         <i class="feather icon-file-text"></i>
                     </span>
                     <span class="pcoded-mtext">
-                        Dashboard-A
+                        Dashboard
                     </span> 
                 </Link>
             </li>
@@ -36,6 +36,18 @@ export default function Main() {
                     </span>
                 </Link>
             </li>
+
+            <li data-username="" class="nav-item">
+                <Link to={`/platformmain/accounts`} activeClassName="active">
+                    <span class="pcoded-micon">
+                        <i class="feather icon-file-text"></i>
+                    </span>
+                    <span class="pcoded-mtext">
+                        Accounts
+                    </span>
+                </Link>
+            </li>
+
 
             <li data-username="" class="nav-item">
                 <Link to={`/platformmain/items`} activeClassName="active">

@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import {Contains, IsInt, Length, IsEmail, IsFQDN, IsDateString, IsDate, Min, Max} from "class-validator";
 
-@Entity('users') 
-export class users extends BaseEntity {   
+@Entity('register') 
+export class register extends BaseEntity {   
 
    @PrimaryGeneratedColumn() 
    ID: number; 

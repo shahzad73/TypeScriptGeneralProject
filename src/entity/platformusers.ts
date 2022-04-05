@@ -1,14 +1,18 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import {Contains, IsInt, Length, IsEmail, IsFQDN, IsDateString, IsDate, Min, Max} from "class-validator";
 
-@Entity('users') 
-export class users extends BaseEntity {   
+@Entity('platformuser') 
+export class platformusers extends BaseEntity {   
 
    @PrimaryGeneratedColumn() 
    ID: number; 
    
    @Column() 
-   @Length(10, 100)
+   @Length(10, 45)
+   username: string; 
+
+   @Column() 
+   @Length(10, 45)
    password: string; 
 
    @Column() 
