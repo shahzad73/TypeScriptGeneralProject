@@ -8,19 +8,22 @@ export class register extends BaseEntity {
    ID: number; 
    
    @Column() 
-   @Length(10, 100)
+   @Length(5, 100)
    password: string; 
 
    @Column() 
-   @Length(10, 200)
+   @Length(2, 200)
    firstname: string; 
 
    @Column() 
-   @Length(10, 200)
+   @Length(2, 200)
    lastname: string; 
    
    @Column() 
-   @Length(10, 200)
+   @Length(5, 200)
    email: string; 
+
+   @Column() 
+   secret: string; 
 
 }

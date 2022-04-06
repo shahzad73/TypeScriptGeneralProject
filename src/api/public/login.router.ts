@@ -6,6 +6,8 @@ import {platformusers} from "../../entity/platformusers";
 import {register} from "../../entity/register"; 	
 var jsonwebtoken = require('jsonwebtoken');
 import {validate} from "class-validator";
+import { v4 as uuidv4 } from 'uuid';
+var SHA256 = require("crypto-js/sha256");
 
 
 export const loginRouter = express.Router();
@@ -64,14 +66,29 @@ loginRouter.post("/register", async (req: Request, res: Response) => {
 
     const manager = getManager();
     const newRegister = manager.create(register, req.body);    
-
+    newRegister.secret = uuidv4();
     const errors = await validate(newRegister);
 
     if (errors.length > 0) {
         res.json({id: -1, error: errors});
     } else {
-        const data = await register.insert ( newRegister );
-        res.json({id: data.raw.insertId});
+        let data = null;
+
+        newRegister.password = SHA256(newRegister.secret + newRegister.password).toString();
+
+        data = await users.findOne({ email: req.body.email })
+        if( data == null ) {
+            data = await register.findOne({ email: req.body.email })
+            if(data == null) {
+                data = await register.insert ( newRegister );
+                res.json({id: 1});
+            } else {
+                res.json({id: -2, error: [{constraints: {"record found": "User is already registered. Please select another user name"}}]});
+            }
+        } else {
+            res.json({id: -2, error: [{constraints: {"record found": "User is already registered. Please select another user name"}}]});
+        }
+
     }
 
 });

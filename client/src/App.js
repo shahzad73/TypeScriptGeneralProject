@@ -32,7 +32,6 @@ export default function App() {
           return config
         },
         error => {
-          alert(error);
           return Promise.reject(error);
         }
     );
@@ -41,7 +40,6 @@ export default function App() {
         return config
       },
       error => {
-        alert(error);
         return Promise.reject(error);
       }
     );

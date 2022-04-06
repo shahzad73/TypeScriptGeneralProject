@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { Button, Form, Checkbox } from 'semantic-ui-react';
 import axios from 'axios';
 import commons from "../common/commons";
+import Modal from "react-bootstrap/Modal";
+import validator from "validator";
 
 
 export default function Register() {
@@ -10,43 +12,56 @@ export default function Register() {
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
     const [registerCheckBox, setRegisterCheckBox] = useState(false);   
 
+    const [showErrorMessage, setShowErrorMessage] = useState(0);
+    const [errorMessage, setErrorMessage] = useState("");        
 
 
     const onFormSubmit = (data) => {
                 
         if( registerCheckBox == false) {
-            alert("Please select checkbox");
+            setErrorMessage("Please select checkbox");
+            setShowErrorMessage(1);
+            return;
         }
-
-        if (data.password.length < 4) {
-            alert("Password less than 4")
-        }
-
 
         if (data.password != data.repassword ) {
-            alert("ReType password not checkbox")
+            setErrorMessage("ReType password not checkbox");
+            setShowErrorMessage(1);                  
+            return;
         }
+
+
+        if(!validator.isEmail(data.email)) {
+            setErrorMessage("Email address is not correct");
+            setShowErrorMessage(1);                  
+            return;
+        }
+
 
         axios.post("/public/register", data).then(response => {
             if(response.data.id == -1) {                    
                 setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
                 setShowErrorMessage(1)
+            } else if(response.data.id == -2) {                    
+                setErrorMessage(  "User name already taken" )
+                setShowErrorMessage(1)
             } else {
                 alert("done")
             }
         }).catch(function(error) {
-            console.log(error);
+            setErrorMessage(  "Some network related error occurred. Please try again" )
+            setShowErrorMessage(1)
         }); 
-        
 
     }
 
+    function handleCloseErrorMessage() {
+        setShowErrorMessage(0)
+    }    
 
     const checkboxUpdate = (data) => {
         setRegisterCheckBox(  data.target.checked  );
     }
-
-
 
     React.useEffect(() => {
 
@@ -92,19 +107,19 @@ export default function Register() {
                                 <label>First Name</label>
                                 <input 
                                     placeholder='First Name' 
-                                    {...register("firstname", { required: true, maxLength: 100 })}
+                                    {...register("firstname", { required: true, maxLength: 150, minLength:2 })}
                                 />
                             </Form.Field>
-                            {errors.firstname && <p>Please enter firstname</p>}
+                            {errors.firstname && <p>Please enter firstname with min 2 characters</p>}
                             
                             <Form.Field>
                                 <label>Last Name</label>
                                 <input 
                                     placeholder='Last Name' 
-                                    {...register("lastname", { required: true, maxLength: 100 })}
+                                    {...register("lastname", { required: true, maxLength: 150, minLength:2})}
                                 />
                             </Form.Field>
-                            {errors.lastname && <p>Please enter lastname</p>}
+                            {errors.lastname && <p>Please enter lastname with min 2 characters</p>}
 
                             <br />
 
@@ -112,7 +127,7 @@ export default function Register() {
                                 <label>Email</label>
                                 <input 
                                     placeholder='Email' 
-                                    {...register("email", { required: true, maxLength: 100 })}
+                                    {...register("email", { required: true, maxLength: 150, minLength:5 })}
                                 />
                             </Form.Field>
                             {errors.email && <p>Please enter lastname</p>}                            
@@ -126,10 +141,10 @@ export default function Register() {
                                         <input 
                                             type="password"
                                             placeholder='Password' 
-                                            {...register("password", { required: true, maxLength: 100 })}
+                                            {...register("password", { required: true, maxLength: 80, minLength:5 })}
                                         />
                                     </Form.Field>
-                                    {errors.password && <p>Please enter lastname</p>}                            
+                                    {errors.password && <p>Please enter Password with min 5 characters</p>}                            
                                 </div>
                                 <div class="col-1"></div>
                                 <div class="col-4">
@@ -138,10 +153,10 @@ export default function Register() {
                                         <input 
                                             type="password"
                                             placeholder='Re Type Password' 
-                                            {...register("repassword", { required: true, maxLength: 100 })}
+                                            {...register("repassword", { required: true, maxLength: 80, minLength:5 })}
                                         />
                                     </Form.Field>
-                                    {errors.repassword && <p>Please ReType Password</p>}                            
+                                    {errors.repassword && <p>Please ReType Password with min 5 characters</p>}                            
                                 </div>
                             </div>
 
@@ -163,6 +178,21 @@ export default function Register() {
 
                 </div>
 
+                <Modal  show={showErrorMessage} onHide={handleCloseErrorMessage}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Register</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <br />
+                        {errorMessage}
+                        <br /><br />
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button positive onClick={handleCloseErrorMessage}>
+                        Close
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
 
             </div> 
         );    
