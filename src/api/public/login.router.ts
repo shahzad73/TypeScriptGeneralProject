@@ -21,20 +21,24 @@ loginRouter.get("/test" , async (req: Request, res: Response) => {
 loginRouter.post("/login", async (req: Request, res: Response) => {
 
     const usr = await users.find({
-        where: {  email: req.body.email,   password: req.body.password  }
+        where: {  email: req.body.email  }
     });
 
     if(usr == null || usr.length == 0) {
-        res.json({
-            status:0
-        });
+        res.json({status:0});
     } else {
-        const data = { id: usr[0].ID,  role:"account",  name: usr[0].firstname + " " + usr[0].lastname };
 
-        res.json({
-            status:1, 
-            token: jsonwebtoken.sign(data, process.env.JWT_SECRET)
-        });
+        if(  SHA256(usr[0].secret + req.body.password).toString() != usr[0].password ) {
+            res.json({status:0});
+        } else {
+            const data = { id: usr[0].ID,  role:"account",  name: usr[0].firstname + " " + usr[0].lastname };
+
+            res.json({
+                status:1, 
+                token: jsonwebtoken.sign(data, process.env.JWT_SECRET)
+            });
+        }
+
     }
 });
 
@@ -92,3 +96,37 @@ loginRouter.post("/register", async (req: Request, res: Response) => {
     }
 
 });
+
+
+loginRouter.post("/verifyregister", async (req: Request, res: Response) => {
+    let data = null;
+
+    data = await register.findOne({ email: req.body.email })
+    if(data == null) {
+        res.json({id: -1, error: [{constraints: {"record not found": "Record not found"}}]});
+    } else {
+
+        if(  data.secret != req.body.secret ) {
+            res.json({id: -1, error: [{constraints: {"record not found": "Account not found or password / secret mismatch"}}]});            
+            return;
+        }
+
+        if(  SHA256(data.secret + req.body.password).toString() != data.password ) {
+            res.json({id: -1, error: [{constraints: {"record not found": "Account not found or password / secret mismatch"}}]});            
+            return;
+        }
+
+        await users.insert ({
+            password: data.password,
+            firstname: data.firstname,
+            lastname: data.lastname,
+            email: data.email,
+            secret: data.secret
+        });
+
+        res.json({id: 1});
+    }
+
+
+});
+

@@ -23,4 +23,7 @@ export class users extends BaseEntity {
    @Length(10, 200)
    email: string; 
 
+   @Column() 
+   secret: string; 
+
 }

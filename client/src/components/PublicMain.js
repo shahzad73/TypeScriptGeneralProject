@@ -14,7 +14,7 @@ import Register from './public/Register';
 import RecoverPassword from './public/RecoverPassword';
 import About from './public/About';
 import Services from './public/Services';
-
+import VerifyPassword from './public/VerifyRegister';
 
 export default function PublicMain() {
 
@@ -43,6 +43,7 @@ export default function PublicMain() {
                 <Route path="/recoverpassword" element={<RecoverPassword />} /> 
                 <Route path="/about" element={<About />} />                  
                 <Route path="/service" element={<Services />} />                                  
+                <Route path="/verifyaccount" element={<VerifyPassword />} />                                                  
             </Routes>
 
             <Footer />

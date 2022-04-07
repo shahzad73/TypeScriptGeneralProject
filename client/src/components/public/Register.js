@@ -5,19 +5,21 @@ import axios from 'axios';
 import commons from "../common/commons";
 import Modal from "react-bootstrap/Modal";
 import validator from "validator";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 export default function Register() {
 
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
-    const [registerCheckBox, setRegisterCheckBox] = useState(false);   
+    const [registerCheckBox, setRegisterCheckBox] = useState(false);
+    const navigate = useNavigate();
 
     const [showErrorMessage, setShowErrorMessage] = useState(0);
-    const [errorMessage, setErrorMessage] = useState("");        
+    const [errorMessage, setErrorMessage] = useState("");
 
 
     const onFormSubmit = (data) => {
-                
+
         if( registerCheckBox == false) {
             setErrorMessage("Please select checkbox");
             setShowErrorMessage(1);
@@ -46,7 +48,7 @@ export default function Register() {
                 setErrorMessage(  "User name already taken" )
                 setShowErrorMessage(1)
             } else {
-                alert("done")
+                navigate('/verifyaccount', { replace: true });
             }
         }).catch(function(error) {
             setErrorMessage(  "Some network related error occurred. Please try again" )
@@ -64,8 +66,6 @@ export default function Register() {
     }
 
     React.useEffect(() => {
-
-        
 
         return () => {
             //alert("Bye");
