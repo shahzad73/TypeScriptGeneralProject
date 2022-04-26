@@ -1,17 +1,20 @@
-import React, { Component, useState } from "react";
-import { Button, Form, Segment, Checkbox } from 'semantic-ui-react';
+import React, { useState } from "react";
+import { Button, Form } from 'semantic-ui-react';
 import { useForm } from "react-hook-form";
 import validator from "validator";
 import Modal from "react-bootstrap/Modal";
 import axios from 'axios';
 import commons from "../common/commons";
-
+import { useNavigate } from "react-router-dom";
 
 export default function RecoverPassword() {
-    const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();    
+    // const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();    
+    const { register, handleSubmit, formState: { errors } } = useForm();        
 
     const [showErrorMessage, setShowErrorMessage] = useState(0);
-    const [errorMessage, setErrorMessage] = useState("");        
+    const [errorMessage, setErrorMessage] = useState("");   
+    const [showLoading, setShowLoading] = useState(false);     
+    const navigate = useNavigate();
     
 
     const onFormSubmit = (data) => {
@@ -22,14 +25,16 @@ export default function RecoverPassword() {
             return;
         }
 
-
+        setShowLoading(true);
         axios.post("/public/verifyregister", data).then(response => {
-            if(response.data.id == -1) {
+            if(response.data.id === -1) {
                 setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
-                setShowErrorMessage(1)
-            } else {
-                //navigate('/verifyaccount', { replace: true });
-                alert("done")
+                setShowErrorMessage(1);
+                setShowLoading(false);
+            } else {                
+                setErrorMessage("Registration is successful. Please login now");
+                setShowErrorMessage(1);
+                navigate('/login', { replace: true });
             }
         }).catch(function(error) {
             setErrorMessage(  "Some network related error occurred. Please try again" )
@@ -61,7 +66,7 @@ export default function RecoverPassword() {
             <div class="row justify-content-md-center">
                 <div class="col-1"></div>
                 <div class="col-10">        
-                    <img src="img/register-banner.jpg" width="100%" height="200px" />
+                    <img src="img/register-banner.jpg" alt="banner" width="100%" height="200px" />
                 </div>
                 <div class="col-1"></div>
             </div>
@@ -72,7 +77,7 @@ export default function RecoverPassword() {
                 </div>
                 <div class="col-3">
                     <br /><br /><br /><br />
-                    <img src="img/register.jpg" width="100%" />
+                    <img src="img/register.jpg" alt="banner" width="100%" />
                 </div>
                 <div class="col-5">
                     <br />
@@ -113,8 +118,9 @@ export default function RecoverPassword() {
                         </Form.Field>
                         {errors.secret && <p>Please enter Password with min 5 characters</p>}   
 
-
+                        <br />
                         <Button positive type='submit'>Register</Button> 
+                        {showLoading && ( <span><img alt="loading" src="/img/loadingdots2.gif" height="50px" /> Loading</span>  ) }
 
                     </Form>
 

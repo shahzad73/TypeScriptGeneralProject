@@ -46,7 +46,7 @@ export default function Items() {
         {appContext.jwtToken}
 
         <br /><br />
-        <Button  positive onClick={appContext.tickCounter}>Increase</Button>                
+        <Button  positive onClick={appContext.tickCounter}>Increase</Button>
         <p>You clicked {appContext.count} times</p>  
 
         <br /><br />
@@ -84,7 +84,7 @@ export default function Items() {
         </Label>
         <span>User Reviews</span>
 
-        <Image src='/images/wireframe/paragraph.png' />
+
       </Segment>
     </Grid.Column>
 
@@ -93,12 +93,11 @@ export default function Items() {
         <Label as='a' color='orange' ribbon='right'>
           Specs
         </Label>
-        <Image src='/images/wireframe/paragraph.png' />
 
         <Label as='a' color='teal' ribbon='right'>
           Reviews
         </Label>
-        <Image src='/images/wireframe/paragraph.png' />
+
       </Segment>
     </Grid.Column>
   </Grid>

@@ -32,7 +32,6 @@ loginRouter.post("/login", async (req: Request, res: Response) => {
             res.json({status:0});
         } else {
             const data = { id: usr[0].ID,  role:"account",  name: usr[0].firstname + " " + usr[0].lastname };
-
             res.json({
                 status:1, 
                 token: jsonwebtoken.sign(data, process.env.JWT_SECRET)
@@ -48,8 +47,6 @@ loginRouter.post("/loginplatform", async (req: Request, res: Response) => {
     const usr = await platformusers.find({
         where: {  username: req.body.email,   password: req.body.password  }
     });
-
-    console.log(  usr  );
 
     if(usr == null || usr.length == 0) {
         res.json({
@@ -123,6 +120,12 @@ loginRouter.post("/verifyregister", async (req: Request, res: Response) => {
             email: data.email,
             secret: data.secret
         });
+
+
+        await register.delete({
+            email: data.email,
+        })
+
 
         res.json({id: 1});
     }

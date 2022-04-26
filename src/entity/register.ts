@@ -4,26 +4,26 @@ import {Contains, IsInt, Length, IsEmail, IsFQDN, IsDateString, IsDate, Min, Max
 @Entity('register') 
 export class register extends BaseEntity {   
 
-   @PrimaryGeneratedColumn() 
-   ID: number; 
+   @PrimaryGeneratedColumn()
+   ID!: number; 
    
-   @Column() 
+   @Column()
    @Length(5, 100)
-   password: string; 
+   password!: string; 
 
-   @Column() 
+   @Column()
    @Length(2, 200)
-   firstname: string; 
+   firstname!: string; 
 
-   @Column() 
+   @Column()
    @Length(2, 200)
-   lastname: string; 
+   lastname!: string; 
    
-   @Column() 
+   @Column()
    @Length(5, 200)
-   email: string; 
+   email!: string; 
 
-   @Column() 
-   secret: string; 
+   @Column()
+   secret!: string; 
 
 }

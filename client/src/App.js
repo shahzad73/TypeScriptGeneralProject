@@ -1,7 +1,7 @@
 import Main from "./components/Main";
 import React, { useState } from "react";
 import AppContext from './components/common/AppContext';
-import axios from 'axios';
+// import axios from 'axios';
 
 export default function App() {
 
@@ -21,28 +21,19 @@ export default function App() {
       jwtToken: jwtToken,
       globalSetJwtToken
     };
+ 
+    React.useEffect((props) => {
 
-    axios.defaults.baseURL = 'http://localhost:7000';
-    axios.interceptors.request.use(
-        config => {
-          if(jwtToken != "") {
-              config.headers.authorization = `Bearer ${jwtToken}`;
-          }
+        return () => {
+          //alert("Bye");
+        };
+    
+    }, []);
 
-          return config
-        },
-        error => {
-          return Promise.reject(error);
-        }
-    );
-    axios.interceptors.response.use(
-      config => {
-        return config
-      },
-      error => {
-        return Promise.reject(error);
-      }
-    );
+
+
+
+
 
     return (
       <AppContext.Provider value={globalSettings}>

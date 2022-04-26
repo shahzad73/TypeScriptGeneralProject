@@ -2,9 +2,7 @@ import React, { useContext, useState,  } from 'react';
 import AppContext from '../common/AppContext';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import {
-    Link
-  } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 export default function Items() {
@@ -40,7 +38,7 @@ export default function Items() {
       .then(function (response) {
             if(response.data.status == 0) {
                 setMessage("Login is not successful")
-            } else {
+            } else {                
                 appContext.globalSetJwtToken( response.data.token );
                 navigate('/adminmain', { replace: true })
             }

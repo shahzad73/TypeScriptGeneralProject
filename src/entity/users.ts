@@ -5,25 +5,25 @@ import {Contains, IsInt, Length, IsEmail, IsFQDN, IsDateString, IsDate, Min, Max
 export class users extends BaseEntity {   
 
    @PrimaryGeneratedColumn() 
-   ID: number; 
+   ID!: number; 
    
    @Column() 
-   @Length(10, 100)
-   password: string; 
+   @Length(5, 100)
+   password!: string; 
 
    @Column() 
-   @Length(10, 200)
-   firstname: string; 
+   @Length(2, 200)
+   firstname!: string; 
 
    @Column() 
-   @Length(10, 200)
-   lastname: string; 
+   @Length(2, 200)
+   lastname!: string; 
    
    @Column() 
-   @Length(10, 200)
-   email: string; 
+   @Length(5, 200)
+   email!: string; 
 
    @Column() 
-   secret: string; 
+   secret!: string; 
 
 }

@@ -46,7 +46,20 @@ export default function Main() {
                         Test
                     </span>
                 </Link>
-            </li>                                   
+            </li>  
+
+
+            <li data-username="" class="nav-item">
+                <Link to={`/adminmain/profile`} activeClassName="active">
+                    <span class="pcoded-micon">
+                        <i class="feather icon-cloud-snow"></i>
+                    </span>
+                    <span class="pcoded-mtext">
+                        Profile
+                    </span>
+                </Link>
+            </li>  
+
 
         </ul>
     </div>

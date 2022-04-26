@@ -5,28 +5,29 @@ import axios from 'axios';
 import commons from "../common/commons";
 import Modal from "react-bootstrap/Modal";
 import validator from "validator";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Register() {
 
-    const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const [registerCheckBox, setRegisterCheckBox] = useState(false);
     const navigate = useNavigate();
-
+    const [showLoading, setShowLoading] = useState(false);
+    
     const [showErrorMessage, setShowErrorMessage] = useState(0);
     const [errorMessage, setErrorMessage] = useState("");
 
 
     const onFormSubmit = (data) => {
 
-        if( registerCheckBox == false) {
+        if( registerCheckBox === false) {
             setErrorMessage("Please select checkbox");
             setShowErrorMessage(1);
             return;
         }
 
-        if (data.password != data.repassword ) {
+        if (data.password !== data.repassword ) {
             setErrorMessage("ReType password not checkbox");
             setShowErrorMessage(1);                  
             return;
@@ -39,12 +40,12 @@ export default function Register() {
             return;
         }
 
-
+        setShowLoading(true);
         axios.post("/public/register", data).then(response => {
-            if(response.data.id == -1) {                    
+            if(response.data.id === -1) {                    
                 setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
                 setShowErrorMessage(1)
-            } else if(response.data.id == -2) {                    
+            } else if(response.data.id === -2) {                    
                 setErrorMessage(  "User name already taken" )
                 setShowErrorMessage(1)
             } else {
@@ -81,7 +82,7 @@ export default function Register() {
                 <div class="row justify-content-md-center">
                     <div class="col-1"></div>
                     <div class="col-10">        
-                        <img src="img/register-banner.jpg" width="100%" height="200px" />
+                        <img alt="register banner" src="img/register-banner.jpg" width="100%" height="200px" />
                     </div>
                     <div class="col-1"></div>
                 </div>
@@ -92,7 +93,7 @@ export default function Register() {
                     </div>
                     <div class="col-3">
                         <br /><br /><br /><br />
-                        <img src="img/register.jpg" width="100%" />
+                        <img alt="register banner" src="img/register.jpg" width="100%" />
                     </div>
                     <div class="col-6">
                         <br />
@@ -169,6 +170,7 @@ export default function Register() {
                             </Form.Field>
 
                             <Button positive type='submit'>Register</Button> 
+                            {showLoading && ( <span><img alt="Loading" src="/img/loadingdots2.gif" height="50px" /> Loading</span>  ) }
 
                         </Form>
 

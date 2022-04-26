@@ -4,9 +4,8 @@ import axios from 'axios';
 export default function Dashboard() {
 
     React.useEffect(() => {
-
         axios.get("/accounts/backend/test").then(response => {
-            alert(   JSON.stringify( response.data )   );
+
         }).catch(function(error) {
             console.log(error);
         });   
@@ -14,7 +13,6 @@ export default function Dashboard() {
         return () => {
             //alert("Bye");
         };
-
     }, []);
 
 
@@ -48,7 +46,7 @@ export default function Dashboard() {
                                 </div>
 
                                 <div className="col-3 text-right">
-                                    <p className="m-b-0">67%</p>
+                                    <p className="m-b-0">61117%</p>
                                 </div>
                             </div>
 
