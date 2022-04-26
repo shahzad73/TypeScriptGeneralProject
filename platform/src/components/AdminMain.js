@@ -1,9 +1,5 @@
 import React, { useState, useContext } from "react";
-import {
-  Routes,
-  Route,
-  useNavigate
-} from "react-router-dom";
+import { Routes, Route, useNavigate} from "react-router-dom";
 import Dashboard from "./admin/Dashboard";
 import Update from "./admin/management/Update";
 import UpdateNew from "./admin/management/Update-New";
@@ -14,6 +10,7 @@ import Accounts from './admin/management/Accounts';
 import AccountsView from "./admin/management/AccountsView.js";
 import Test from './admin/test/Example2';
 import $ from 'jquery';
+import axios from 'axios';
 
 
 export default function Main() {
@@ -33,10 +30,38 @@ export default function Main() {
         }
     }
 
+    axios.defaults.baseURL = 'http://localhost:7000'; 
+    var interceptors = null    
     React.useEffect(() => {
         if(appContext.jwtToken == "") {
             navigate('/', { replace: true })
         }    
+
+
+        if( interceptors == null ) {
+            interceptors = axios.interceptors.request.use( 
+                function (req) {
+                    if(appContext.jwtToken != "") {
+                        req.headers.authorization = `Bearer ${appContext.jwtToken}`;
+                    }
+
+                    return req;
+                },  
+                function (error) {
+                    return Promise.reject(error);
+                }
+            );        
+            
+            /*axios.interceptors.response.use(
+                config => {
+                return config
+                },
+                error => {
+                return Promise.reject(error);
+                }
+            );*/            
+        }        
+
 
         return () => {
             //alert("Bye");
