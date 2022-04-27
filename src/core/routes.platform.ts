@@ -1,9 +1,13 @@
 import { bckendDataRouter } from "../api/platform/backend.router";
+import { bckOtherRouters } from "../api/platform/others.routes";
+
 var jwt = require('jsonwebtoken');
 
 module.exports = function(app: any){
 
-    app.use("/platform/backend", securityPlatform, bckendDataRouter);    
+    app.use("/platform/backend", securityPlatform, bckendDataRouter);  
+    app.use("/platform/others", securityPlatform, bckOtherRouters);      
+
 }
 
 

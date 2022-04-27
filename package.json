@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/nodemailer": "^6.4.4",
     "axios": "^0.26.0",
     "class-validator": "^0.13.2",
     "compression": "^1.7.4",
@@ -31,6 +32,7 @@
     "moment": "^2.29.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.3",
     "npm": "^8.5.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

@@ -69,7 +69,31 @@ export default function Main() {
                         Test
                     </span>
                 </Link>
-            </li>                                   
+            </li>      
+
+
+            <li data-username="" class="nav-item">
+                <Link to={`/platformmain/sendemail`} activeClassName="active">
+                    <span class="pcoded-micon">
+                        <i class="feather icon-file-text"></i>
+                    </span>
+                    <span class="pcoded-mtext">
+                        Send Email
+                    </span>
+                </Link>
+            </li>      
+
+
+            <li data-username="" class="nav-item">
+                <Link to={`/platformmain/inbox`} activeClassName="active">
+                    <span class="pcoded-micon">
+                        <i class="feather icon-file-text"></i>
+                    </span>
+                    <span class="pcoded-mtext">
+                        Inbox
+                    </span>
+                </Link>
+            </li>              
 
         </ul>
     </div>

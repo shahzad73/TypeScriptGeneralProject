@@ -98,7 +98,6 @@ export default function Home(props) {
                             <div className="row">
                                 <div className="col-md-12">
 
-
                                         <div className="form-group">
                                             <label>Title</label>
                                             <Form.Field>
@@ -111,7 +110,6 @@ export default function Home(props) {
                                             </Form.Field>
                                             {errors.TITLE && <p>Please enter title 11</p>}
                                         </div>
-
 
                                         <div className="form-group">
                                             <label>Select Date</label>

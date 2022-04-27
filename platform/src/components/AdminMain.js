@@ -1,16 +1,21 @@
 import React, { useState, useContext } from "react";
 import { Routes, Route, useNavigate} from "react-router-dom";
+import $ from 'jquery';
+import axios from 'axios';
+import SideBar from './admin/common/sidebar';
+
 import Dashboard from "./admin/Dashboard";
 import Update from "./admin/management/Update";
 import UpdateNew from "./admin/management/Update-New";
 import Items from "./admin/test/Items";
 import AppContext from './common/AppContext';
-import SideBar from './admin/common/sidebar';
 import Accounts from './admin/management/Accounts';
 import AccountsView from "./admin/management/AccountsView.js";
+import SendEmail from "./admin/Inbox/SendEmail.js"
+import Inbox from "./admin/Inbox/Inbox.js"
+import ViewInbox from "./admin/Inbox/ViewInbox.js"
+
 import Test from './admin/test/Example2';
-import $ from 'jquery';
-import axios from 'axios';
 
 
 export default function Main() {
@@ -125,6 +130,9 @@ export default function Main() {
                                         <Route path="/viewaccounts" element={<AccountsView />} />
                                         <Route path="/items" element={<Items />} /> 
                                         <Route path="/test" element={<Test />} /> 
+                                        <Route path="/sendemail" element={<SendEmail />} />
+                                        <Route path="/inbox" element={<Inbox />} />
+                                        <Route path="/viewinbox" element={<ViewInbox />} />
                                     </Routes>
                                 </div>
                             </div>

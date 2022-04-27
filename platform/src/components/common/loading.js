@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function Loading({show}) {
+export default function Loading(props) {
 
     React.useEffect(() => {
         return () => {
@@ -11,7 +11,7 @@ export default function Loading({show}) {
 
     return (  
       <div>
-        <img src="/img/loadingdots2.gif" height="50px" /> Loading 
+        <img src="/img/loadingdots2.gif" height="50px" /> {props.message}  
       </div>
     );
 

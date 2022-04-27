@@ -71,7 +71,7 @@ export default function Items() {
                     </div>
                     <h3 className="mb-4">Login</h3>
                     <div className="input-group mb-3">
-                        <input type="email" id="email" name="email" onChange={handleChange} className="form-control" placeholder="Email" />
+                        <input type="email" id="email" name="email" onChange={handleChange} className="form-control" placeholder="user" />
                     </div>
                     <div className="input-group mb-4">
                         <input type="password" id="password" name="password" onChange={handleChange} className="form-control" placeholder="password" />
