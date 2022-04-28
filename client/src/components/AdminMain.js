@@ -1,9 +1,5 @@
 import React, { useState, useContext } from "react";
-import {
-  Routes,
-  Route,
-  useNavigate
-} from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Dashboard from "./admin/Dashboard";
 import Profile from "./admin/Profile";
 import Items from "./admin/test/Items";
@@ -12,6 +8,11 @@ import SideBar from './admin/common/sidebar';
 import Test from './admin/test/Example2';
 import $ from 'jquery';
 import axios from 'axios';
+
+import SendEmail from "./admin/Inbox/SendEmail.js"
+import Inbox from "./admin/Inbox/Inbox.js"
+import ViewInbox from "./admin/Inbox/ViewInbox.js"
+
 
 
 export default function Main() {
@@ -120,7 +121,10 @@ export default function Main() {
                                         <Route path="/" element={<Dashboard />} />
                                         <Route path="/items" element={<Items />} /> 
                                         <Route path="/test" element={<Test />} /> 
-                                        <Route path="/profile" element={<Profile />} />                                         
+                                        <Route path="/profile" element={<Profile />} />   
+                                        <Route path="/sendemail" element={<SendEmail />} />
+                                        <Route path="/inbox" element={<Inbox />} />
+                                        <Route path="/viewinbox" element={<ViewInbox />} />                                                                              
                                     </Routes>
                                 </div>
                             </div>

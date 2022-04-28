@@ -116,7 +116,7 @@ bckendDataRouter.get("/getAccount", async (req: Request, res: Response) => {
         'email'
     ])
     .from(users)
-    .where("id = :id", { id: req.query.id })
+    .where("id = :id", { id: req.body.userid })
     .execute();
 
     res.send( dat );
