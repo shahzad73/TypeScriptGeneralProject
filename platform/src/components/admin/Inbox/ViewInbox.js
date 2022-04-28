@@ -11,13 +11,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import Loading from '../../common/loading';
 
-
+ 
 export default function ViewInbox(props) {
 
     const navigate = useNavigate();
     const location = useLocation()
 
-    const [accountData, setAccountData] = useState({});
+    const [emailData, setEmailData] = useState({});
+    const [userData, setUserData] = useState({});    
     const [showResposeSection, setShowResposeSection] = useState(false);    
 
     const [inputs, setInputs] = useState({});    
@@ -26,35 +27,42 @@ export default function ViewInbox(props) {
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
 
     const onFormSubmit = (data) => {
+        // setShowLoading(true);
+        data.userID = emailData.UserID;
+        data.ID = emailData.ID;        
         setShowLoading(true);
-        data.ID = inputs.ID;
         axios.post("/platform/others/respondEmail", data).then(response => {
             setShowLoading(false);
 
             if(response.data.status == 0) {
                 alert("Error sending email. Please contact administrator")
             } else {
-                alert("Email send")
+                navigate('/platformmain/inbox', { replace: true });
             }
         }).catch(function(error) {
             console.log(error);
         });
 
-    }    
+    }
 
     function cancel() {
         navigate('/platformmain/inbox', { replace: true })
     } 
 
     React.useEffect(() => {   
-
-        if(location.state.update == 1) {
+        
             const id = location.state.id;
-            axios.get("/platform/others/getInboxDetails?id=" + id).then(response => {
-                response.data[0].RETitle = "RE: " + response.data[0].Title;
-                setAccountData( response.data[0] );
 
-                if(  response.data[0].isResponded === 0  ) {
+            axios.get("/platform/others/getInboxDetails?id=" + id).then(response => {  
+                response.data.email.RETitle = "RE: " + response.data.email.Title;
+                setEmailData( response.data.email );
+                setUserData ( response.data.user );
+
+                reset ({
+                    "Title": response.data.email.RETitle,
+                });                
+
+                if(  response.data.email.isResponded === 0  ) {
                     setShowResposeSection(false);
                 } else
                     setShowResposeSection(true);
@@ -62,13 +70,13 @@ export default function ViewInbox(props) {
             }).catch(function(error) {
                 console.log(error);
             });     
-        }
 
         return () => {
             //alert("This is where when control is being transferred to another page");
         };
 
     }, []);
+
 
     return (
 
@@ -81,11 +89,18 @@ export default function ViewInbox(props) {
                     </div>
                     <div className="card-block table-border-style">
 
-                        {accountData.Title} 
+                        {userData.firstname} {userData.lastname}
                         <br />
-                        {accountData.Details}
+                        {userData.email}
+
                         <br /><br />
-                        {accountData.email}
+
+
+                        {emailData.Title} 
+                        <br />
+                        {emailData.Details}
+                        <br /><br />
+                        {emailData.email}
                         <br />
 
                         { !showResposeSection && (
@@ -100,10 +115,10 @@ export default function ViewInbox(props) {
                                                 <label>Title</label>
                                                 <Form.Field>
                                                     <input type="text" className="form-control" placeholder="Enter Title" 
-                                                        id="TITLE"  
-                                                        name="TITLE"
-                                                        defaultValue={accountData.RETitle}
-                                                        {...register("TITLE", { required: true, maxLength: 500 })}
+                                                        id="Title"  
+                                                        name="Title"
+                                                        defaultValue={emailData.RETitle}
+                                                        {...register("Title", { required: true, maxLength: 500 })}
                                                         />
                                                 </Form.Field>
                                                 {errors.TITLE && <p>Please enter title</p>}
@@ -116,7 +131,6 @@ export default function ViewInbox(props) {
                                                         name="details"
                                                         id="details"
                                                         {...register("details", { required: true, maxLength: 100 })}
-                                                        defaultValue={inputs.details}
                                                         placeholder="Describe your event!"
                                                     ></textarea>
                                                 </Form.Field>
@@ -147,7 +161,7 @@ export default function ViewInbox(props) {
 
                         { showResposeSection && (
                             <span>
-                                {accountData.Response}
+                                {emailData.Response}
                                 <br /> <br />
                                 <Button color="orange" onClick={cancel}>Back</Button> 
                             </span>

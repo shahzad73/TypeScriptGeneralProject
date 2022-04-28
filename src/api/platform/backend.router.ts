@@ -87,7 +87,7 @@ bckendDataRouter.post("/updateUpdates", async (req: Request, res: Response) => {
         .set(req.body)
         .where("id = :id", { id: tid })
         .execute();
-    
+
         res.send("done");
     }
 

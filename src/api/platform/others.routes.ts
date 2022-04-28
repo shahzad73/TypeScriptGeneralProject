@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { sendEmail } from '../../common/mailer';
 import { inbox } from "../../entity/inbox";
+import { users } from "../../entity/users";
 import { getConnection, getManager } from "typeorm"; 
 
 
@@ -43,10 +44,11 @@ bckOtherRouters.get("/deleteInbox", async (req: Request, res: Response) => {
 
 bckOtherRouters.get("/getInboxDetails", async (req: Request, res: Response) => {
 
-    var dat = await getConnection()
+    var email = await getConnection()
     .createQueryBuilder()
     .select([
         'ID',
+        'UserID',
         'Title',
         'Details',
         'DateEmail',
@@ -58,15 +60,55 @@ bckOtherRouters.get("/getInboxDetails", async (req: Request, res: Response) => {
     .where("id = :id", { id: req.query.id })
     .execute();
 
-    res.send( dat );
+
+    var user = await getConnection()
+    .createQueryBuilder()
+    .select([
+        'ID',
+        'email', 
+        'firstname', 
+        'lastname'
+    ])
+    .from(users)
+    .where("id = :id", { id: email[0].UserID })
+    .execute();
+
+    console.log( email )
+
+    res.send( {
+        "email": email[0],
+        "user": user[0]
+    } );
 });
 
 bckOtherRouters.post("/respondEmail", async (req: Request, res: Response) => {
 
-    console.log(req.body);
+    var user = await getConnection()
+    .createQueryBuilder()
+    .select([
+        'email', 
+        'firstname', 
+        'lastname'
+    ])
+    .from(users)
+    .where("id = :id", { id: req.body.userID })
+    .execute();
+
+    console.log(user);
 
     try {
-        await sendEmail("Shah Aslam", "sender@hot.com", req.body.email, req.body.TITLE, req.body.details,  )
+        await sendEmail("Shah Aslam", "sender@hot.com", user[0].email, req.body.Title, req.body.details  )
+
+        await getConnection()
+        .createQueryBuilder()
+        .update(inbox)
+        .set({
+            "isResponded": 1,
+            "Response": req.body.details
+        })
+        .where("id = :id", { id: req.body.ID })
+        .execute();
+
 
         res.json({
             "status": 1

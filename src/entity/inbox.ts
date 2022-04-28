@@ -9,7 +9,7 @@ export class inbox extends BaseEntity {
    
    @Column() 
    @IsInt()
-   InvestorID!: number; 
+   UserID!: number; 
 
    @Column() 
    @Length(5, 256)

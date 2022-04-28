@@ -8,10 +8,9 @@ import Modal from "react-bootstrap/Modal";
 import AppContext from '../../common/AppContext';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import moment from "moment";
 
 
-export default function Home(props) {
+export default function AccountsView(props) {
 
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
