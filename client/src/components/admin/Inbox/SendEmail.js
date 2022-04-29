@@ -5,25 +5,31 @@ import { Form, Button } from 'semantic-ui-react';
 import { useForm } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
 import Loading from '../../common/loading';
+import commons from "../../common/commons";
+import Modal from "react-bootstrap/Modal";
+
 
 export default function SendEmail() {
 
     const [inputs, setInputs] = useState({});
     const navigate = useNavigate();    
     const [showLoading, setShowLoading] = useState(false);
+    const [showErrorMessage, setShowErrorMessage] = useState(0);
+    const [errorMessage, setErrorMessage] = useState("");        
 
 
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
 
     const onFormSubmit = (data) => {
         setShowLoading(true);
-        axios.post("/platform/others/sendEmail", data).then(response => {
+        axios.post("/accounts/others/sendEmail", data).then(response => {
             setShowLoading(false);
-           if(response.data.status == 0) {
-                alert("Error sending email. Please contact administrator")
-           } else {
-                alert("Email send")
-           }
+            if(response.data.id == -1) {
+                setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
+                setShowErrorMessage(1)
+            } else                
+                navigate('/adminmain/inbox', { replace: true });
+
         }).catch(function(error) {
             console.log(error);
         });
@@ -31,9 +37,12 @@ export default function SendEmail() {
     }
 
     function cancel() {
-        navigate('/platformmain', { replace: true })
+        navigate('/adminmain/inbox', { replace: true })
     } 
 
+    function handleCloseErrorMessage() {
+        setShowErrorMessage(0)
+    }    
 
     React.useEffect(() => {
 
@@ -64,27 +73,27 @@ export default function SendEmail() {
                                                     <label>Title</label>
                                                     <Form.Field>
                                                         <input type="text" className="form-control" placeholder="Enter Title" 
-                                                            id="TITLE"  
-                                                            name="TITLE"
-                                                            defaultValue={inputs.TITLE}
-                                                            {...register("TITLE", { required: true, maxLength: 100 })}
+                                                            id="Title"  
+                                                            name="Title"
+                                                            defaultValue={inputs.Title}
+                                                            {...register("Title", { required: true, maxLength: 100 })}
                                                             />
                                                     </Form.Field>
-                                                    {errors.TITLE && <p>Please enter title</p>}
+                                                    {errors.Title && <p>Please enter title</p>}
                                                 </div>
 
                                                 <div className="form-group">
                                                     <label>Details</label>
                                                     <Form.Field>
                                                         <textarea className="form-control" rows="3"
-                                                            name="details"
-                                                            id="details"
-                                                            {...register("details", { required: true, maxLength: 100 })}
+                                                            name="Details"
+                                                            id="Details"
+                                                            {...register("Details", { required: true, maxLength: 100 })}
                                                             defaultValue={inputs.details}
                                                             placeholder="Describe your event!"
                                                         ></textarea>
                                                     </Form.Field>
-                                                    {errors.details && <p>Please enter details</p>}
+                                                    {errors.Details && <p>Please enter details</p>}
                                                 </div>                                                
 
                                             </div>
@@ -109,7 +118,27 @@ export default function SendEmail() {
                         </div>
                     </div>
 
-                </div>                            
+                </div>         
+
+
+
+            <Modal  show={showErrorMessage} onHide={handleCloseErrorMessage}>
+                <Modal.Header closeButton>
+                <Modal.Title>Update Record</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <br />
+                    Errors occurred on server while adding new record
+                    <br /><br />
+                    {errorMessage}                      
+                    <br /><br />
+                </Modal.Body>
+                <Modal.Footer>
+                <Button positive onClick={handleCloseErrorMessage}>
+                    Close
+                </Button>
+                </Modal.Footer>
+            </Modal>                                   
 
         </div>
     );

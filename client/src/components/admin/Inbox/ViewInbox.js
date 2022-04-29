@@ -18,7 +18,6 @@ export default function ViewInbox(props) {
     const location = useLocation()
 
     const [emailData, setEmailData] = useState({});
-    const [userData, setUserData] = useState({});    
     const [showResposeSection, setShowResposeSection] = useState(false);    
 
     const [inputs, setInputs] = useState({});    
@@ -26,43 +25,19 @@ export default function ViewInbox(props) {
 
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
 
-    const onFormSubmit = (data) => {
-        // setShowLoading(true);
-        data.userID = emailData.UserID;
-        data.ID = emailData.ID;        
-        setShowLoading(true);
-        axios.post("/platform/others/respondEmail", data).then(response => {
-            setShowLoading(false);
-
-            if(response.data.status == 0) {
-                alert("Error sending email. Please contact administrator")
-            } else {
-                navigate('/platformmain/inbox', { replace: true });
-            }
-        }).catch(function(error) {
-            console.log(error);
-        });
-
-    }
 
     function cancel() {
-        navigate('/platformmain/inbox', { replace: true })
+        navigate('/adminmain/inbox', { replace: true })
     } 
 
     React.useEffect(() => {   
         
             const id = location.state.id;
 
-            axios.get("/platform/others/getInboxDetails?id=" + id).then(response => {  
-                response.data.email.RETitle = "RE: " + response.data.email.Title;
-                setEmailData( response.data.email );
-                setUserData ( response.data.user );
+            axios.get("/accounts/others/detailsEmail?id=" + id).then(response => {  
+                setEmailData( response.data );
 
-                reset ({
-                    "Title": response.data.email.RETitle,
-                });                
-
-                if(  response.data.email.isResponded === 0  ) {
+                if(  response.data.isResponded === 0  ) {
                     setShowResposeSection(false);
                 } else
                     setShowResposeSection(true);
@@ -89,83 +64,27 @@ export default function ViewInbox(props) {
                     </div>
                     <div className="card-block table-border-style">
 
-                        {userData.firstname} {userData.lastname}
-                        <br />
-                        {userData.email}
-
-                        <br /><br />
-
-
                         {emailData.Title} 
                         <br />
                         {emailData.Details}
-                        <br /><br />
-                        {emailData.email}
-                        <br />
+                        <br /><br /><br /><br />
 
-                        { !showResposeSection && (
-                            <span>
-                                
-                                <Form onSubmit={handleSubmit(onFormSubmit)}>
-
-                                    <div className="row">
-                                        <div className="col-md-12">
-
-                                            <div className="form-group">
-                                                <label>Title</label>
-                                                <Form.Field>
-                                                    <input type="text" className="form-control" placeholder="Enter Title" 
-                                                        id="Title"  
-                                                        name="Title"
-                                                        defaultValue={emailData.RETitle}
-                                                        {...register("Title", { required: true, maxLength: 500 })}
-                                                        />
-                                                </Form.Field>
-                                                {errors.TITLE && <p>Please enter title</p>}
-                                            </div>
-
-                                            <div className="form-group">
-                                                <label>Details</label>
-                                                <Form.Field>
-                                                    <textarea className="form-control" rows="3"
-                                                        name="details"
-                                                        id="details"
-                                                        {...register("details", { required: true, maxLength: 100 })}
-                                                        placeholder="Describe your event!"
-                                                    ></textarea>
-                                                </Form.Field>
-                                                {errors.details && <p>Please enter details</p>}
-                                            </div>                                                
-
-                                        </div>
-                                    </div>
-                                    {showLoading}
-
-                                    { !showLoading && (
-                                        <span><br />
-                                        <Button positive type='submit'>Send</Button> 
-                                        &nbsp;&nbsp;&nbsp; 
-                                        <Button color="orange" onClick={cancel}>Back</Button> 
-                                        <br /></span>
-                                        )
-                                    }
-                                    
-                                    { showLoading && ( <Loading message="Sending Email" /> ) }
-
-                                </Form>
-
-
-                            </span>
-                        )}
-
+                        <h4>Admin Response</h4>
 
                         { showResposeSection && (
                             <span>
                                 {emailData.Response}
-                                <br /> <br />
-                                <Button color="orange" onClick={cancel}>Back</Button> 
+                                <br /><br />
                             </span>
                         )}
+
+                        { !showResposeSection && (                    
+                            <span> Not yet responded 
+                            <br /><br />                            
+                            </span>
+                        )}
+
+                        <Button color="orange" onClick={cancel}>Back</Button> 
 
                     </div>
                 </div>

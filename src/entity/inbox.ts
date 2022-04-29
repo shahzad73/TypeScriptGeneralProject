@@ -26,9 +26,9 @@ export class inbox extends BaseEntity {
    @Column() 
    @IsInt()
    isResponded!: number; 
-
+ 
    @Column() 
-   @Length(5, 4000)
+   @Length(0, 4000)
    Response!: string; 
    
    @Column() 

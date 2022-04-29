@@ -37,9 +37,7 @@ export default function Inbox(props) {
 function handleDeleteModelEvent() {
     setDeleteModelShow(false);
 
-    alert("jere")
-
-    axios.get("/accounts/others/getAllInbox").then(response => {
+    axios.get("/accounts/others/deleteInbox?id=" + deleteRecordID).then(response => {
         setInboxDataSet(response.data);
     }).catch(function(error) {
         console.log(error);
@@ -53,19 +51,27 @@ function handleDeleteModelEvent() {
         <div className="col-xl-12">
             <div className="card">
                 <div className="card-header">
-                    <h5>List of Updates</h5>
-                    <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
-                </div>
+                    <div className="row">
+                        <div className="col-xl-9">
+                            <h5>My Inbox</h5>
+                            <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
+                        </div>
+                        <div className="col-xl-3">
+                            <Link to="/adminmain/sendemail" > <Button positive size='medium'>Send Email to Admin</Button> </Link>
+                        </div>
+                    </div>
+                </div>      
+
+
                 <div className="card-block table-border-style">
 
                     <div className="table-responsive">
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th width="5%">#</th>
-                                    <th width="15%">Update</th>
-                                    <th width="65%"></th>                                    
-                                    <th width="15%"></th>                                        
+                                    <th width="65%">Update</th>
+                                    <th width="15%"></th>
+                                    <th width="20%"></th>                                        
                                 </tr>
                             </thead>
                             <tbody>
@@ -73,11 +79,14 @@ function handleDeleteModelEvent() {
                                 {inboxDataSet.map(inbox => {
                                     return (
                                         <tr>
-                                            <th  scope="row">{inbox.ID}</th>
                                             <td >{inbox.Title}</td>
-                                            <td ></td>
+                                            <th >
+                                                {inbox.isResponded && (
+                                                    <span>Response Received</span>
+                                                )}
+                                            </th>                                            
                                             <td >
-                                                <Link to="/platformmain/viewinbox" 
+                                                <Link to="/adminmain/viewinbox" 
                                                     state = {{id: inbox.ID, update: 1}} >
                                                 <Button positive size='tiny'>View</Button> </Link>
                                                 &nbsp;&nbsp;
@@ -95,25 +104,24 @@ function handleDeleteModelEvent() {
             </div>
         </div>
 
-
         <Modal  show={deleteModelShow} onHide={handleDeleteModelClose}>
-                    <Modal.Header closeButton>
-                    <Modal.Title>Delete Record</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <br />
-                        Do you want to delete this record id {deleteRecordID} ?
-                        <br /><br />
-                    </Modal.Body>
-                    <Modal.Footer>
-                    <Button positive onClick={handleDeleteModelClose}>
-                        Close
-                    </Button>
-                    <Button color="orange" onClick={handleDeleteModelEvent}>
-                        Yes Delete
-                    </Button>
-                    </Modal.Footer>
-                </Modal>
+            <Modal.Header closeButton>
+            <Modal.Title>Delete Record</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <br />
+                Do you want to delete this record id {deleteRecordID} ?
+                <br /><br />
+            </Modal.Body>
+            <Modal.Footer>
+            <Button positive onClick={handleDeleteModelClose}>
+                Close
+            </Button>
+            <Button color="orange" onClick={handleDeleteModelEvent}>
+                Yes Delete
+            </Button>
+            </Modal.Footer>
+        </Modal>
 
 
     </div>

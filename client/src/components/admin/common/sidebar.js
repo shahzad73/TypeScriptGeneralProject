@@ -60,17 +60,7 @@ export default function Main() {
                 </Link>
             </li>  
             
-
-            <li data-username="" class="nav-item">
-                <Link to={`/adminmain/sendemail`} activeClassName="active">
-                    <span class="pcoded-micon">
-                        <i class="feather icon-file-text"></i>
-                    </span>
-                    <span class="pcoded-mtext">
-                        Send Email
-                    </span>
-                </Link>
-            </li>      
+  
 
 
             <li data-username="" class="nav-item">
