@@ -50,29 +50,6 @@ export default function Main() {
 
 
             <li data-username="" class="nav-item">
-                <Link to={`/platformmain/items`} activeClassName="active">
-                    <span class="pcoded-micon">
-                        <i class="feather icon-file-text"></i>
-                    </span>
-                    <span class="pcoded-mtext">
-                        Items
-                    </span>
-                </Link>
-            </li>  
-
-            <li data-username="" class="nav-item">
-                <Link to={`/platformmain/test`} activeClassName="active">
-                    <span class="pcoded-micon">
-                        <i class="feather icon-file-text"></i>
-                    </span>
-                    <span class="pcoded-mtext">
-                        Test
-                    </span>
-                </Link>
-            </li>      
-
-
-            <li data-username="" class="nav-item">
                 <Link to={`/platformmain/sendemail`} activeClassName="active">
                     <span class="pcoded-micon">
                         <i class="feather icon-file-text"></i>
@@ -94,6 +71,31 @@ export default function Main() {
                     </span>
                 </Link>
             </li>              
+
+
+
+            <li data-username="" class="nav-item">
+                <Link to={`/platformmain/items`} activeClassName="active">
+                    <span class="pcoded-micon">
+                        <i class="feather icon-file-text"></i>
+                    </span>
+                    <span class="pcoded-mtext">
+                        Items
+                    </span>
+                </Link>
+            </li>  
+
+            <li data-username="" class="nav-item">
+                <Link to={`/platformmain/test`} activeClassName="active">
+                    <span class="pcoded-micon">
+                        <i class="feather icon-file-text"></i>
+                    </span>
+                    <span class="pcoded-mtext">
+                        Test
+                    </span>
+                </Link>
+            </li>      
+            
 
         </ul>
     </div>

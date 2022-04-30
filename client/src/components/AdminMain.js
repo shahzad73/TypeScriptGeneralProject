@@ -8,6 +8,8 @@ import SideBar from './admin/sidebar';
 import Test from './admin/test/Example2';
 import $ from 'jquery';
 import axios from 'axios';
+import Dropdown from 'react-bootstrap/Dropdown'
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 import SendEmail from "./admin/Inbox/SendEmail.js"
 import Inbox from "./admin/Inbox/Inbox.js"
@@ -32,6 +34,20 @@ export default function Main() {
         }
     }
 
+    async function RedirectHomePage() {
+        navigate('/', { replace: true })        
+    }
+
+    async function Logout() {
+        appContext.globalSetJwtToken( "" ); 
+        navigate('/', { replace: true })
+    };
+
+    async function myProfile() {
+        navigate('/adminmain/profile', { replace: true })
+    };
+
+
     axios.defaults.baseURL = 'http://localhost:7000'; 
     var interceptors = null
     React.useEffect(() => {
@@ -39,6 +55,8 @@ export default function Main() {
             navigate('/', { replace: true })
         }
         
+        alert( appContext.showDashboardHomeLink )
+
         if( interceptors == null ) {
             interceptors = axios.interceptors.request.use( 
                 function (req) {
@@ -101,13 +119,29 @@ export default function Main() {
                 <a class="mobile-menu" id="mobile-header" href="javascript:">
                     <i class="feather icon-more-horizontal"></i>
                 </a>
+              
+
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item dropdown">
                             <h3>Dashboard</h3>
                         </li>
                     </ul>
+
+
+                    <ul class=" navbar-nav  float-right">
+                        <li>
+
+                            <span onClick={RedirectHomePage} style={{cursor: "pointer"}} >Home</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <img src="/img/profile.png" height="26px;"  data-toggle="tooltip" data-placement="top" title="View my Profile" onClick={myProfile} style={{cursor: "pointer"}}/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <img src="/img/logout.png" height="22px;"  data-toggle="tooltip" data-placement="top" title="Logout" onClick={Logout} style={{cursor: "pointer"}}/>
+                        </li>                    
+                    </ul>
                 </div>
+
+
             </header>
 
             <div class="pcoded-main-container">

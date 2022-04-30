@@ -27,6 +27,33 @@ export default function Main() {
             </li>
 
             <li data-username="" class="nav-item">
+                <Link to={`/adminmain/profile`} activeClassName="active">
+                    <span class="pcoded-micon">
+                        <i class="feather icon-cloud-snow"></i>
+                    </span>
+                    <span class="pcoded-mtext">
+                        Profile
+                    </span>
+                </Link>
+            </li>  
+            
+
+
+            <li data-username="" class="nav-item">
+                <Link to={`/adminmain/inbox`} activeClassName="active">
+                    <span class="pcoded-micon">
+                        <i class="feather icon-file-text"></i>
+                    </span>
+                    <span class="pcoded-mtext">
+                        Inbox
+                    </span>
+                </Link>
+            </li>  
+                                    
+
+
+
+            <li data-username="" class="nav-item">
                 <Link to={`/adminmain/items`} activeClassName="active">
                     <span class="pcoded-micon">
                         <i class="feather icon-monitor"></i>
@@ -48,32 +75,6 @@ export default function Main() {
                 </Link>
             </li>  
 
-
-            <li data-username="" class="nav-item">
-                <Link to={`/adminmain/profile`} activeClassName="active">
-                    <span class="pcoded-micon">
-                        <i class="feather icon-cloud-snow"></i>
-                    </span>
-                    <span class="pcoded-mtext">
-                        Profile
-                    </span>
-                </Link>
-            </li>  
-            
-  
-
-
-            <li data-username="" class="nav-item">
-                <Link to={`/adminmain/inbox`} activeClassName="active">
-                    <span class="pcoded-micon">
-                        <i class="feather icon-file-text"></i>
-                    </span>
-                    <span class="pcoded-mtext">
-                        Inbox
-                    </span>
-                </Link>
-            </li>  
-                                    
 
 
         </ul>

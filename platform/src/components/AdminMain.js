@@ -35,6 +35,13 @@ export default function Main() {
         }
     }
 
+    async function Logout() {
+        appContext.globalSetJwtToken( "" ); 
+        navigate('/', { replace: true })
+    };
+
+
+
     axios.defaults.baseURL = 'http://localhost:7000'; 
     var interceptors = null    
     React.useEffect(() => {
@@ -113,6 +120,11 @@ export default function Main() {
                         </li>
                     </ul>
        
+                    <ul class=" navbar-nav  float-right">
+                        <li>
+                            <img src="/img/logout.png" height="22px;"  data-toggle="tooltip" data-placement="top" title="Logout" onClick={Logout} style={{cursor: "pointer"}}/>
+                        </li>                    
+                    </ul>       
                 </div>
 
             </header>

@@ -17,10 +17,14 @@ export default function PublicMain() {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
+
     React.useEffect(() => {
         if(appContext.jwtToken == "") {
             navigate('/', { replace: true })
-        }    
+            appContext.setDashboardHomeLink(false);
+        } else {
+            appContext.setDashboardHomeLink(true);
+        }
 
         return () => {
             //alert("Bye");

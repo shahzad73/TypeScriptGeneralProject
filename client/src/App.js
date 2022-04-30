@@ -15,13 +15,20 @@ export default function App() {
       setJwtToken(token)
     };
 
+    const [showDashboardHomeLink, setShowDashboardHomeLink] = useState(false);
+    const setDashboardHomeLink = (val) => {
+      setShowDashboardHomeLink(val)
+    };
+
     const globalSettings = {
       count: count,
       tickCounter,
       jwtToken: jwtToken,
-      globalSetJwtToken
+      globalSetJwtToken,
+      showDashboardHomeLink,
+      setDashboardHomeLink
     };
- 
+
     React.useEffect((props) => {
 
         return () => {
