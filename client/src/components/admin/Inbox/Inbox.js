@@ -3,6 +3,9 @@ import axios from 'axios';
 import {Modal} from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { Button } from 'semantic-ui-react'
+import Moment from 'moment';
+import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
+
 
 export default function Inbox(props) {
   const [inboxDataSet, setInboxDataSet] = useState([]);
@@ -69,7 +72,8 @@ function handleDeleteModelEvent() {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th width="65%">Update</th>
+                                    <th width="1%"></th  >
+                                    <th width="64%"></th>
                                     <th width="15%"></th>
                                     <th width="20%"></th>                                        
                                 </tr>
@@ -79,12 +83,15 @@ function handleDeleteModelEvent() {
                                 {inboxDataSet.map(inbox => {
                                     return (
                                         <tr>
+                                            <td>
+                                                {inbox.isResponded === 0 && 
+                                                    <span>
+                                                        <img src="/img/emailclosed.jpg" width="25px;" data-toggle="tooltip" data-placement="top" title="Email is not yet responded by admin"/>
+                                                    </span>
+                                                }                                                  
+                                            </td>
                                             <td >{inbox.Title}</td>
-                                            <th >
-                                                {inbox.isResponded && (
-                                                    <span>Response Received</span>
-                                                )}
-                                            </th>                                            
+                                            <td> {Moment(inbox.DateEmail).format('DD MMM-YYYY')} </td>
                                             <td >
                                                 <Link to="/adminmain/viewinbox" 
                                                     state = {{id: inbox.ID, update: 1}} >

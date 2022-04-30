@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Routes, Route, useNavigate} from "react-router-dom";
 import $ from 'jquery';
 import axios from 'axios';
-import SideBar from './admin/common/sidebar';
+import SideBar from './admin/sidebar';
 
 import Dashboard from "./admin/Dashboard";
 import Update from "./admin/management/Update";
@@ -108,11 +108,13 @@ export default function Main() {
                 </a>
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item dropdown">
+                        <li class="nav-item">
                             <h3>Dashboard</h3>
                         </li>
                     </ul>
+       
                 </div>
+
             </header>
 
             <div class="pcoded-main-container">

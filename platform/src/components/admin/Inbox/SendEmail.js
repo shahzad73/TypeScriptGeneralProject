@@ -31,7 +31,7 @@ export default function SendEmail() {
     }
 
     function cancel() {
-        navigate('/platformmain', { replace: true })
+        navigate('/platformmain/inbox', { replace: true })
     } 
 
 

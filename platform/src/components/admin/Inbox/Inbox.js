@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Modal} from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { Button } from 'semantic-ui-react'
+import Moment from 'moment';
 
 export default function Inbox(props) {
   const [inboxDataSet, setInboxDataSet] = useState([]);
@@ -51,8 +52,15 @@ function handleDeleteModelEvent() {
         <div className="col-xl-12">
             <div className="card">
                 <div className="card-header">
-                    <h5>List of Updates</h5>
-                    <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
+                    <div className="row">
+                            <div className="col-xl-10">
+                                <h5>My Inbox</h5>
+                                <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
+                            </div>
+                            <div className="col-xl-2">
+                                <Link to="/platformmain/sendemail" > <Button positive size='medium'>Compose</Button> </Link>
+                            </div>
+                    </div>
                 </div>
                 <div className="card-block table-border-style">
 
@@ -60,9 +68,9 @@ function handleDeleteModelEvent() {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th width="5%">#</th>
-                                    <th width="15%">Update</th>
-                                    <th width="65%"></th>                                    
+                                    <th width="2%"></th>
+                                    <th width="65%"></th>
+                                    <th width="15%"></th>                                    
                                     <th width="15%"></th>                                        
                                 </tr>
                             </thead>
@@ -71,9 +79,15 @@ function handleDeleteModelEvent() {
                                 {inboxDataSet.map(inbox => {
                                     return (
                                         <tr>
-                                            <th  scope="row">{inbox.ID}</th>
+                                            <td>
+                                                {inbox.isResponded === 0 && 
+                                                    <span>
+                                                        <img src="/img/emailclosed.jpg" width="25px;" data-toggle="tooltip" data-placement="top" title="Email is not yet responded by admin"/>
+                                                    </span>
+                                                }                                                  
+                                            </td>
                                             <td >{inbox.Title}</td>
-                                            <td ></td>
+                                            <td> {Moment(inbox.DateEmail).format('DD MMM-YYYY')} </td>
                                             <td >
                                                 <Link to="/platformmain/viewinbox" 
                                                     state = {{id: inbox.ID, update: 1}} >

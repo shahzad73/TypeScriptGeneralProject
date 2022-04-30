@@ -4,7 +4,7 @@ import Dashboard from "./admin/Dashboard";
 import Profile from "./admin/Profile";
 import Items from "./admin/test/Items";
 import AppContext from './common/AppContext';
-import SideBar from './admin/common/sidebar';
+import SideBar from './admin/sidebar';
 import Test from './admin/test/Example2';
 import $ from 'jquery';
 import axios from 'axios';

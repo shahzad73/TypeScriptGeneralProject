@@ -1,14 +1,10 @@
 import React, { useState, useContext } from "react";
-import {
-  Routes,
-  Route,
-  useNavigate
-} from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./public/Home";
 import Contact from "./public/Contact";
 import AppContext from './common/AppContext';
-import MenuBar from './public/common/menubar';
-import Footer from './public/common/footer';
+import MenuBar from './public/menubar';
+import Footer from './public/footer';
 import Login from './public/Login';
 import Register from './public/Register';
 import RecoverPassword from './public/RecoverPassword';

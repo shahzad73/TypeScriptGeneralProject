@@ -6,8 +6,8 @@ import {
 } from "react-router-dom";
 import Home from "./public/Home";
 import AppContext from './common/AppContext';
-import MenuBar from './public/common/menubar';
-import Footer from './public/common/footer';
+import MenuBar from './public/menubar';
+import Footer from './public/footer';
 import Login from './public/Login';
 
 
