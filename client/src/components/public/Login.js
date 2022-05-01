@@ -37,9 +37,17 @@ export default function Items() {
       })
       .then(function (response) {
             if(response.data.status == 0) {
+                appContext.setDashboardHomeLink(false);
                 setMessage("Login is not successful")
-            } else {                
+            } else {
                 appContext.globalSetJwtToken( response.data.token );
+                appContext.setLoginedUsername( response.data.name );   
+                                
+                appContext.setDashboardHomeLink(true);
+
+                localStorage.setItem("siteJWTTokenString", response.data.token);
+                localStorage.setItem("siteUserName", response.data.name);
+
                 navigate('/adminmain', { replace: true })
             }
       })

@@ -20,16 +20,32 @@ export default function App() {
       setShowDashboardHomeLink(val)
     };
 
+    const [loginUserName, setLoginUserName] = useState("");
+    const setLoginedUsername = (val) => {
+      setLoginUserName(val)
+    };
+
+
     const globalSettings = {
-      count: count,
+      count,
       tickCounter,
-      jwtToken: jwtToken,
+      jwtToken,
       globalSetJwtToken,
       showDashboardHomeLink,
-      setDashboardHomeLink
+      setDashboardHomeLink,
+      loginUserName,
+      setLoginedUsername
     };
 
     React.useEffect((props) => {
+
+        const JWTToken = localStorage.getItem("siteJWTTokenString");
+
+        if( JWTToken != "" && JWTToken != null) {
+           setDashboardHomeLink(true);
+           globalSetJwtToken( JWTToken )
+           setLoginedUsername(  localStorage.getItem("siteUserName")  );           
+        }
 
         return () => {
           //alert("Bye");

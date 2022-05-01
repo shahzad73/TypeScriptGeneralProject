@@ -31,9 +31,10 @@ loginRouter.post("/login", async (req: Request, res: Response) => {
         if(  SHA256(usr[0].secret + req.body.password).toString() != usr[0].password ) {
             res.json({status:0});
         } else {
-            const data = { id: usr[0].ID,  role:"account",  name: usr[0].firstname + " " + usr[0].lastname };
+            const data = { id: usr[0].ID,  role:"account" };
             res.json({
                 status:1, 
+                name: usr[0].firstname,
                 token: jsonwebtoken.sign(data, process.env.JWT_SECRET)
             });
         }

@@ -39,7 +39,8 @@ export default function Main() {
     }
 
     async function Logout() {
-        appContext.globalSetJwtToken( "" ); 
+        appContext.globalSetJwtToken( "" );         
+        localStorage.removeItem("siteJWTTokenString");
         navigate('/', { replace: true })
     };
 
@@ -54,8 +55,6 @@ export default function Main() {
         if(appContext.jwtToken == "") {
             navigate('/', { replace: true })
         }
-        
-        alert( appContext.showDashboardHomeLink )
 
         if( interceptors == null ) {
             interceptors = axios.interceptors.request.use( 
@@ -131,9 +130,10 @@ export default function Main() {
 
                     <ul class=" navbar-nav  float-right">
                         <li>
-
-                            <span onClick={RedirectHomePage} style={{cursor: "pointer"}} >Home</span>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            Welcome {appContext.loginUserName}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;                                                           
+                            <span onClick={RedirectHomePage} style={{cursor: "pointer"}} >Home Page</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
                             <img src="/img/profile.png" height="26px;"  data-toggle="tooltip" data-placement="top" title="View my Profile" onClick={myProfile} style={{cursor: "pointer"}}/>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <img src="/img/logout.png" height="22px;"  data-toggle="tooltip" data-placement="top" title="Logout" onClick={Logout} style={{cursor: "pointer"}}/>
