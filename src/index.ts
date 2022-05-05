@@ -7,6 +7,7 @@ import { errorHandler } from "./middleware/error.middleware";
 import { notFoundHandler } from "./middleware/not-found.middleware";
 import { createConnection, Connection } from "typeorm"; 
 import { findMany } from './core/mysql';
+import AWS from 'aws-sdk';
 
 import {updates} from "./entity/updates"; 
 
@@ -96,6 +97,15 @@ app.use(notFoundHandler);
 	*/		
 
 	app.listen(PORT, () => {
+
+		const SESConfig = {
+			/*apiVersion: "latest",
+			accessKeyId: process.env.AWS_ACCESS_KEY,
+			accessSecretKey: process.env.AWS_SECRET_KEY,*/
+			region: "US-East-1"
+		}
+		AWS.config.update(SESConfig);
+
 		console.log(`Listening on port ${PORT}`);
 	});
 

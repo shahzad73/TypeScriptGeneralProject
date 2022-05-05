@@ -1,0 +1,125 @@
+CREATE TABLE IF NOT EXISTS `contacts_types` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `title` varchar(100) DEFAULT NULL,
+    `type` int NOT NULL,
+     PRIMARY KEY (`id`)    
+);
+insert into contacts_types(title, type) values("Personal Mobile", 1);
+insert into contacts_types(title, type) values("Personal Land Line", 1);
+insert into contacts_types(title, type) values("Business Mobile", 1);
+insert into contacts_types(title, type) values("Business Land Line", 1);
+
+insert into contacts_types(title, type) values("Home", 2);
+insert into contacts_types(title, type) values("Business", 2);
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS `user_contacts` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `userid` int DEFAULT NULL,
+    `contactTypeID` int DEFAULT NULL,
+    `contact` varchar(100) DEFAULT NULL,    
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`userid`) REFERENCES users(`ID`),
+    FOREIGN KEY(`contactTypeID`) REFERENCES contacts_types(`id`)
+)
+
+
+
+CREATE TABLE IF NOT EXISTS `user_addresses` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `userid` int DEFAULT NULL,
+    `contactTypeID` int DEFAULT NULL,
+    `contact` varchar(2000) DEFAULT NULL,    
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`userid`) REFERENCES users(`ID`),
+    FOREIGN KEY(`contactTypeID`) REFERENCES contacts_types(`id`) 
+)
+
+
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS `company` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `userid` int DEFAULT NULL,
+    `title` varchar(1000) DEFAULT NULL,
+    `mainImage` varchar(1000) DEFAULT NULL,    
+    `mainImageCaption` varchar(4000) DEFAULT NULL,
+    `country` varchar(500) DEFAULT NULL,
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`userid`) REFERENCES users(`ID`)
+)
+
+
+CREATE TABLE IF NOT EXISTS `company_images` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `companyID` int DEFAULT NULL,
+    `image` varchar(1000) DEFAULT NULL,    
+    `title` varchar(1000) DEFAULT NULL,        
+    `description` varchar(4000) DEFAULT NULL,        
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`companyID`) REFERENCES company(`ID`)
+)
+
+
+
+CREATE TABLE IF NOT EXISTS `company_contacts` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `companyID` int DEFAULT NULL,
+    `name` varchar(200) DEFAULT NULL,        
+    `phone1` varchar(50) DEFAULT NULL,            
+    `phone1Type` int DEFAULT NULL,                
+    `phone2` varchar(50) DEFAULT NULL,            
+    `phone2Type` int DEFAULT NULL,                    
+    `email1` varchar(150) DEFAULT NULL,            
+    `email1Type` int DEFAULT NULL,                    
+    `email2` varchar(150) DEFAULT NULL,            
+    `email2Type` int DEFAULT NULL,                    
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`companyID`) REFERENCES company(`ID`),
+    FOREIGN KEY(`phone1Type`) REFERENCES company(`ID`),
+    FOREIGN KEY(`phone2Type`) REFERENCES company(`ID`),
+    FOREIGN KEY(`email1Type`) REFERENCES company(`ID`),
+    FOREIGN KEY(`email2Type`) REFERENCES company(`ID`)
+)
+
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS `company_documents` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `companyID` int DEFAULT NULL,
+    `document` varchar(1000) DEFAULT NULL,    
+    `title` varchar(1000) DEFAULT NULL,        
+    `description` varchar(4000) DEFAULT NULL,        
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`companyID`) REFERENCES company(`ID`)
+)
+
+
+
+
+CREATE TABLE IF NOT EXISTS `company_paragraphs` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `companyID` int DEFAULT NULL,
+    `title` varchar(1000) DEFAULT NULL,        
+    `details` varchar(4000) DEFAULT NULL,        
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`companyID`) REFERENCES company(`ID`)
+)
+
+
+
+
+
+
+
+
+
