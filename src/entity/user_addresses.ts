@@ -17,4 +17,16 @@ export class user_addresses extends BaseEntity {
    @Length(5, 2000)
    contact!: string; 
 
+   @Column() 
+   @Length(0, 20)
+   zip!: string; 
+
+   @Column() 
+   @Length(0, 100)
+   state!: string; 
+
+   @Column() 
+   @Length(0, 200)
+   country!: string; 
+
 }

@@ -16,28 +16,17 @@ bckendDataRouter.get("/getAllUpdates", async (req: Request, res: Response) => {
 });
 
 bckendDataRouter.get("/getUpdate", async (req: Request, res: Response) => {
-
-    /*var dat = await updates.find({        
-        where: {  ID: req.query.id  }
-    });*/
-
     var dat = await getConnection()
     .createQueryBuilder()
     .select([
         'ID',
         'TITLE',
         'details',
-        'UpdateDate'
+        "DATE_FORMAT(UpdateDate, '%M %d %Y') as UpdateDate"
     ])
     .from(updates)
     .where("id = :id", { id: req.query.id })
     .execute();
-
-    var dateFormat = 'MMMM DD, YYYY';
-    if (moment(moment( dat[0].UpdateDate ).format(dateFormat),dateFormat,true).isValid()) {
-        dat[0].UpdateDate = moment(dat[0].UpdateDate).format(dateFormat) 
-    } else
-        dat[0].UpdateDate = "January 01, 2000"
 
     res.send( dat );
 });
@@ -92,9 +81,6 @@ bckendDataRouter.post("/updateUpdates", async (req: Request, res: Response) => {
     }
 
 });
-
-
-
 
 
 bckendDataRouter.get("/getAllAccounts", async (req: Request, res: Response) => {

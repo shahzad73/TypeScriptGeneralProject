@@ -8,6 +8,7 @@ insert into contacts_types(title, type) values("Personal Mobile", 1);
 insert into contacts_types(title, type) values("Personal Land Line", 1);
 insert into contacts_types(title, type) values("Business Mobile", 1);
 insert into contacts_types(title, type) values("Business Land Line", 1);
+insert into contacts_types(title, type) values("Fax Number", 1);
 
 insert into contacts_types(title, type) values("Home", 2);
 insert into contacts_types(title, type) values("Business", 2);
@@ -114,6 +115,19 @@ CREATE TABLE IF NOT EXISTS `company_paragraphs` (
     PRIMARY KEY (`id`),    
     FOREIGN KEY(`companyID`) REFERENCES company(`ID`)
 )
+
+
+ALTER TABLE users ADD COLUMN `PassportNumber` varchar(100) defau1t null;
+ALTER TABLE users ADD COLUMN `NationalID` varchar(100) default null;
+ALTER TABLE users ADD COLUMN `DOB` date default null;
+ALTER TABLE users ADD COLUMN `MaritalStatus` varchar(100) default null;
+ALTER TABLE users ADD COLUMN `Occupation` varchar(100) default null;
+
+
+ALTER TABLE user_addresses ADD COLUMN `zip` varchar(20) default null;
+ALTER TABLE user_addresses ADD COLUMN `state` varchar(100) default null;
+ALTER TABLE user_addresses ADD COLUMN `country` varchar(200) default null;
+
 
 
 

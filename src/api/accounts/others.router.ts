@@ -27,7 +27,7 @@ othersDataRouter.get("/inbox", async (req: Request, res: Response) => {
         'ResponseDate'
     ])
     .from(inbox)
-    .where("userID = :id", { id: req.body.userid })
+    .where("userID = :id", { id: req.userid })
     .execute();
 
     res.json( email );
@@ -42,7 +42,7 @@ othersDataRouter.post("/sendEmail", async (req: Request, res: Response) => {
 
     const manager = getManager();
     const newAddition = manager.create(inbox, req.body);    
-    newAddition.UserID = req.body.userid;
+    newAddition.UserID = req.userid;
     newAddition.isResponded = 0;
     newAddition.Response = "";
     newAddition.DateEmail = new Date();
@@ -80,7 +80,7 @@ othersDataRouter.get("/deleteInbox", async (req: Request, res: Response) => {
         'ResponseDate'
     ])
     .from(inbox)
-    .where("userID = :id", { id: req.body.userid })
+    .where("userID = :id", { id: req.userid })
     .execute();
 
     res.json( email );

@@ -8,3 +8,21 @@
 }
 
 
+.CaptionLabel {
+  font-size: 14px;
+  color: black;
+}
+
+
+.DataLabel {
+  font-size: 14px;
+  color:black;
+}
+
+
+.ErrorLabel {
+  font-size: 12px;
+  color:red;
+}
+
+

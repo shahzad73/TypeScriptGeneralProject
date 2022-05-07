@@ -13,7 +13,6 @@ export default function Inbox(props) {
   const [deleteModelShow, setDeleteModelShow] = useState(false);
   const [deleteRecordID, setDeleteRecordID] = useState(0);
 
-  const handleDeleteModelClose = () => setDeleteModelShow(false);  
 
   React.useEffect((props) => {
       //alert("This is where you initialization code is execute");
@@ -111,7 +110,7 @@ function handleDeleteModelEvent() {
             </div>
         </div>
 
-        <Modal  show={deleteModelShow} onHide={handleDeleteModelClose}>
+        <Modal  show={deleteModelShow} onHide={() => setDeleteModelShow(false)}>
             <Modal.Header closeButton>
             <Modal.Title>Delete Record</Modal.Title>
             </Modal.Header>
@@ -121,10 +120,10 @@ function handleDeleteModelEvent() {
                 <br /><br />
             </Modal.Body>
             <Modal.Footer>
-            <Button positive onClick={handleDeleteModelClose}>
+            <Button positive onClick={() => setDeleteModelShow(false)}>
                 Close
             </Button>
-            <Button color="orange" onClick={handleDeleteModelEvent}>
+            <Button color="orange" onClick={() => setDeleteModelShow(false)}>
                 Yes Delete
             </Button>
             </Modal.Footer>

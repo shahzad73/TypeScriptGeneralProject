@@ -1,11 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
-import {Contains, IsInt, Length, IsEmail, IsFQDN, IsDateString, IsDate, Min, Max} from "class-validator";
+import {Contains, IsInt, Length, IsNotEmpty, IsEmail, IsFQDN, IsDateString, IsDate, Min, Max} from "class-validator";
 
 @Entity('users') 
 export class users extends BaseEntity {   
 
    @PrimaryGeneratedColumn() 
-   ID!: number; 
+   "ID": number; 
    
    @Column() 
    @Length(5, 100)
@@ -26,4 +26,24 @@ export class users extends BaseEntity {
    @Column() 
    secret!: string; 
 
+   @Column() 
+   @Length(0, 100)
+   "PassportNumber": string; 
+
+   @Column() 
+   @Length(0, 100)
+   "NationalID": string; 
+
+   @Column() 
+   "DOB": Date; 
+
+   @Column() 
+   @Length(0, 100)
+   "MaritalStatus": string; 
+
+   @Column() 
+   @Length(0, 100)
+   "Occupation": string; 
+
 }
+

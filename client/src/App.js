@@ -1,7 +1,7 @@
 import Main from "./components/Main";
 import React, { useState } from "react";
 import AppContext from './components/common/AppContext';
-// import axios from 'axios';
+import './App.css';
 
 export default function App() {
 

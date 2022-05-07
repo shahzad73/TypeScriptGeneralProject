@@ -5,10 +5,8 @@ var jwt = require('jsonwebtoken');
 
 
 module.exports = function(app: any){
-
     app.use("/accounts/backend", securityAccount,  bckendDataRouter);    
     app.use("/accounts/others", securityAccount,  othersDataRouter);    
-
 }
 
 
@@ -20,7 +18,7 @@ const securityAccount = function (req: any, res: any, next: any) {
                 console.log("error ....  " + err)
             } else { 
                 if(decoded.role == "account") {
-                    req.body.userid = decoded.id;
+                    req.userid = decoded.id;
                     next();
                 } else 
                     console.log("not correct tole")
