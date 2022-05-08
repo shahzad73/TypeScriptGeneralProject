@@ -32,7 +32,6 @@ bckendDataRouter.get("/getUpdate", async (req: Request, res: Response) => {
 });
 
 bckendDataRouter.post("/addNewUpdates", async (req: Request, res: Response) => {
-
     const manager = getManager();
     const newUpdates = manager.create(updates, req.body);    
     newUpdates.stoid = 0;

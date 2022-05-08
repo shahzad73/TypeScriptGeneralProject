@@ -42,6 +42,36 @@ bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
 });
 
 
+bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
+    req.body.userid = req.userid;
+
+    console.log( req.body.userid )
+
+    const manager = getManager();
+    const newUpdates = manager.create(user_contacts, req.body);    
+
+    const errors = await validate(newUpdates);
+
+    if (errors.length > 0) {
+        res.json({id: -1, error: errors});
+    } else {
+        const data = await user_contacts.insert ( newUpdates );
+        const usr = await getUserProfile(req.userid);
+        res.json(  usr  ); 
+    }
+})
+
+bckendDataRouter.post("/deleteContact", async (req: Request, res: Response) => {
+    await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(user_contacts)
+    .where("id = :id and userid = :userid", { id: req.body.id, userid: req.userid })
+    .execute();
+
+    const usr = await getUserProfile(req.userid);
+    res.json(  usr  );
+});
 
 
 async function getUserProfile(userid: number) {
@@ -81,6 +111,13 @@ async function getUserProfile(userid: number) {
     .execute();
     data.mobileTypes = typ1;
 
+    const typ2 = await getConnection()
+    .createQueryBuilder()
+    .select(["*"])
+    .from(contacts_types, "contacts_types")
+    .where("type = :id", { id: 2 })
+    .execute();
+    data.addressTypes = typ2;
 
 
     console.log(data);

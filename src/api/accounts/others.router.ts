@@ -107,3 +107,4 @@ othersDataRouter.get("/detailsEmail", async (req: Request, res: Response) => {
 
     res.json( email[0] )
 });
+

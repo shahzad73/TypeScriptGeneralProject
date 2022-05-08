@@ -13,24 +13,94 @@ export default function Profile() {
     const [data, setData] = useState([]);
 
     const [profileErrorMessages, setProfileErrorMessages] = useState("");    
-    const [profileModelShow, setProfileModelShow] = useState(false);    
     const [showLoading, setShowLoading] = useState(true);
     const {register, handleSubmit, reset, formState: { errors }} = useForm();
     const [DOBDate, setDOBDate] = useState("");
 
     const [userContacts, setUserContacts] = useState([]);
     const [mobileTypes, setMobileTypes] = useState([]);    
+    const [addressTypes, setAddressTypes] = useState([]);        
 
+    const [profileModelShow, setProfileModelShow] = useState(false); 
+
+    const countries = commons.getCountryNamesJSON();
+
+    React.useEffect(() => {
+
+            axios.get("/accounts/backend/getProfile").then(response => {   
+                setData( response.data.user );
+                setUserContacts ( response.data.userContacts );
+                setMobileTypes ( response.data.mobileTypes );
+                setAddressTypes ( response.data.addressTypes );
+                setShowLoading(false);
+            }).catch(function(error) {
+                console.log(error);
+            }); 
+
+        return () => {
+            //alert("Bye");
+        };
+
+    }, []);
+
+    const onFormSubmit = (data) => {
+            setShowLoading(true);
+            setProfileModelShow(false);
+            
+            if(DOBDate != "" && DOBDate != null)
+                data.DOB =  new Date(  moment(DOBDate).format('YYYY-MM-DD')  ) 
+            
+            axios.post("/accounts/backend/setProfile", data).then(response => {
+
+                setShowLoading(false);
+                if(response.data.id == -1) {
+                    setProfileErrorMessages(  commons.getDBErrorMessagesText(response.data.error)   );
+                } else 
+                    setData( response.data.user )
+
+                setShowLoading(false);
+
+            }).catch(function(error) {
+                console.log(error);
+            });
+    }
+
+    function openEditProfile() {
+        if(data.DOB != "" && data.DOB != null)
+            setDOBDate( new Date(data.DOB) )
+        reset(data);
+        setProfileModelShow(true)
+    }
+
+
+    // Contacts information
+    const [showProfileLoading, setShowProfileLoading] = useState(false);     
     const [contactModelShow, setContactModelShow] = useState(false);
     const [formContactData, updateFormContactData] = React.useState([]);
 
-
+    function openEditContact() {
+        setContactModelShow(true);
+    }
     const addContactDataForm = (e) => {
         e.preventDefault()
-        alert( JSON.stringify( formContactData) );
+        setContactModelShow(false);
+        setShowProfileLoading(true);
+
+        axios.post("/accounts/backend/addContact", formContactData).then(response => {
+            setUserContacts ( response.data.userContacts )
+            setShowProfileLoading(false);
+        }).catch(function(error) {
+            console.log(error);
+        });
     };
-
-
+    const deleteContactDataForm = value => () => {
+        axios.post("/accounts/backend/deleteContact", {id: value}).then(response => {
+            setUserContacts ( response.data.userContacts )
+            setShowProfileLoading(false);
+        }).catch(function(error) {
+            console.log(error);
+        });        
+    };
     const handleContactChange = (e) => {
         updateFormContactData({
             ...formContactData,
@@ -38,59 +108,38 @@ export default function Profile() {
             [e.target.name]: e.target.value.trim()
         });
     };
-    
-    
 
-  React.useEffect(() => {
 
-        axios.get("/accounts/backend/getProfile").then(response => {   
-            setData( response.data.user )
-            setUserContacts ( response.data.userContacts )
-            setMobileTypes ( response.data.mobileTypes )
-            setShowLoading(false)
-        }).catch(function(error) {
-            console.log(error);
-        }); 
 
-      return () => {
-          //alert("Bye");
-      };
+    // Address information
+    const [showAddressesLoading, setShowAddressesLoading] = useState(false);         
+    const [addressesModelShow, setAddressesModelShow] = useState(false);
+    const [formAddressesData, updateFormAddressesData] = React.useState([]);
 
-  }, []);
-
-  const onFormSubmit = (data) => {
-        setShowLoading(true);
-        setProfileModelShow(false);
-        
-        if(DOBDate != "" && DOBDate != null)
-            data.DOB =  new Date(  moment(DOBDate).format('YYYY-MM-DD')  ) 
-        
-        axios.post("/accounts/backend/setProfile", data).then(response => {
-
-            setShowLoading(false);
-            if(response.data.id == -1) {
-                setProfileErrorMessages(  commons.getDBErrorMessagesText(response.data.error)   );
-            } else 
-                setData( response.data.user )
-
-            setShowLoading(false);
-
-        }).catch(function(error) {
-            console.log(error);
+    function openEditAddresses() {
+        setAddressesModelShow(true);
+    }
+    const handleAddressChange = (e) => {
+        updateFormAddressesData({
+            ...formAddressesData,
+            // Trimming any whitespace
+            [e.target.name]: e.target.value.trim()
         });
-  }
+    };
+    const addAddressDataForm = (e) => {
+        e.preventDefault()
+        setContactModelShow(false);
+        setShowAddressesLoading(true);
 
-  function openEditProfile() {
-    if(data.DOB != "" && data.DOB != null)
-        setDOBDate( new Date(data.DOB) )
-    reset(data);
-    setProfileModelShow(true)
-  }
+        alert (  JSON.stringify(formAddressesData)  )
 
-
-  function openEditContact() {
-    setContactModelShow(true);
-  }
+        /*axios.post("/accounts/backend/addAddress", formContactData).then(response => {
+            setUserContacts ( response.data.userContacts )
+            setShowProfileLoading(false);
+        }).catch(function(error) {
+            console.log(error);
+        });*/
+    };
 
 
   return (  
@@ -259,7 +308,7 @@ export default function Profile() {
                                     <div className="col-2">
                                         <Button onClick={openEditContact} positive size='tiny'>New Contact</Button>
                                     </div>                                
-                                </div>
+                                </div>   
                             </div>
                             <div className="card-block table-border-style">
 
@@ -273,35 +322,48 @@ export default function Profile() {
                                             <div className="col-xl-4">
                                                 {dat.contact}
                                             </div>
-                                            <div className="col-xl-4">
-                                                <Button onClick={openEditProfile} positive size='tiny'>Edit</Button>
+                                            <div className="col-xl-4"> 
+                                                <Button onClick={deleteContactDataForm(dat.id)} positive size='tiny'>Delete</Button>
                                             </div>                                            
                                         </div>
                                     </span> 
                                 )}
 
                             </div>
+                            
+                        { showProfileLoading && ( <Loading message="Saving Contact" /> ) }
                     </div>
                 </div>
             </div>
         </div>
+
 
         <div>
             <div className="row">
                 <div className="col-xl-12">
                     <div className="card">
                             <div className="card-header">
-                                <h5>My Addresses</h5>
+                                <div className="row">
+                                    <div className="col-10">
+                                        <h5>My Contacts</h5>
+                                    </div> 
+                                    <div className="col-2">
+                                        <Button onClick={openEditAddresses} positive size='tiny'>New Address</Button>
+                                    </div>                                
+                                </div>   
                             </div>
                             <div className="card-block table-border-style">
 
-
+                                    Addresses
 
                             </div>
+                            
+                        { showAddressesLoading && ( <Loading message="Saving Address Information" /> ) }
                     </div>
                 </div>
             </div>
         </div>
+
 
 
 
@@ -444,8 +506,6 @@ export default function Profile() {
             </Form>
         </Modal>
 
-
-
         <Modal size="lg" show={contactModelShow} onHide={() => setContactModelShow(false)}>
 
                 <Modal.Header closeButton>
@@ -467,7 +527,7 @@ export default function Profile() {
                                                     id="contact"  
                                                     name="contact"
                                                     onChange={handleContactChange}
-                                                />
+                                                />   
                                             </Form.Field>
                                         </div>
                                     </div>
@@ -480,12 +540,12 @@ export default function Profile() {
                                         <div className="form-group">
                                                 <Form.Field>
                                                     <select 
-                                                    id="MobileType"  
-                                                    name="MobileType"
+                                                    id="contactTypeID"  
+                                                    name="contactTypeID"
                                                     onChange={handleContactChange}
                                                     className="form-control">
-                                                        {mobileTypes && mobileTypes.map(dat =>                                    
-                                                            <option value={dat.ID}>{dat.title}</option>
+                                                        { mobileTypes && mobileTypes.map(dat =>
+                                                            <option value={dat.id} label={dat.title} />
                                                         )}
                                                     </select>
                                                 </Form.Field>
@@ -508,8 +568,122 @@ export default function Profile() {
 
         </Modal>
 
+        <Modal size="lg" show={addressesModelShow} onHide={() => setAddressesModelShow(false)}>
+
+                <Modal.Header closeButton>
+                <Modal.Title>Add / Edit Address</Modal.Title>
+                </Modal.Header>
+                <Modal.Body  >
+                    <br />
+                    
+
+                    <div className="row">
+
+                                <div className="row">
+                                    <div className="col-md-2"> Address </div>
+                                    <div className="col-md-10">
+                                        <div className="form-group">
+                                            
+                                            <Form.Field>
+                                                <input type="text" className="form-control" placeholder="Enter Title" 
+                                                    id="contact"  
+                                                    name="contact"
+                                                    onChange={handleAddressChange}
+                                                />   
+                                            </Form.Field>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-1"></div>
+                                </div>
 
 
+                                <div className="row">
+                                    <div className="col-md-2"> State </div>
+                                    <div className="col-md-4">
+                                        <div className="form-group">
+                                            
+                                            <Form.Field>
+                                                <input type="text" className="form-control" placeholder="Enter Title" 
+                                                    id="state"  
+                                                    name="state"
+                                                    onChange={handleAddressChange}
+                                                />   
+                                            </Form.Field>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-2"> Zip </div>
+                                    <div className="col-md-4">
+                                        <div className="form-group">
+                                            
+                                            <Form.Field>
+                                                <input type="text" className="form-control" placeholder="Enter Title" 
+                                                    id="zip"  
+                                                    name="zip"
+                                                    onChange={handleAddressChange}
+                                                />   
+                                            </Form.Field>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div className="row">
+
+                                        <div className="col-md-2"> Country </div>
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                        <Form.Field>
+                                                            <select 
+                                                            id="country"  
+                                                            name="country"
+                                                            onChange={handleAddressChange}
+                                                            className="form-control">
+                                                                { countries && countries.map(dat =>
+                                                                    <option value={dat} label={dat} />
+                                                                )}
+                                                            </select>
+                                                        </Form.Field>
+                                                </div>
+                                            </div>
+                                </div>
+                                
+                                    <div className="row">
+                                    <div className="col-md-2"> Address Type </div>
+                                    <div className="col-md-4">
+                                        <div className="form-group">
+                                                <Form.Field>
+                                                    <select 
+                                                    id="contactTypeID"  
+                                                    name="contactTypeID"
+                                                    onChange={handleAddressChange}
+                                                    className="form-control">
+                                                        { addressTypes && addressTypes.map(dat =>
+                                                            <option value={dat.id} label={dat.title} />
+                                                        )}
+                                                    </select>
+                                                </Form.Field>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                    </div>
+
+                    <br /><br />
+                </Modal.Body>
+                <Modal.Footer>
+                <Button color="green" onClick={addAddressDataForm}>Save</Button>
+                &nbsp;&nbsp;
+                <Button color="orange" onClick={() => setAddressesModelShow(false)}>Close</Button>
+                </Modal.Footer>
+
+
+        </Modal>
+
+
+        
 
     </div>  
 
