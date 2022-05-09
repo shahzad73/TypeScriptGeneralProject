@@ -4,6 +4,7 @@ import {validate} from "class-validator";
 import {users} from "../../entity/users";
 import {contacts_types} from "../../entity/contact_types";
 import {user_contacts} from "../../entity/user_contacts";
+import {user_addresses} from "../../entity/user_addresses";
 import { findMany } from "../../core/mysql";
 
 
@@ -73,6 +74,23 @@ bckendDataRouter.post("/deleteContact", async (req: Request, res: Response) => {
     res.json(  usr  );
 });
 
+bckendDataRouter.post("/addAddress", async (req: Request, res: Response) => {
+    req.body.userid = req.userid;
+
+    const manager = getManager();
+    const newUpdates = manager.create(user_addresses, req.body);    
+
+    const errors = await validate(newUpdates);
+
+    if (errors.length > 0) {
+        res.json({id: -1, error: errors});
+    } else {
+        const data = await user_addresses.insert ( newUpdates );
+        const usr = await getUserProfile(req.userid);
+        res.json(  usr  ); 
+    }
+});
+
 
 async function getUserProfile(userid: number) {
     var data = {}
@@ -99,7 +117,6 @@ async function getUserProfile(userid: number) {
     const usrContacts = await findMany(`select u.id, u.contact, c.title 
         from contacts_types c, user_contacts u 
         where u.contactTypeID = c.id and u.userid = ?`, [userid])
-    console.log( usrContacts )
     data.userContacts = usrContacts;
 
 
@@ -111,6 +128,7 @@ async function getUserProfile(userid: number) {
     .execute();
     data.mobileTypes = typ1;
 
+
     const typ2 = await getConnection()
     .createQueryBuilder()
     .select(["*"])
@@ -120,6 +138,12 @@ async function getUserProfile(userid: number) {
     data.addressTypes = typ2;
 
 
+    const usrAddresses = await findMany(`select u.id, c.title, u.contact, u.zip, u.state, u.country 
+        from contacts_types c, user_addresses u 
+        where u.contactTypeID = c.id and u.userid = ?`, [userid])
+    data.userContacts = usrAddresses;
+
+    
     console.log(data);
     return data;
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { Button, Form } from 'semantic-ui-react'
+import { Button, Form, Dropdown } from 'semantic-ui-react'
 import { Modal } from 'react-bootstrap'
 import { useForm } from "react-hook-form";
 import Loading from "../common/loading"
@@ -32,6 +32,7 @@ export default function Profile() {
                 setUserContacts ( response.data.userContacts );
                 setMobileTypes ( response.data.mobileTypes );
                 setAddressTypes ( response.data.addressTypes );
+                setFormAddressesData ( response.data.userContacts )
                 setShowLoading(false);
             }).catch(function(error) {
                 console.log(error);
@@ -114,31 +115,30 @@ export default function Profile() {
     // Address information
     const [showAddressesLoading, setShowAddressesLoading] = useState(false);         
     const [addressesModelShow, setAddressesModelShow] = useState(false);
-    const [formAddressesData, updateFormAddressesData] = React.useState([]);
+    const [formAddressesData, setFormAddressesData] = React.useState([]);
 
     function openEditAddresses() {
         setAddressesModelShow(true);
     }
     const handleAddressChange = (e) => {
-        updateFormAddressesData({
+        setFormAddressesData({
             ...formAddressesData,
-            // Trimming any whitespace
             [e.target.name]: e.target.value.trim()
         });
     };
     const addAddressDataForm = (e) => {
         e.preventDefault()
-        setContactModelShow(false);
+        setAddressesModelShow(false);
         setShowAddressesLoading(true);
 
-        alert (  JSON.stringify(formAddressesData)  )
+        //alert (  JSON.stringify(formAddressesData)  )
 
-        /*axios.post("/accounts/backend/addAddress", formContactData).then(response => {
-            setUserContacts ( response.data.userContacts )
-            setShowProfileLoading(false);
+        axios.post("/accounts/backend/addAddress", formAddressesData).then(response => {
+            setShowAddressesLoading(false);
+            setFormAddressesData ( response.data.userContacts )
         }).catch(function(error) {
             console.log(error);
-        });*/
+        });
     };
 
 
@@ -354,7 +354,25 @@ export default function Profile() {
                             </div>
                             <div className="card-block table-border-style">
 
-                                    Addresses
+                                {formAddressesData && formAddressesData.map(dat =>                                    
+                                    <span>
+                                        <br />
+                                        <div className="row">
+                                            <div className="col-xl-2">
+                                                {dat.title} Address
+                                            </div>                                            
+                                            <div className="col-xl-4">
+                                                {dat.contact} &nbsp; 
+                                                {dat.zip} &nbsp;  
+                                                {dat.state} &nbsp; 
+                                                {dat.country} &nbsp; 
+                                            </div>
+                                            <div className="col-xl-4"> 
+                                                <Button onClick={deleteContactDataForm(dat.id)} positive size='tiny'>Delete</Button>
+                                            </div>                                            
+                                        </div>
+                                    </span> 
+                                )}
 
                             </div>
                             
@@ -363,9 +381,6 @@ export default function Profile() {
                 </div>
             </div>
         </div>
-
-
-
 
 
 
@@ -463,8 +478,9 @@ export default function Profile() {
                                             Marital Status
                                             <Form.Field>
                                                 <select 
+                                                className="form-control form-select"
                                                 id="MaritalStatus"  
-                                                name="MaritalStatus"
+                                                name="MaritalStatus"                                                
                                                 {...register("MaritalStatus", { maxLength: 100 })}>
                                                     <option value="Single">Single</option>
                                                     <option value="Married">Married</option>
@@ -543,7 +559,7 @@ export default function Profile() {
                                                     id="contactTypeID"  
                                                     name="contactTypeID"
                                                     onChange={handleContactChange}
-                                                    className="form-control">
+                                                    className="form-control form-select">
                                                         { mobileTypes && mobileTypes.map(dat =>
                                                             <option value={dat.id} label={dat.title} />
                                                         )}
@@ -639,7 +655,7 @@ export default function Profile() {
                                                             id="country"  
                                                             name="country"
                                                             onChange={handleAddressChange}
-                                                            className="form-control">
+                                                            className="form-control form-select">
                                                                 { countries && countries.map(dat =>
                                                                     <option value={dat} label={dat} />
                                                                 )}
@@ -658,7 +674,7 @@ export default function Profile() {
                                                     id="contactTypeID"  
                                                     name="contactTypeID"
                                                     onChange={handleAddressChange}
-                                                    className="form-control">
+                                                    className="form-control form-select">
                                                         { addressTypes && addressTypes.map(dat =>
                                                             <option value={dat.id} label={dat.title} />
                                                         )}
@@ -682,8 +698,6 @@ export default function Profile() {
 
         </Modal>
 
-
-        
 
     </div>  
 
