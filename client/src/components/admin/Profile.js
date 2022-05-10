@@ -10,62 +10,37 @@ import commons from "../common/commons";
 
 
 export default function Profile() {
-    const [data, setData] = useState([]);
 
+    const countries = commons.getCountryNamesJSON();
+
+    // Profile related data
+    const [data, setData] = useState([]);
     const [profileErrorMessages, setProfileErrorMessages] = useState("");    
     const [showLoading, setShowLoading] = useState(true);
     const {register, handleSubmit, reset, formState: { errors }} = useForm();
     const [DOBDate, setDOBDate] = useState("");
-
-    const [userContacts, setUserContacts] = useState([]);
-    const [mobileTypes, setMobileTypes] = useState([]);    
-    const [addressTypes, setAddressTypes] = useState([]);        
-
     const [profileModelShow, setProfileModelShow] = useState(false); 
-
-    const countries = commons.getCountryNamesJSON();
-
-    React.useEffect(() => {
-
-            axios.get("/accounts/backend/getProfile").then(response => {   
-                setData( response.data.user );
-                setUserContacts ( response.data.userContacts );
-                setMobileTypes ( response.data.mobileTypes );
-                setAddressTypes ( response.data.addressTypes );
-                setFormAddressesData ( response.data.userContacts )
-                setShowLoading(false);
-            }).catch(function(error) {
-                console.log(error);
-            }); 
-
-        return () => {
-            //alert("Bye");
-        };
-
-    }, []);
-
     const onFormSubmit = (data) => {
-            setShowLoading(true);
-            setProfileModelShow(false);
-            
-            if(DOBDate != "" && DOBDate != null)
-                data.DOB =  new Date(  moment(DOBDate).format('YYYY-MM-DD')  ) 
-            
-            axios.post("/accounts/backend/setProfile", data).then(response => {
+        setShowLoading(true);
+        setProfileModelShow(false);
+        
+        if(DOBDate != "" && DOBDate != null)
+            data.DOB =  new Date(  moment(DOBDate).format('YYYY-MM-DD')  ) 
+        
+        axios.post("/accounts/backend/setProfile", data).then(response => {
 
-                setShowLoading(false);
-                if(response.data.id == -1) {
-                    setProfileErrorMessages(  commons.getDBErrorMessagesText(response.data.error)   );
-                } else 
-                    setData( response.data.user )
+            setShowLoading(false);
+            if(response.data.id == -1) {
+                setProfileErrorMessages(  commons.getDBErrorMessagesText(response.data.error)   );
+            } else 
+                setData( response.data.user )
 
-                setShowLoading(false);
+            setShowLoading(false);
 
-            }).catch(function(error) {
-                console.log(error);
-            });
+        }).catch(function(error) {
+            console.log(error);
+        });
     }
-
     function openEditProfile() {
         if(data.DOB != "" && data.DOB != null)
             setDOBDate( new Date(data.DOB) )
@@ -75,8 +50,10 @@ export default function Profile() {
 
 
     // Contacts information
-    const [showProfileLoading, setShowProfileLoading] = useState(false);     
+    const [userContacts, setUserContacts] = useState([]);    
+    const [mobileTypes, setMobileTypes] = useState([]);        
     const [contactModelShow, setContactModelShow] = useState(false);
+    const [showContactLoading, setShowContactLoading] = useState(false);         
     const [formContactData, updateFormContactData] = React.useState([]);
 
     function openEditContact() {
@@ -85,61 +62,85 @@ export default function Profile() {
     const addContactDataForm = (e) => {
         e.preventDefault()
         setContactModelShow(false);
-        setShowProfileLoading(true);
+        setShowContactLoading(true);
 
         axios.post("/accounts/backend/addContact", formContactData).then(response => {
-            setUserContacts ( response.data.userContacts )
-            setShowProfileLoading(false);
+            setUserContacts ( response.data.userContacts );
+            setShowContactLoading(false);
         }).catch(function(error) {
             console.log(error);
+        });
+    };
+    const handleContactChange = (e) => {
+        updateFormContactData({
+            ...formContactData,
+            [e.target.name]: e.target.value.trim()
         });
     };
     const deleteContactDataForm = value => () => {
         axios.post("/accounts/backend/deleteContact", {id: value}).then(response => {
             setUserContacts ( response.data.userContacts )
-            setShowProfileLoading(false);
+            setShowContactLoading(false);
         }).catch(function(error) {
             console.log(error);
         });        
     };
-    const handleContactChange = (e) => {
-        updateFormContactData({
-            ...formContactData,
-            // Trimming any whitespace
-            [e.target.name]: e.target.value.trim()
-        });
-    };
-
 
 
     // Address information
+    const [addressesData, setAddressesData] = React.useState([]);    
+    const [addressesModelShow, setAddressesModelShow] = useState(false);    
     const [showAddressesLoading, setShowAddressesLoading] = useState(false);         
-    const [addressesModelShow, setAddressesModelShow] = useState(false);
     const [formAddressesData, setFormAddressesData] = React.useState([]);
+    const [addressTypes, setAddressTypes] = useState([]);        
 
     function openEditAddresses() {
         setAddressesModelShow(true);
     }
+    const addAddressDataForm = (e) => {
+        e.preventDefault()
+        setAddressesModelShow(false);
+        setShowAddressesLoading(true);
+
+        axios.post("/accounts/backend/addAddress", formAddressesData).then(response => {
+            setShowAddressesLoading(false);
+            setAddressesData ( response.data.usrAddresses );
+        }).catch(function(error) {
+            console.log(error);
+        });
+    };
     const handleAddressChange = (e) => {
         setFormAddressesData({
             ...formAddressesData,
             [e.target.name]: e.target.value.trim()
         });
     };
-    const addAddressDataForm = (e) => {
-        e.preventDefault()
-        setAddressesModelShow(false);
-        setShowAddressesLoading(true);
-
-        //alert (  JSON.stringify(formAddressesData)  )
-
-        axios.post("/accounts/backend/addAddress", formAddressesData).then(response => {
+    const deleteAddressDataForm = value => () => {
+        axios.post("/accounts/backend/deleteAddress", {id: value}).then(response => {
+            setAddressesData ( response.data.usrAddresses );
             setShowAddressesLoading(false);
-            setFormAddressesData ( response.data.userContacts )
         }).catch(function(error) {
             console.log(error);
-        });
+        });        
     };
+
+
+    React.useEffect(() => {
+        axios.get("/accounts/backend/getProfile").then(response => {
+            setData( response.data.user );
+            setUserContacts ( response.data.userContacts );
+            setMobileTypes ( response.data.mobileTypes );
+            setAddressTypes ( response.data.addressTypes );
+            setAddressesData ( response.data.usrAddresses )
+            setShowLoading(false);
+        }).catch(function(error) {
+            console.log(error);
+        }); 
+
+        return () => {
+            //alert("Bye");
+        };
+    }, []);
 
 
   return (  
@@ -331,12 +332,11 @@ export default function Profile() {
 
                             </div>
                             
-                        { showProfileLoading && ( <Loading message="Saving Contact" /> ) }
+                        { showContactLoading && ( <Loading message="Saving Contact" /> ) }
                     </div>
                 </div>
             </div>
         </div>
-
 
         <div>
             <div className="row">
@@ -354,7 +354,7 @@ export default function Profile() {
                             </div>
                             <div className="card-block table-border-style">
 
-                                {formAddressesData && formAddressesData.map(dat =>                                    
+                                {addressesData && addressesData.map(dat =>                                    
                                     <span>
                                         <br />
                                         <div className="row">
@@ -368,7 +368,7 @@ export default function Profile() {
                                                 {dat.country} &nbsp; 
                                             </div>
                                             <div className="col-xl-4"> 
-                                                <Button onClick={deleteContactDataForm(dat.id)} positive size='tiny'>Delete</Button>
+                                                <Button onClick={deleteAddressDataForm(dat.id)} positive size='tiny'>Delete</Button>
                                             </div>                                            
                                         </div>
                                     </span> 
@@ -381,7 +381,6 @@ export default function Profile() {
                 </div>
             </div>
         </div>
-
 
 
         <Modal size="lg" show={profileModelShow} onHide={() => setProfileModelShow(false)}>
@@ -697,7 +696,6 @@ export default function Profile() {
 
 
         </Modal>
-
 
     </div>  
 

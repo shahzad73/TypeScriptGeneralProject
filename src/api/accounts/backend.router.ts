@@ -19,7 +19,6 @@ bckendDataRouter.get("/getProfile", async (req: Request, res: Response) => {
     res.json(  usr  );
 });
 
-
 bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
 
     const manager = getManager();
@@ -41,7 +40,6 @@ bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
     }
 
 });
-
 
 bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
     req.body.userid = req.userid;
@@ -91,6 +89,17 @@ bckendDataRouter.post("/addAddress", async (req: Request, res: Response) => {
     }
 });
 
+bckendDataRouter.post("/deleteAddress", async (req: Request, res: Response) => {
+    await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(user_addresses)
+    .where("id = :id and userid = :userid", { id: req.body.id, userid: req.userid })
+    .execute();
+
+    const usr = await getUserProfile(req.userid);
+    res.json(  usr  );
+});
 
 async function getUserProfile(userid: number) {
     var data = {}
@@ -141,10 +150,9 @@ async function getUserProfile(userid: number) {
     const usrAddresses = await findMany(`select u.id, c.title, u.contact, u.zip, u.state, u.country 
         from contacts_types c, user_addresses u 
         where u.contactTypeID = c.id and u.userid = ?`, [userid])
-    data.userContacts = usrAddresses;
+    data.usrAddresses = usrAddresses;
 
     
-    console.log(data);
     return data;
 
 }
