@@ -8,12 +8,13 @@ import SideBar from './admin/sidebar';
 import Test from './admin/test/Example2';
 import $ from 'jquery';
 import axios from 'axios';
-import Dropdown from 'react-bootstrap/Dropdown'
-import DropdownButton from 'react-bootstrap/DropdownButton';
+
 
 import SendEmail from "./admin/Inbox/SendEmail.js"
 import Inbox from "./admin/Inbox/Inbox.js"
 import ViewInbox from "./admin/Inbox/ViewInbox.js"
+import Company from "./admin/Company/Company.js"
+import AddCompany from "./admin/Company/Add.js"
 
 
 
@@ -158,7 +159,9 @@ export default function Main() {
                                         <Route path="/profile" element={<Profile />} />   
                                         <Route path="/sendemail" element={<SendEmail />} />
                                         <Route path="/inbox" element={<Inbox />} />
-                                        <Route path="/viewinbox" element={<ViewInbox />} />                                                                              
+                                        <Route path="/viewinbox" element={<ViewInbox />} />   
+                                        <Route path="/company" element={<Company />} />   
+                                        <Route path="/addcompany" element={<AddCompany />} />                                           
                                     </Routes>
                                 </div>
                             </div>

@@ -15,15 +15,15 @@ export class company extends BaseEntity {
    title!: string; 
 
    @Column() 
-   @Length(5, 1000)
+   @Length(5, 100)
    mainImage!: string; 
 
    @Column() 
-   @Length(5, 4000)
+   @Length(5, 200)
    mainImageCaption!: string; 
 
    @Column() 
-   @Length(5, 500)
+   @Length(5, 150)
    country!: string; 
 
 }

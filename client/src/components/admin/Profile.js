@@ -78,6 +78,7 @@ export default function Profile() {
         });
     };
     const deleteContactDataForm = value => () => {
+        setShowContactLoading(true);
         axios.post("/accounts/backend/deleteContact", {id: value}).then(response => {
             setUserContacts ( response.data.userContacts )
             setShowContactLoading(false);
@@ -116,6 +117,7 @@ export default function Profile() {
         });
     };
     const deleteAddressDataForm = value => () => {
+        setShowAddressesLoading(true);
         axios.post("/accounts/backend/deleteAddress", {id: value}).then(response => {
             setAddressesData ( response.data.usrAddresses );
             setShowAddressesLoading(false);
@@ -124,7 +126,7 @@ export default function Profile() {
         });        
     };
 
-
+ 
     React.useEffect(() => {
         axios.get("/accounts/backend/getProfile").then(response => {
             setData( response.data.user );
@@ -332,7 +334,7 @@ export default function Profile() {
 
                             </div>
                             
-                        { showContactLoading && ( <Loading message="Saving Contact" /> ) }
+                        { showContactLoading && ( <Loading message="Updating Contact" /> ) }
                     </div>
                 </div>
             </div>
@@ -345,7 +347,7 @@ export default function Profile() {
                             <div className="card-header">
                                 <div className="row">
                                     <div className="col-10">
-                                        <h5>My Contacts</h5>
+                                        <h5>My Addresses</h5>
                                     </div> 
                                     <div className="col-2">
                                         <Button onClick={openEditAddresses} positive size='tiny'>New Address</Button>
@@ -376,7 +378,7 @@ export default function Profile() {
 
                             </div>
                             
-                        { showAddressesLoading && ( <Loading message="Saving Address Information" /> ) }
+                        { showAddressesLoading && ( <Loading message="Updating Address Information" /> ) }
                     </div>
                 </div>
             </div>

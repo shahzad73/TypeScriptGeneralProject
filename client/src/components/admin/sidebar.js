@@ -38,6 +38,18 @@ export default function Main() {
             </li>  
             
 
+            <li data-username="" class="nav-item">
+                <Link to={`/adminmain/company`} activeClassName="active">
+                    <span class="pcoded-micon">
+                        <i class="feather icon-cloud-snow"></i>
+                    </span>
+                    <span class="pcoded-mtext">
+                        Companies
+                    </span>
+                </Link>
+            </li>  
+                        
+
 
             <li data-username="" class="nav-item">
                 <Link to={`/adminmain/inbox`} activeClassName="active">

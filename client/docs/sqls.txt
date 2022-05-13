@@ -130,10 +130,14 @@ ALTER TABLE user_addresses ADD COLUMN `country` varchar(200) default null;
 
 
 
+// dropping foreign key constraint
+alter table company drop FOREIGN KEY company_ibfk_2;
+alter table company drop column contactTypeID;
 
 
 
-
-
-
+ALTER TABLE company ADD COLUMN `title` varchar(1000) default null;
+ALTER TABLE company ADD COLUMN `mainImage` varchar(100) default null;
+ALTER TABLE company ADD COLUMN `mainImageCaption` varchar(200) default null;
+ALTER TABLE company ADD COLUMN `country` varchar(150) default null;
 
