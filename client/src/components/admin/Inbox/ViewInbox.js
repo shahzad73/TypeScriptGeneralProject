@@ -1,29 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate, useLocation } from "react-router-dom";
-import { Form, Button } from 'semantic-ui-react';
-import { useForm } from "react-hook-form";
-import commons from "../../common/commons";
-import Modal from "react-bootstrap/Modal";
-import AppContext from '../../common/AppContext';
-import DatePicker from "react-datepicker";
+import { Button } from 'semantic-ui-react';
 import "react-datepicker/dist/react-datepicker.css";
-import moment from "moment";
-import Loading from '../../common/loading';
 
- 
+
 export default function ViewInbox(props) {
 
     const navigate = useNavigate();
-    const location = useLocation()
+    const location = useLocation();
 
     const [emailData, setEmailData] = useState({});
     const [showResposeSection, setShowResposeSection] = useState(false);    
-
-    const [inputs, setInputs] = useState({});    
-    const [showLoading, setShowLoading] = useState(false);
-
-    const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
 
 
     function cancel() {

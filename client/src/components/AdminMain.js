@@ -15,6 +15,7 @@ import Inbox from "./admin/Inbox/Inbox.js"
 import ViewInbox from "./admin/Inbox/ViewInbox.js"
 import Company from "./admin/Company/Company.js"
 import AddCompany from "./admin/Company/Add.js"
+import EditCompany from "./admin/Company/Edit.js"
 
 
 
@@ -161,7 +162,8 @@ export default function Main() {
                                         <Route path="/inbox" element={<Inbox />} />
                                         <Route path="/viewinbox" element={<ViewInbox />} />   
                                         <Route path="/company" element={<Company />} />   
-                                        <Route path="/addcompany" element={<AddCompany />} />                                           
+                                        <Route path="/addcompany" element={<AddCompany />} />  
+                                        <Route path="/editcompany" element={<EditCompany />} />
                                     </Routes>
                                 </div>
                             </div>

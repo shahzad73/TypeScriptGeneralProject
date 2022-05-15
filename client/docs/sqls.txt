@@ -141,3 +141,5 @@ ALTER TABLE company ADD COLUMN `mainImage` varchar(100) default null;
 ALTER TABLE company ADD COLUMN `mainImageCaption` varchar(200) default null;
 ALTER TABLE company ADD COLUMN `country` varchar(150) default null;
 
+ALTER TABLE company ADD COLUMN `details` varchar(1000) default null;
+

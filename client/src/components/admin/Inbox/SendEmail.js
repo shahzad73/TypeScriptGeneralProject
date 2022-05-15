@@ -17,7 +17,6 @@ export default function SendEmail() {
     const [showErrorMessage, setShowErrorMessage] = useState(0);
     const [errorMessage, setErrorMessage] = useState("");        
 
-
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
 
     const onFormSubmit = (data) => {

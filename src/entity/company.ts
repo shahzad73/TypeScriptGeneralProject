@@ -26,4 +26,8 @@ export class company extends BaseEntity {
    @Length(5, 150)
    country!: string; 
 
+   @Column() 
+   @Length(5, 1000)
+   details!: string; 
+
 }
