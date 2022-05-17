@@ -5,7 +5,6 @@ import {users} from "../../entity/users";
 import {company} from "../../entity/company";
 import { findMany } from "../../core/mysql";
 
-
 export const companyDataRouter = express.Router();
 
 companyDataRouter.get("/companies", async (req: Request, res: Response) => {
@@ -20,7 +19,6 @@ companyDataRouter.get("/companies", async (req: Request, res: Response) => {
     res.json( typ2 );
 
 })
-
 
 companyDataRouter.post("/createcompany", async (req: Request, res: Response) => {
     req.body.userid = req.userid;
@@ -38,14 +36,10 @@ companyDataRouter.post("/createcompany", async (req: Request, res: Response) => 
     }
 })
 
-
-
 companyDataRouter.get("/getdetails", async (req: Request, res: Response) => {
     const data = await getCompanyProfile( req.query.id );
-    console.log(data);
     res.json( data );
-})
-
+});
 
 
 async function getCompanyProfile(companyid: number) {

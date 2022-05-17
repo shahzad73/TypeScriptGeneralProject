@@ -3,23 +3,20 @@ import AppContext from '../../common/AppContext';
 import { useNavigate } from "react-router-dom";
 import { Button, Dropdown } from 'semantic-ui-react'
 import { Grid, Image, Label, Segment } from 'semantic-ui-react'
-import { Container, Row, Col, Form, ProgressBar } from "react-bootstrap"
-import axios from "axios"
-import { Divider, Header, Icon, Table } from 'semantic-ui-react'
+import CustomTextEditor from "../../common/CustomTextEditor"
 
 
 export default function Items() {
   var isLoading = 1;
-
 
   const [data, dataSet] = useState(null);
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false)
 
+
+
   React.useEffect((props) => {
-
-
 
       return () => {
         //alert("Bye");
@@ -28,9 +25,9 @@ export default function Items() {
   }, []);
 
 
-  handleFile((e) => {
+/*  handleFile((e) => {
     this.setState({ ...this.state, [e.target.name]: e.target.files[0] });
-  });
+  });*/
 
 
   async function Logout() {
@@ -45,6 +42,11 @@ export default function Items() {
     { key: 'delete', icon: 'delete', text: 'Remove Post', value: 'delete' },
     { key: 'hide', icon: 'hide', text: 'Hide Post', value: 'hide' },
   ]
+
+  const [htmlText, setHtmlText] = useState("");
+  function textEditorTextChangeEvent(data) {
+    setHtmlText(data)
+  }   
 
   
 
@@ -78,8 +80,6 @@ export default function Items() {
 
 
 
-
-
   <Grid columns={2}>
     <Grid.Column>
       <Segment raised>
@@ -102,8 +102,6 @@ export default function Items() {
       </Segment>
 
 
-
-
     </Grid.Column>
 
     <Grid.Column>
@@ -123,17 +121,11 @@ export default function Items() {
 
   <br /><br /><br /><br />
 
-  <form style={{ display: this.state.pagetwo ? 'block' : 'none' }}>
-          <label>
-            <h4>page two</h4>
-          </label>
-          <input
-            type="file"
-            name="pagetwodata"
-            value={this.state.pagetwodata}
-            onChange={handleFile}
-          />
-        </form>
+
+  <CustomTextEditor onChange={textEditorTextChangeEvent} height="200px" />
+  <br />
+  <div className="preview" dangerouslySetInnerHTML={   {__html: htmlText}    }></div>
+
 
   <br /><br /><br />
 
