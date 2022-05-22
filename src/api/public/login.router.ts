@@ -9,14 +9,11 @@ import {validate} from "class-validator";
 import { v4 as uuidv4 } from 'uuid';
 var SHA256 = require("crypto-js/sha256");
 
-
 export const loginRouter = express.Router();
-
 
 loginRouter.get("/test" , async (req: Request, res: Response) => { 
     res.send("ddddddddd")
 })
-
 
 loginRouter.post("/login", async (req: Request, res: Response) => {
 
@@ -42,7 +39,6 @@ loginRouter.post("/login", async (req: Request, res: Response) => {
     }
 });
 
-
 loginRouter.post("/loginplatform", async (req: Request, res: Response) => {
 
     const usr = await platformusers.find({
@@ -62,7 +58,6 @@ loginRouter.post("/loginplatform", async (req: Request, res: Response) => {
         });
     }
 });
-
 
 loginRouter.post("/register", async (req: Request, res: Response) => {
 
@@ -94,7 +89,6 @@ loginRouter.post("/register", async (req: Request, res: Response) => {
     }
 
 });
-
 
 loginRouter.post("/verifyregister", async (req: Request, res: Response) => {
     let data = null;

@@ -30,7 +30,7 @@ export default function Inbox(props) {
   }, []);
 
 
-  function deleteRecord(id) {
+function deleteRecord(id) {
     setDeleteRecordID(id);
     setDeleteModelShow(true);
 }

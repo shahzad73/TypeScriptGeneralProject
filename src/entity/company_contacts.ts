@@ -1,7 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import {Contains, IsInt, Length, IsEmail, IsFQDN, IsDateString, IsDate, Min, Max} from "class-validator";
 
-@Entity('user_contacts') 
+
+
+@Entity('company_contacts') 
 export class company_contacts extends BaseEntity {   
 
    @PrimaryGeneratedColumn() 
@@ -11,36 +13,14 @@ export class company_contacts extends BaseEntity {
    companyID!: number; 
 
    @Column() 
-   @Length(5, 200)
-   name!: string; 
+   @Length(5, 100)
+   nameOfPerson!: string; 
 
    @Column() 
-   @Length(5, 50)
-   phone1!: string; 
+   contactTypeID!: number; 
 
    @Column() 
-   phone1Type!: number; 
-
-   @Column() 
-   @Length(5, 50)
-   phone2!: string; 
-
-   @Column() 
-   phone2Type!: number; 
-
-
-   @Column() 
-   @Length(5, 150)
-   email1!: string; 
-
-   @Column() 
-   email1Type!: number; 
-
-   @Column() 
-   @Length(5, 150)
-   email2!: string; 
-
-   @Column() 
-   email2Type!: number; 
+   @Length(5, 100)
+   contact: string; 
 
 }

@@ -124,7 +124,6 @@ export default function Items() {
 
   <CustomTextEditor onChange={textEditorTextChangeEvent} height="100px" defaultHTML="" />
   <br />
-  <div className="preview" dangerouslySetInnerHTML={   {__html: htmlText}    }></div>
 
 
   <br /><br /><br />

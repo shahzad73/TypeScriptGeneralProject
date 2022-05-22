@@ -15,9 +15,6 @@ export default function CustomTextEditor(props) {
       separator: ' ',
     }
 
-
-
-
     const getInitialState = (defaultValue) => {
       if (defaultValue) {
         const blocksFromHtml = htmlToDraft(defaultValue);
@@ -29,35 +26,26 @@ export default function CustomTextEditor(props) {
       }
     };
 
-
-      const [editorState, setEditorState] = useState(
+    const [editorState, setEditorState] = useState(
         () => getInitialState(props.defaultHTML)
-      );
+    );
 
-      const handleEditorChange = (state) => {
+    const handleEditorChange = (state) => {
         setEditorState(state);
-
         const rawContentState = convertToRaw(editorState.getCurrentContent());
-     
         const markup = draftToHtml(
           rawContentState, 
           hashConfig, 
           false
         );
-        // setConvertedContent(markup)
         props.onChange(  DOMPurify.sanitize(markup)  );
-
-      }
+    }
     
     React.useEffect(() => {
-
-
-
         return () => {
             //alert("Bye");
         };
     }, []);
-
 
     return (  
       <div>
@@ -67,7 +55,7 @@ export default function CustomTextEditor(props) {
                 toolbarClassName="toolbar"
                 editorState={editorState}                                                
                 onEditorStateChange={handleEditorChange}
-                editorStyle={{ border: "0px solid", height: props.height, padding: "10px" }}               
+                editorStyle={{"background-color": "white", border: "0px solid", height: props.height, padding: "10px"}}
             /> 
       </div>
     );

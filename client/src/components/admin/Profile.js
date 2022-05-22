@@ -64,7 +64,7 @@ export default function Profile() {
         setContactModelShow(false);
         setShowContactLoading(true);
 
-        axios.post("/accounts/backend/addContact", formContactData).then(response => {
+        axios.post("/accounts/company/addContact", formContactData).then(response => {
             setUserContacts ( response.data.userContacts );
             setShowContactLoading(false);
         }).catch(function(error) {
