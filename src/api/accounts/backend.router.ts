@@ -7,6 +7,8 @@ import {user_contacts} from "../../entity/user_contacts";
 import {user_addresses} from "../../entity/user_addresses";
 import { findMany } from "../../core/mysql";
 
+const uploadFile = require("../../common/fileupload");
+
 
 export const bckendDataRouter = express.Router();
 
@@ -100,6 +102,34 @@ bckendDataRouter.post("/deleteAddress", async (req: Request, res: Response) => {
     const usr = await getUserProfile(req.userid);
     res.json(  usr  );
 });
+
+bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
+
+    try {
+        await uploadFile(req, res);
+
+        if (req.file == undefined) {
+        return res.status(400).send({ message: "Please upload a file!" });
+        }
+
+        res.status(200).send({
+        message: "Uploaded the file successfully: " + req.file.originalname,
+        });
+    } catch (err) {
+        console.log(err);
+
+        if (err.code == "LIMIT_FILE_SIZE") {
+        return res.status(500).send({
+            message: "File size cannot be larger than 2MB!",
+        });
+        }
+
+        res.status(500).send({
+        message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+        });
+    }
+});
+
 
 async function getUserProfile(userid: number) {
     var data = {}
