@@ -7,7 +7,11 @@ const FileUploader = (props) => {
   const [progressInfos, setProgressInfos] = useState({ val: [] });
   const [message, setMessage] = useState([]);
   const progressInfosRef = useRef(null)
-  const event = props.event;
+
+
+  // Properties of this component 
+  const event = props.event;                        // raise event on caller 
+  const showMessages = props.showMessages || 0;     // optional - show messages or not
 
   useEffect(() => {
 
@@ -19,51 +23,55 @@ const FileUploader = (props) => {
   };
 
   const upload = (idx, file) => {
+      // alert(file.size / 1000)
 
-    alert(file.size / 1000)
-
-    let _progressInfos = [...progressInfosRef.current.val];
-    return UploadService.upload(file, (event) => {
-      _progressInfos[idx].percentage = Math.round(
-        (100 * event.loaded) / event.total
-      );
-      setProgressInfos({ val: _progressInfos });
-    })
-      .then(() => {
-        /*setMessage((prevMessage) => ([
-          ...prevMessage,
-          "Uploaded the file successfully: " + file.name,
-        ]));*/
-        
-        
-        setProgressInfos({ val: [] });
-        event("aa");
-      })
-      .catch(() => {
-        _progressInfos[idx].percentage = 0;
+      let _progressInfos = [...progressInfosRef.current.val];
+      return UploadService.upload(file, (event) => {
+        _progressInfos[idx].percentage = Math.round(
+          (100 * event.loaded) / event.total
+        );
         setProgressInfos({ val: _progressInfos });
 
-        setMessage((prevMessage) => ([
-          ...prevMessage,
-          "Could not upload the file: " + file.name,
-        ]));
+      }).then((data) => {
+          if(showMessages) {
+              setMessage((prevMessage) => ([
+                ...prevMessage,
+                "Uploaded the file successfully: " + file.name,
+              ]));
+          }
+
+
+          setProgressInfos({ val: [] });
+          event({"status": 1, "file":data.data.fileName });
+
+      }).catch(() => {
+          _progressInfos[idx].percentage = 0;
+          setProgressInfos({ val: _progressInfos });
+
+          if(showMessages) {
+              setMessage((prevMessage) => ([
+                ...prevMessage,
+                "Could not upload the file: " + file.name,
+              ]));
+          }
+          event({"status": 0});
       });
+    
   };
 
   const uploadFiles = () => {
-    const files = Array.from(selectedFiles);
 
-    let _progressInfos = files.map(file => ({ percentage: 0, fileName: file.name }));
+      const files = Array.from(selectedFiles);
 
-    progressInfosRef.current = {
-      val: _progressInfos,
-    }
+      let _progressInfos = files.map(file => ({ percentage: 0, fileName: file.name }));
 
-    const uploadPromises = files.map((file, i) => upload(i, file));
+      progressInfosRef.current = {
+        val: _progressInfos,
+      }
 
-    Promise.all(uploadPromises)
-
-    setMessage([]);
+      const uploadPromises = files.map((file, i) => upload(i, file));
+      Promise.all(uploadPromises)
+      setMessage([]);
   };
 
   return (

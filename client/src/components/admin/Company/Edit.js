@@ -151,7 +151,7 @@ export default function EditCompany(props) {
 
 
     const filesUploadedEvent = (data) => {
-        alert("files uploaded")
+        alert( JSON.stringify(data) );
     }
 
 
@@ -286,7 +286,7 @@ export default function EditCompany(props) {
 
                             <div className="row">
                                 <div className="col-xl-6">
-                                    <FilesUploader event={filesUploadedEvent} />
+                                    <FilesUploader event={filesUploadedEvent}  />
                                 </div>
                             </div>
 

@@ -6,6 +6,10 @@ import {contacts_types} from "../../entity/contact_types";
 import {user_contacts} from "../../entity/user_contacts";
 import {user_addresses} from "../../entity/user_addresses";
 import { findMany } from "../../core/mysql";
+import fs from "fs";
+import path from "path";
+import { v4 as uuidv4 } from 'uuid';
+
 
 const uploadFile = require("../../common/fileupload");
 
@@ -106,22 +110,25 @@ bckendDataRouter.post("/deleteAddress", async (req: Request, res: Response) => {
 bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
 
     try {
+
         await uploadFile(req, res);
 
-        if (req.file == undefined) {
-        return res.status(400).send({ message: "Please upload a file!" });
-        }
+        if (req.file == undefined) 
+            return res.status(400).send({ message: "Please upload a file!" });
 
-        res.status(200).send({
-        message: "Uploaded the file successfully: " + req.file.originalname,
+        const filname = uuidv4() + path.extname( req.file.originalname );
+
+        fs.rename(__dirname + "/../../uploads/" + req.file.originalname, __dirname + "/../../uploads/" + filname, function(err) {
+            res.status(200).send({   fileName: filname   });
         });
+
     } catch (err) {
         console.log(err);
 
         if (err.code == "LIMIT_FILE_SIZE") {
-        return res.status(500).send({
-            message: "File size cannot be larger than 2MB!",
-        });
+            return res.status(500).send({
+                message: "File size cannot be larger than 2MB!",
+            });
         }
 
         res.status(500).send({
