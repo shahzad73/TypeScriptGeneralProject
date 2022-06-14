@@ -9,9 +9,11 @@ import { findMany } from "../../core/mysql";
 import fs from "fs";
 import path from "path";
 import { v4 as uuidv4 } from 'uuid';
-
+import { s3UploadFile } from '../../common/s3';
+import { Exception } from "handlebars";
 
 const uploadFile = require("../../common/fileupload");
+
 
 
 export const bckendDataRouter = express.Router();
@@ -107,10 +109,12 @@ bckendDataRouter.post("/deleteAddress", async (req: Request, res: Response) => {
     res.json(  usr  );
 });
 
+
+
+// ............... Files management 
 bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
 
     try {
-
         await uploadFile(req, res);
 
         if (req.file == undefined) 
@@ -132,10 +136,36 @@ bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
         }
 
         res.status(500).send({
-        message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+            message: `Could not upload the file: ${req.file.originalname}. ${err}`,
         });
     }
 });
+
+bckendDataRouter.post("/transferUploadedFile", async (req: Request, res: Response) => {
+
+    if(req.body.fileDestination == "1") {
+        //  move file to public files directory
+        fs.rename(__dirname + "/../../uploads/" + req.body.fileName, __dirname + "/../../../public/files/" + req.body.fileName, function(err) {
+            console.log("file in internal puvlic");
+            res.send({'status': 1});
+        });
+    }  if(req.body.fileDestination == "2") {
+        // var newPath:String = await uploadFile(req.body.fileName, __dirname + "/../../uploads");
+        try {
+            const newPath = await s3UploadFile(req.body.fileName, __dirname + "/../../uploads");
+            console.log("file in s3");
+            console.log( newPath )
+            res.send({'status': 1});
+        } catch (e:any) {
+            console.log("failed to upload files to s3")
+            res.send({'status': 0});
+        }
+    }
+
+});
+//...................
+
+
 
 
 async function getUserProfile(userid: number) {

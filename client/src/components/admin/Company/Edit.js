@@ -151,7 +151,10 @@ export default function EditCompany(props) {
 
 
     const filesUploadedEvent = (data) => {
-        alert( JSON.stringify(data) );
+        if(data.status == 0) {
+            alert("Some issues uploading file. please try again")
+        } else 
+            alert( JSON.stringify(data.file) );
     }
 
 
@@ -284,11 +287,11 @@ export default function EditCompany(props) {
                             </div>
                             <div className="card-block table-border-style">
 
-                            <div className="row">
-                                <div className="col-xl-6">
-                                    <FilesUploader event={filesUploadedEvent}  />
+                                <div className="row">
+                                    <div className="col-xl-6">
+                                        <FilesUploader event={filesUploadedEvent} fileDestination="1" />
+                                    </div>
                                 </div>
-                            </div>
 
                             </div>
                             

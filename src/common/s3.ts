@@ -3,7 +3,7 @@ import { bool } from 'aws-sdk/clients/signer';
 import fs from 'fs';
 
 
-async function getBucketsList(): Promise<any> {
+async function s3GetBucketsList(): Promise<any> {
 
     let promise = new Promise<any>((resolve, reject) => {
         const s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -19,12 +19,12 @@ async function getBucketsList(): Promise<any> {
     return await promise;
 }
 
-async function uploadFile(fileName: string, filePath: string): Promise<string> {
+async function s3UploadFile(fileName: string, filePath: string): Promise<string> {
 
     let promise = new Promise<any>((resolve, reject) => {
 
         const s3 = new AWS.S3({apiVersion: '2006-03-01'});
-        const fileContent = fs.readFileSync(filePath)
+        const fileContent = fs.readFileSync(filePath + "/" +fileName)
 
         const params = {
             Bucket: "inftmaker",
@@ -32,13 +32,11 @@ async function uploadFile(fileName: string, filePath: string): Promise<string> {
             Body: fileContent
         }
 
-
         s3.upload(params, (err: any, data: any ) => {
-            if (err) {
+            if (err) 
                 reject(err)
-            }
-
-            resolve( data.Location );
+            else 
+                resolve( data.Location );
         })
 
     });
@@ -47,7 +45,7 @@ async function uploadFile(fileName: string, filePath: string): Promise<string> {
 
 }
 
-async function deleteFile(fileName: string): Promise<bool> {
+async function s3DeleteFile(fileName: string): Promise<bool> {
 
     let promise = new Promise<any>((resolve, reject) => {
 
@@ -72,7 +70,7 @@ async function deleteFile(fileName: string): Promise<bool> {
 
 }
 
-async function uploadFileFileBase(fileName: string, filePath: string): Promise<string> {
+async function s3UploadFileFileBase(fileName: string, filePath: string): Promise<string> {
     let promise = new Promise<any>(async (resolve, reject) => {
 
         const myPictureFile = fs.readFileSync("/home/shahzad/background.jpeg")
@@ -101,16 +99,14 @@ async function uploadFileFileBase(fileName: string, filePath: string): Promise<s
         await request.send();
         console.log("file send")
 
-        return "success";
-        
+        resolve( "success" );
     });
-
 }
 
 
 export {
-    getBucketsList,
-    uploadFile,
-    deleteFile,
-    uploadFileFileBase
+    s3GetBucketsList,
+    s3UploadFile,
+    s3DeleteFile,
+    s3UploadFileFileBase
 }

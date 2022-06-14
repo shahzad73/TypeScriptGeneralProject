@@ -40,7 +40,6 @@ app.use(helmet.xssFilter()); // set X-XSS-Protection header
 app.use(express.static(`${__dirname}/public`));
 
 app.use(cors());
-app.use(express.json());
 
 const cookieVar = {
 	secure: process.env.isHTTPSessionSecure, // if site is https then must be true otherwise must be false

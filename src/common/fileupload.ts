@@ -7,7 +7,7 @@ let storage = multer.diskStorage({
     cb(null, __dirname + "/../uploads/");
   },
   filename: (req: any, file: any, cb: any) => {
-    console.log(file.originalname);
+    //console.log(file.originalname);
     cb(null, file.originalname);
   },
 });
@@ -19,3 +19,6 @@ let uploadFile = multer({
 
 let uploadFileMiddleware = util.promisify(uploadFile);
 module.exports = uploadFileMiddleware;
+
+
+
