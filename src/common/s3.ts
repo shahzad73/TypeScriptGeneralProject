@@ -19,7 +19,7 @@ async function s3GetBucketsList(): Promise<any> {
     return await promise;
 }
 
-async function s3UploadFile(fileName: string, filePath: string): Promise<string> {
+async function s3UploadFile(fileName: string, filePath: string, bucket: string): Promise<string> {
 
     let promise = new Promise<any>((resolve, reject) => {
 
@@ -27,7 +27,7 @@ async function s3UploadFile(fileName: string, filePath: string): Promise<string>
         const fileContent = fs.readFileSync(filePath + "/" +fileName)
 
         const params = {
-            Bucket: "inftmaker",
+            Bucket: bucket,
             Key: `${fileName}`,
             Body: fileContent
         }

@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import UploadService from "./FileUploadService";
-import { Button, Form, Dropdown } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 import axios from 'axios';
 
 const FileUploader = (props) => {
   const [selectedFiles, setSelectedFiles] = useState(undefined);
+  const [selectedFilesNames, setSelectedFilesNames] = useState("");
+
+
   const [progressInfos, setProgressInfos] = useState({ val: [] });
   const [message, setMessage] = useState([]);
   const progressInfosRef = useRef(null)
@@ -15,14 +17,18 @@ const FileUploader = (props) => {
   const showMessages = props.showMessages || 0;     // optional - show messages or not
   const fileDestination = props.fileDestination;
 
-  const fileInputReference = React.useRef(); //See Supporting Documentation #2
-
+  // this is used as ref in file input to clear the name of the file 
+  // which is disapled with Choose File button of File input. 
+  // check ref in <input type="file"> below
+  const fileInputReference = React.useRef();     
+ 
   useEffect(() => {
 
   }, []);
 
   const selectFiles = (event) => {
     setSelectedFiles(event.target.files);
+    setSelectedFilesNames(event.target.files[0].name)
     setProgressInfos({ val: [] });
   };
 
@@ -32,42 +38,25 @@ const FileUploader = (props) => {
       let _progressInfos = [...progressInfosRef.current.val];
       let formData = new FormData();
       formData.append("file", file);
-    
-      return axios.post("accounts/backend/uploadfile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: function(event) {
-            _progressInfos[idx].percentage = Math.round(
-              (100 * event.loaded) / event.total
-            );
-            setProgressInfos({ val: _progressInfos });
-        },
+
+      return axios.post("accounts/backend/uploadfile?destination=" + fileDestination, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: function(event) {
+              _progressInfos[idx].percentage = Math.round(
+                (100 * event.loaded) / event.total
+              );
+              setProgressInfos({ val: _progressInfos });
+          },
       }).then((data) => {
 
-          axios.post("/accounts/backend/transferUploadedFile", {'fileName': data.data.fileName, 'fileDestination': fileDestination}).then(response => {
-
-                if(showMessages) {
-                    setMessage((prevMessage) => ([
-                      ...prevMessage,
-                      "Uploaded the file successfully: " + file.name,
-                    ]));
-                }
-
-
-                fileInputReference.current.value = "";
-                setProgressInfos({ val: [] });
-                event({"status": 1, "file":data.data.fileName });
-
-          }).catch(function(error) {
-              setProgressInfos({ val: [] });
-              event({"status": 0});
-          });
+          fileInputReference.current.value = "";
+          setSelectedFilesNames("");
+          setProgressInfos({ val: [] });
+          event({"status": 1, "file":data.data.fileName });
 
       }).catch(() => {
-          //_progressInfos[idx].percentage = 0;
-          //setProgressInfos({ val: _progressInfos });
-
           if(showMessages) {
               setMessage((prevMessage) => ([
                 ...prevMessage,
@@ -76,11 +65,16 @@ const FileUploader = (props) => {
           }
 
           fileInputReference.current.value = "";
+          setSelectedFilesNames("");
           setProgressInfos({ val: [] });
           event({"status": 0});
       });
     
   };
+
+  const upLoadFileButtonClickEvent = () => {
+    document.getElementById('upLoadFileButton').click()
+  }
 
   const uploadFiles = () => {
 
@@ -121,21 +115,26 @@ const FileUploader = (props) => {
 
       <div className="row my-3">
         <div className="col-8">
-          <label className="btn btn-default p-0">
+
+            <Button onClick={upLoadFileButtonClickEvent} positive size='tiny'>Select Files</Button>
             <input type="file" 
-              style={{"color": "green"}} 
+              id="upLoadFileButton"
+              style={{"color": "green", "display":"none"}} 
               onChange={selectFiles} 
               ref={fileInputReference}
-            />
-          </label>
+            />            
+            &nbsp;&nbsp;&nbsp;
+            {selectedFilesNames}
+
         </div>
 
         <div className="col-4">
-          <Button color='green'
-            className="btn btn-success btn-sm"
-            disabled={!selectedFiles}
-            onClick={uploadFiles}
-          > Upload </Button>         
+          {selectedFilesNames != "" && ( 
+            <Button color='green'
+              onClick={uploadFiles}
+              positive size='tiny'
+            > Upload </Button>         
+          )}          
         </div>
       </div>
 

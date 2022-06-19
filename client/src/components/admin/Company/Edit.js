@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { Button, Form, Dropdown } from 'semantic-ui-react'
+import { Button, Form } from 'semantic-ui-react'
 import { Modal } from 'react-bootstrap'
 import Loading from "../../common/loading"
 import DatePicker from "react-datepicker";
@@ -137,7 +137,6 @@ export default function EditCompany(props) {
         setDeleteRecordID(id);
         setDeleteModelShow(true);
     }
-
     function handleDeleteModelEvent() {
         setDeleteModelShow(false);
         setShowParagraphLoading(true);
@@ -148,16 +147,12 @@ export default function EditCompany(props) {
             console.log(error);
         });
     }  
-
-
     const filesUploadedEvent = (data) => {
         if(data.status == 0) {
             alert("Some issues uploading file. please try again")
         } else 
             alert( JSON.stringify(data.file) );
     }
-
-
 
     return (
         <div>
@@ -270,7 +265,6 @@ export default function EditCompany(props) {
                     </div>
                 </div>
             </div>
-
             
             <div className="row">
                 <div className="col-xl-12">
@@ -286,13 +280,11 @@ export default function EditCompany(props) {
                                 </div>   
                             </div>
                             <div className="card-block table-border-style">
-
                                 <div className="row">
                                     <div className="col-xl-6">
-                                        <FilesUploader event={filesUploadedEvent} fileDestination="1" />
+                                        <FilesUploader event={filesUploadedEvent} fileDestination="2" />
                                     </div>
                                 </div>
-
                             </div>
                             
                         { showContactLoading && ( <Loading message="Updating Contact" /> ) }
