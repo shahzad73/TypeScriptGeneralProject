@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { Button, Form, Dropdown } from 'semantic-ui-react'
+import { Button, Form } from 'semantic-ui-react'
 import { Modal } from 'react-bootstrap'
 import { useForm } from "react-hook-form";
 import Loading from "../common/loading"
@@ -12,6 +12,25 @@ import commons from "../common/commons";
 export default function Profile() {
 
     const countries = commons.getCountryNamesJSON();
+
+    // confirmation Button 
+    const [confirmationMessage, setConfirmationMessage] = React.useState("");    
+    const [confirmationModelShow, setConfirmationModelShow] = React.useState(false);        
+    const [conformationOption, setConformationOption] = React.useState({});                
+    function confirmationOK() {
+        if(conformationOption.option == 1) {
+            setShowContactLoading(true);
+            axios.post("/accounts/backend/deleteContact", {id: conformationOption.id}).then(response => {
+                setUserContacts ( response.data.userContacts )
+                setShowContactLoading(false);
+            }).catch(function(error) {
+                console.log(error);
+            });            
+        }
+
+        setConfirmationModelShow(false);
+    }
+
 
     // Profile related data
     const [data, setData] = useState([]);
@@ -64,7 +83,7 @@ export default function Profile() {
         setContactModelShow(false);
         setShowContactLoading(true);
 
-        axios.post("/accounts/company/addContact", formContactData).then(response => {
+        axios.post("/accounts/backend/addContact", formContactData).then(response => {
             setUserContacts ( response.data.userContacts );
             setShowContactLoading(false);
         }).catch(function(error) {
@@ -78,14 +97,23 @@ export default function Profile() {
         });
     };
     const deleteContactDataForm = value => () => {
+
+        setConformationOption({
+            "option": 1,
+            id: value
+        })
+        setConfirmationMessage("Are you sure you want to delete ?");
+        setConfirmationModelShow(true);
+    };
+    const editContactDataForm = value => () => {
         setShowContactLoading(true);
-        axios.post("/accounts/backend/deleteContact", {id: value}).then(response => {
-            setUserContacts ( response.data.userContacts )
+        axios.get("/accounts/backend/getContactRecord?id=" + value, {}).then(response => {
+            alert ( JSON.stringify( response.data ) );
             setShowContactLoading(false);
         }).catch(function(error) {
             console.log(error);
-        });        
-    };
+        });
+    }
 
 
     // Address information
@@ -125,6 +153,8 @@ export default function Profile() {
             console.log(error);
         });        
     };
+
+
 
  
     React.useEffect(() => {
@@ -210,15 +240,16 @@ export default function Profile() {
                             <div className="card-header">
                                 <div className="row">
                                     <div className="col-10">
-                                        <h5>My Profile</h5>
+                                        <h5><img src="/img/profile.png" height="26px;" /> &nbsp; My Profile</h5>
+                                        <span className="d-block m-t-5">Basic information about <code> my profile</code></span>
                                     </div>
                                     <div className="col-2">
-                                        <Button onClick={openEditProfile} positive size='tiny'>Edit</Button>
+                                        <Button onClick={openEditProfile} color="vk" size='tiny'>Edit</Button>
                                     </div>                                
                                 </div>
                             </div>
                             <div className="card-block table-border-style">
-                                
+
                                 <span className="ErrorLabel">{profileErrorMessages}</span>
 
                                 <div className="row">
@@ -237,7 +268,6 @@ export default function Profile() {
                                     </div>
                                 </div>
 
-
                                 <br />
                                 <div className="row">
                                     <div className="col-2">
@@ -253,7 +283,6 @@ export default function Profile() {
                                         {data.DOB}                              
                                     </div>                                
                                 </div>
-
 
                                 <br />
                                 <div className="row">
@@ -271,8 +300,6 @@ export default function Profile() {
                                         {data.NationalID}                              
                                     </div>
                                 </div>
-
-
 
                                 <br />
                                 <div className="row">
@@ -306,10 +333,11 @@ export default function Profile() {
                             <div className="card-header">
                                 <div className="row">
                                     <div className="col-10">
-                                        <h5>My Contacts</h5>
+                                        <h5> <img src="/img/contacts.jpeg" height="30px"></img> &nbsp; My Contacts</h5>
+                                        <span className="d-block m-t-5">Your contact list including phone numbers, fax numbers etc.</span>
                                     </div> 
                                     <div className="col-2">
-                                        <Button onClick={openEditContact} positive size='tiny'>New Contact</Button>
+                                        <Button onClick={openEditContact} color="vk" size='tiny'>New Contact</Button>
                                     </div>                                
                                 </div>   
                             </div>
@@ -317,20 +345,23 @@ export default function Profile() {
 
                                 {userContacts && userContacts.map(dat =>                                    
                                     <span>
-                                        <br />
                                         <div className="row">
-                                            <div className="col-xl-2">
+                                            <div className="col-xl-4">
+                                                <img src="/img/edit.png" width="22px" className="imageHover" onClick={editContactDataForm(dat.id)}></img>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <img src="/img/delete.png" width="22px" className="imageHover" onClick={deleteContactDataForm(dat.id)}></img>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 {dat.title}
                                             </div>                                            
                                             <div className="col-xl-4">
                                                 {dat.contact}
-                                            </div>
-                                            <div className="col-xl-4"> 
-                                                <Button onClick={deleteContactDataForm(dat.id)} positive size='tiny'>Delete</Button>
-                                            </div>                                            
+                                            </div>                                        
                                         </div>
+                                        <br />
                                     </span> 
                                 )}
+
+                                {userContacts.length == 0 && <span>No records found </span>}
 
                             </div>
                             
@@ -350,7 +381,7 @@ export default function Profile() {
                                         <h5>My Addresses</h5>
                                     </div> 
                                     <div className="col-2">
-                                        <Button onClick={openEditAddresses} positive size='tiny'>New Address</Button>
+                                        <Button onClick={openEditAddresses} color="vk" size='tiny'>New Address</Button>
                                     </div>                                
                                 </div>   
                             </div>
@@ -370,7 +401,7 @@ export default function Profile() {
                                                 {dat.country} &nbsp; 
                                             </div>
                                             <div className="col-xl-4"> 
-                                                <Button onClick={deleteAddressDataForm(dat.id)} positive size='tiny'>Delete</Button>
+                                                <Button onClick={deleteAddressDataForm(dat.id)} color="vk" size='tiny'>Delete</Button>
                                             </div>                                            
                                         </div>
                                     </span> 
@@ -390,7 +421,7 @@ export default function Profile() {
 
 
                 <Modal.Header closeButton>
-                <Modal.Title>Edit Profile</Modal.Title>
+                <Modal.Title> <img src="/img/profile.png" height="26px;" /> &nbsp; Edit Profile</Modal.Title>
                 </Modal.Header>
                 <Modal.Body  >
                     <br />
@@ -513,11 +544,9 @@ export default function Profile() {
                     <br /><br />
                 </Modal.Body>
                 <Modal.Footer>
-                <Button positive type='submit'>Save</Button>   
+                <Button color="vk" type='submit'  size='tiny'>Save</Button>   
                 &nbsp;&nbsp;              
-                <Button color="orange" onClick={() => setProfileModelShow(false)}>
-                    Close
-                </Button>
+                <Button color="red"  size='tiny' onClick={() => setProfileModelShow(false)}>Close</Button>
                 </Modal.Footer>
 
             </Form>
@@ -526,7 +555,7 @@ export default function Profile() {
         <Modal size="lg" show={contactModelShow} onHide={() => setContactModelShow(false)}>
 
                 <Modal.Header closeButton>
-                <Modal.Title>Add / Edit Contact</Modal.Title>
+                <Modal.Title> <img src="/img/contacts.jpeg" height="30px"></img> &nbsp; Add / Edit Contact</Modal.Title>
                 </Modal.Header>
                 <Modal.Body  >
                     <br />
@@ -577,9 +606,9 @@ export default function Profile() {
                     <br /><br />
                 </Modal.Body>
                 <Modal.Footer>
-                <Button color="green" onClick={addContactDataForm}>Save</Button>
+                <Button color="vk" size="tiny" onClick={addContactDataForm}>Save</Button>
                 &nbsp;&nbsp;
-                <Button color="orange" onClick={() => setContactModelShow(false)}>Close</Button>
+                <Button color="red" size="tiny" onClick={() => setContactModelShow(false)}>Close</Button>
                 </Modal.Footer>
 
 
@@ -696,6 +725,29 @@ export default function Profile() {
                 <Button color="orange" onClick={() => setAddressesModelShow(false)}>Close</Button>
                 </Modal.Footer>
 
+        </Modal>
+        
+        <Modal size="me" show={confirmationModelShow} onHide={() => setConfirmationModelShow(false)}>
+
+                <Modal.Header closeButton>
+                <Modal.Title> <img src="/img/messagebox.png" width="25px"></img> Confirmation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body  >
+                    <br />
+                    
+                    <div className="row">
+                        <div className="col-md-12">
+                            {confirmationMessage}
+                        </div>
+                    </div>
+
+                    <br /><br />
+                </Modal.Body>
+                <Modal.Footer>
+                <Button color="vk" size="tiny" onClick={confirmationOK}>Yes</Button>
+                &nbsp;&nbsp;
+                <Button color="red" size="tiny" onClick={() => setConfirmationModelShow(false)}>Close</Button>
+                </Modal.Footer>
 
         </Modal>
 

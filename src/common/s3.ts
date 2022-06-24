@@ -70,6 +70,8 @@ async function s3DeleteFile(fileName: string): Promise<bool> {
 
 }
 
+// this will upload files to FileBase file service which is IPFS pinning service
+// it also uses the AWS code base
 async function s3UploadFileFileBase(fileName: string, filePath: string): Promise<string> {
     let promise = new Promise<any>(async (resolve, reject) => {
 

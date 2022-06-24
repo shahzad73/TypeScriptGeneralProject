@@ -54,8 +54,6 @@ bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
 bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
     req.body.userid = req.userid;
 
-    console.log( req.body.userid )
-
     const manager = getManager();
     const newUpdates = manager.create(user_contacts, req.body);    
 
@@ -68,6 +66,15 @@ bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
         const usr = await getUserProfile(req.userid);
         res.json(  usr  ); 
     }
+})
+
+bckendDataRouter.get("/getContactRecord", async (req: Request, res: Response) => {
+    res.json( await user_contacts.find ( 
+        {
+            id: req.query.id,
+            userid: req.userid
+        } 
+    ));
 })
 
 bckendDataRouter.post("/deleteContact", async (req: Request, res: Response) => {
