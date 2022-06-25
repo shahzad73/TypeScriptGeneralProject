@@ -16,17 +16,36 @@ import { Web3Storage, getFilesFromPath } from 'web3.storage'
 const uploadFile = require("../../common/fileupload");
 
 
-
-
 export const bckendDataRouter = express.Router();
 
-bckendDataRouter.get("/test", async (req: Request, res: Response) => {
-
-})
-
 bckendDataRouter.get("/getProfile", async (req: Request, res: Response) => {
-    const usr = await getUserProfile(req.userid);
+    const usr = await getUserAddresses(req.userid);
     res.json(  usr  );
+});
+
+bckendDataRouter.get("/getProfilePersonal", async (req: Request, res: Response) => {
+    const usr = await getConnection()
+    .createQueryBuilder()
+    .select([
+        "ID",
+        "firstname", 
+        "lastname", 
+        "email", 
+        "PassportNumber", 
+        "NationalID", 
+        "MaritalStatus", 
+        "Occupation",
+        "DATE_FORMAT(DOB, '%M %d %Y') as DOB"
+    ])
+    .from(users,"users")
+    .where("id = :id", { id: req.userid })
+    .execute();
+
+    res.json(usr[0]);
+});
+
+bckendDataRouter.get("/getProfileContacts", async (req: Request, res: Response) => {
+    res.json( await getUserContacts(req.userid) )
 });
 
 bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
@@ -45,8 +64,24 @@ bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
         .where("id = :id", { id: req.userid })
         .execute();
 
-        const usr = await getUserProfile(req.userid)    
-        res.json(  usr  );
+        const usr = await getConnection()
+        .createQueryBuilder()
+        .select([
+            "ID",
+            "firstname", 
+            "lastname", 
+            "email", 
+            "PassportNumber", 
+            "NationalID", 
+            "MaritalStatus", 
+            "Occupation",
+            "DATE_FORMAT(DOB, '%M %d %Y') as DOB"
+        ])
+        .from(users,"users")
+        .where("id = :id", { id: req.userid })
+        .execute();
+        
+        res.json(usr[0]);
     }
 
 });
@@ -63,18 +98,42 @@ bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
         res.json({id: -1, error: errors});
     } else {
         const data = await user_contacts.insert ( newUpdates );
-        const usr = await getUserProfile(req.userid);
+        const usr = await getUserContacts(req.userid);
         res.json(  usr  ); 
     }
 })
 
+bckendDataRouter.post("/editContact", async (req: Request, res: Response) => {
+    const id = req.body.id;
+    delete req.body.id;
+    delete req.body.userid;
+
+    const manager = getManager();
+    const newUpdates = manager.create(user_contacts, req.body);    
+
+    const errors = await validate(newUpdates);
+
+    if (errors.length > 0) {
+        res.json({id: -1, error: errors});
+    } else {
+        await getConnection()
+        .createQueryBuilder()
+        .update(user_contacts)
+        .set(req.body)
+        .where("id = :id and userid = :userid", {  id: id,  userid: req.userid })
+        .execute();
+
+        res.json(  await getUserContacts(req.userid)  ); 
+    }
+})
+
 bckendDataRouter.get("/getContactRecord", async (req: Request, res: Response) => {
-    res.json( await user_contacts.find ( 
-        {
-            id: req.query.id,
-            userid: req.userid
-        } 
-    ));
+    const data = await user_contacts.find ({
+        id: req.query.id,
+        userid: req.userid
+    });
+    console.log(data[0])
+    res.json( data[0] );
 })
 
 bckendDataRouter.post("/deleteContact", async (req: Request, res: Response) => {
@@ -85,7 +144,7 @@ bckendDataRouter.post("/deleteContact", async (req: Request, res: Response) => {
     .where("id = :id and userid = :userid", { id: req.body.id, userid: req.userid })
     .execute();
 
-    const usr = await getUserProfile(req.userid);
+    const usr = await getUserContacts(req.userid);
     res.json(  usr  );
 });
 
@@ -101,7 +160,7 @@ bckendDataRouter.post("/addAddress", async (req: Request, res: Response) => {
         res.json({id: -1, error: errors});
     } else {
         const data = await user_addresses.insert ( newUpdates );
-        const usr = await getUserProfile(req.userid);
+        const usr = await getUserAddresses(req.userid);
         res.json(  usr  ); 
     }
 });
@@ -114,9 +173,45 @@ bckendDataRouter.post("/deleteAddress", async (req: Request, res: Response) => {
     .where("id = :id and userid = :userid", { id: req.body.id, userid: req.userid })
     .execute();
 
-    const usr = await getUserProfile(req.userid);
+    const usr = await getUserAddresses(req.userid);
     res.json(  usr  );
 });
+
+bckendDataRouter.get("/getAddressRecord", async (req: Request, res: Response) => {
+    const data = await user_addresses.find ({
+        id: req.query.id,
+        userid: req.userid
+    });
+
+    res.json( data[0] );
+});
+
+bckendDataRouter.post("/editAddress", async (req: Request, res: Response) => {
+    const id = req.body.id;
+    delete req.body.id;
+    delete req.body.userid;
+
+    const manager = getManager();
+    const newUpdates = manager.create(user_addresses, req.body);    
+
+    const errors = await validate(newUpdates);
+
+    if (errors.length > 0) {
+        res.json({id: -1, error: errors});
+    } else {
+        await getConnection()
+        .createQueryBuilder()
+        .update(user_addresses)
+        .set(req.body)
+        .where("id = :id and userid = :userid", {  id: id,  userid: req.userid })
+        .execute();
+
+        res.json(  await getUserAddresses(req.userid)  ); 
+    }
+})
+
+
+
 
 // ............... Files management 
 bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
@@ -226,27 +321,8 @@ bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
 
 
 
-async function getUserProfile(userid: number) {
+async function getUserContacts(userid: number) {
     var data = {}
-
-    const usr = await getConnection()
-    .createQueryBuilder()
-    .select([
-        "ID",
-        "firstname", 
-        "lastname", 
-        "email", 
-        "PassportNumber", 
-        "NationalID", 
-        "MaritalStatus", 
-        "Occupation",
-        "DATE_FORMAT(DOB, '%M %d %Y') as DOB"
-    ])
-    .from(users,"users")
-    .where("id = :id", { id: userid })
-    .execute();
-    data.user = usr[0];
-
 
     const usrContacts = await findMany(`select u.id, u.contact, c.title 
         from contacts_types c, user_contacts u 
@@ -262,7 +338,13 @@ async function getUserProfile(userid: number) {
     .execute();
     data.mobileTypes = typ1;
 
+    return data;
+}
 
+
+async function getUserAddresses(userid: number) {
+    var data = {}
+        
     const typ2 = await getConnection()
     .createQueryBuilder()
     .select(["*"])

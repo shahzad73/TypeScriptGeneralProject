@@ -64,8 +64,8 @@ export default function Company() {
                     <div className="row">
                         <div className="col-xl-12">
                             <div className="card">
-                                <div className="card-header">
-                                    <h5>Add / Edit Company</h5>
+                                <div className="card-header" style={{"background-color":"#F5F5F5"}}>
+                                    <h5> <img src="/img/company.png" width="25px"></img> &nbsp;  Add / Edit Company</h5>
                                 </div>
                                 <div className="card-block table-border-style">
  
@@ -124,9 +124,9 @@ export default function Company() {
 
                                             { !showLoading && (
                                                 <span><br />
-                                                <Button positive type='submit'>Send</Button> 
+                                                <Button color="vk" type='submit'>Save</Button> 
                                                 &nbsp;&nbsp;&nbsp; 
-                                                <Button color="orange" onClick={cancel}>Cancel</Button> 
+                                                <Button color="red" onClick={cancel}>Cancel</Button> 
                                                 <br /></span>
                                                 )
                                             }

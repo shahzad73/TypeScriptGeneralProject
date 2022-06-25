@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Dashboard from "./admin/Dashboard";
-import Profile from "./admin/Profile";
+import Profile from "./admin/Profile/Profile";
 import Items from "./admin/test/Items";
 import AppContext from './common/AppContext';
 import SideBar from './admin/sidebar';
