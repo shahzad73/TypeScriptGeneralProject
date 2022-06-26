@@ -125,7 +125,6 @@ export default function ProfileContacts(params) {
                 </Modal.Header>
                 <Modal.Body  >
                     <br />
-                    
                     <div>
                         <div className="row">
 
@@ -188,7 +187,6 @@ export default function ProfileContacts(params) {
 
                         </div>
                     </div>
-
                     <br /><br />
                 </Modal.Body>
                 <Modal.Footer>
@@ -196,7 +194,6 @@ export default function ProfileContacts(params) {
                 &nbsp;&nbsp;
                 <Button color="red"  size="tiny" onClick={() => setContactModelShow(false)}>Close</Button>
                 </Modal.Footer>
-
 
             </Modal>
         </div>
