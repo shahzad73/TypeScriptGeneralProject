@@ -119,13 +119,13 @@ export default function ProfileContacts() {
                                     <span>                                        
                                         <div className="row">
                                             <div className="col-xl-4">
-                                                <img src="/img/edit.png" width="22px" className="imageHover" onClick={editAddressDataForm(dat.id)}></img>
+                                                <img src="/img/edit.png" width="22px" className="listIconImage" onClick={editAddressDataForm(dat.id)}></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <img src="/img/delete.png" width="22px" className="imageHover" onClick={deleteAddressDataForm(dat.id)}></img>
+                                                <img src="/img/delete.png" width="22px" className="listIconImage" onClick={deleteAddressDataForm(dat.id)}></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                
                                                 {dat.title} Address
                                             </div>                                            
-                                            <div className="col-xl-4">
+                                            <div className="col-xl-8">
                                                 {dat.contact} &nbsp; 
                                                 {dat.zip} &nbsp;  
                                                 {dat.state} &nbsp; 

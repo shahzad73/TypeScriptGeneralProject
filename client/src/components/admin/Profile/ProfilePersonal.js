@@ -65,7 +65,7 @@ export default function ProfilePersonal() {
         <div className="row">
             <div className="col-xl-12">
                 <div className="card">
-                        <div className="card-header header-color">
+                        <div className="card-header">
                             <div className="row">
                                 <div className="col-10">
                                     <h5><img src="/img/profile.png" height="26px;" /> &nbsp; My Profile</h5>

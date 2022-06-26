@@ -29,12 +29,12 @@ export default function Company() {
                                 <div className="card-header">
 
                                     <div className="row">
-                                        <div className="col-xl-9">
+                                        <div className="col-xl-10">
                                             <h5><img src="/img/company.png" width="25px"></img> &nbsp; List of Companies</h5>
                                             <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
                                         </div>
-                                        <div className="col-xl-3">
-                                            <Link to="/adminmain/addcompany" state = {{update: 0}}> <Button color="vk" size='medium'>New Company</Button> </Link>
+                                        <div className="col-xl-2">
+                                            <Link to="/adminmain/addcompany" state = {{update: 0}}> <Button color="vk" size='tiny'>New Company</Button> </Link>
                                         </div>
                                     </div>
 
@@ -57,7 +57,7 @@ export default function Company() {
                                                     <Button color="vk" size='tiny'>View &nbsp; / &nbsp; Edit</Button> </Link>
                                                 </div>
                                             </div>
-                                            <hr />
+                                            <br />
                                         </span>
                                             
                                     )}

@@ -2,12 +2,13 @@
   text-align: center;
 }
 
-.imageHover {
+.listIconImage {
   cursor: pointer;
+  width: 20px;
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 40min;
   pointer-events: none;
 }
 
@@ -30,6 +31,8 @@
   border: 1px solid rgb(206,212,218);
 }
 
-.header-color {
-  background-color: #F5F5F5;
+div.card-header {
+  background-color: #F5F5F5 !important;
 }
+
+

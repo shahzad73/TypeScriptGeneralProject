@@ -124,9 +124,9 @@ export default function Company() {
 
                                             { !showLoading && (
                                                 <span><br />
-                                                <Button color="vk" type='submit'>Save</Button> 
+                                                <Button color="vk" size="tiny" type='submit'>Save</Button> 
                                                 &nbsp;&nbsp;&nbsp; 
-                                                <Button color="red" onClick={cancel}>Cancel</Button> 
+                                                <Button color="red"  size="tiny" onClick={cancel}>Cancel</Button> 
                                                 <br /></span>
                                                 )
                                             }

@@ -101,9 +101,9 @@ export default function SendEmail() {
 
                                         { !showLoading && (
                                             <span><br />
-                                            <Button positive type='submit'>Send</Button> 
+                                            <Button color="vk" size="tiny" type='submit'>Send</Button> 
                                             &nbsp;&nbsp;&nbsp; 
-                                            <Button color="orange" onClick={cancel}>Cancel</Button> 
+                                            <Button color="red" size="tiny" onClick={cancel}>Cancel</Button> 
                                             <br /></span>
                                             )
                                         }

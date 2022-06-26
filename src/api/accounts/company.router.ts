@@ -39,10 +39,36 @@ companyDataRouter.post("/createcompany", async (req: Request, res: Response) => 
     }
 })
 
+
+
+
 companyDataRouter.get("/getdetails", async (req: Request, res: Response) => {
     const data = await getCompanyProfile( req.query.id );
     res.json( data );
 });
+
+companyDataRouter.get("/getcompanydetails", async (req: Request, res: Response) => {
+    const cmp = await getConnection()
+    .createQueryBuilder()
+    .select(["*"])
+    .from(company, "company")
+    .where("id = :id", { id: req.query.id })
+    .execute();    
+
+    res.json( cmp[0] );
+});
+
+companyDataRouter.get("/getcompanyparagraphs", async (req: Request, res: Response) => {
+    const para = await getConnection()
+    .createQueryBuilder()
+    .select(["*"])
+    .from(company_paragraphs, "company_paragraphs")
+    .where("companyID = :id", { id: req.query.id })
+    .execute();    
+    
+    res.json( para );
+});
+
 
 companyDataRouter.post("/addParamgraph", async (req: Request, res: Response) => {
     req.body.userid = req.userid;
@@ -56,12 +82,21 @@ companyDataRouter.post("/addParamgraph", async (req: Request, res: Response) => 
         res.json({id: -1, error: errors});
     } else {
         await company_paragraphs.insert ( newUpdates );
-        res.json( await getCompanyProfile( newUpdates.companyID ) );
+
+        const para = await getConnection()
+        .createQueryBuilder()
+        .select(["*"])
+        .from(company_paragraphs, "company_paragraphs")
+        .where("companyID = :id", { id: newUpdates.companyID })
+        .execute();    
+        
+        res.json( para );
+
     }
 });
 
 companyDataRouter.get("/deleteParagraph", async (req: Request, res: Response) => {
-    console.log( req.body );
+
     await getConnection()
     .createQueryBuilder()
     .delete()
@@ -69,8 +104,15 @@ companyDataRouter.get("/deleteParagraph", async (req: Request, res: Response) =>
     .where("id = :id and companyID = :companyID", { id: req.query.id, companyID: req.query.companyID })
     .execute();
 
-    const usr = await getCompanyProfile(req.query.companyID);
-    res.json(  usr  );
+    const para = await getConnection()
+    .createQueryBuilder()
+    .select(["*"])
+    .from(company_paragraphs, "company_paragraphs")
+    .where("companyID = :id", { id: req.query.companyID })
+    .execute();    
+    
+    res.json( para );
+
 });
 
 companyDataRouter.post("/deleteContact", async (req: Request, res: Response) => {
@@ -105,15 +147,6 @@ companyDataRouter.post("/addContact", async (req: Request, res: Response) => {
 async function getCompanyProfile(companyid: number) {
     var data = {}
 
-    const cmp = await getConnection()
-    .createQueryBuilder()
-    .select(["*"])
-    .from(company, "company")
-    .where("id = :id", { id: companyid })
-    .execute();    
-    data.company = cmp[0];
-
-
     const typ1 = await getConnection()
     .createQueryBuilder()
     .select(["*"])
@@ -121,15 +154,6 @@ async function getCompanyProfile(companyid: number) {
     .where("type = :id", { id: 1 })
     .execute();
     data.mobileTypes = typ1;
-
-
-    const para = await getConnection()
-    .createQueryBuilder()
-    .select(["*"])
-    .from(company_paragraphs, "company_paragraphs")
-    .where("companyID = :id", { id: companyid })
-    .execute();    
-    data.company_paragraph = para;
 
 
     const usrContacts = await findMany(`select u.id, u.contact, u.nameOfPerson, c.title 

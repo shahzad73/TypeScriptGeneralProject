@@ -72,7 +72,7 @@ export default function ViewInbox(props) {
                             </span>
                         )}
 
-                        <Button color="orange" onClick={cancel}>Back</Button> 
+                        <Button color="vk" size="tiny" onClick={cancel}>Back</Button> 
 
                     </div>
                 </div>

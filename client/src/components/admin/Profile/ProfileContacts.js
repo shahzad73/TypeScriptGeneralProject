@@ -95,10 +95,10 @@ export default function ProfileContacts() {
             <div className="row">
                 <div className="col-xl-12">
                     <div className="card">
-                            <div className="card-header"  style={{"background-color":"#F5F5F5"}}>
+                            <div className='card-header header-color'>
                                 <div className="row">
                                     <div className="col-10">
-                                        <h5> <img src="/img/contacts.jpeg" height="30px"></img> &nbsp; My Contacts</h5>
+                                        <h5> <img src="/img/contacts.png" height="25px"></img> &nbsp; My Contacts</h5>
                                         <span className="d-block m-t-5">Your contact list including phone numbers, fax numbers etc.</span>
                                     </div> 
                                     <div className="col-2">
@@ -112,13 +112,13 @@ export default function ProfileContacts() {
                                     <span>
                                         <div className="row">
                                             <div className="col-xl-4">
-                                                <img src="/img/edit.png" width="22px" className="imageHover" onClick={editContactDataForm(dat.id)}></img>
+                                                <img src="/img/edit.png" className="listIconImage" onClick={editContactDataForm(dat.id)}></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <img src="/img/delete.png" width="22px" className="imageHover" onClick={deleteContactDataForm(dat.id)}></img>
+                                                <img src="/img/delete.png" className="listIconImage" onClick={deleteContactDataForm(dat.id)}></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 {dat.title}
                                             </div>                                            
-                                            <div className="col-xl-4">
+                                            <div className="col-xl-8">
                                                 {dat.contact}
                                             </div>                                        
                                         </div>
@@ -139,7 +139,7 @@ export default function ProfileContacts() {
                 <Form onSubmit={handleSubmit(onFormSubmit)}>
 
                     <Modal.Header closeButton>
-                    <Modal.Title> <img src="/img/contacts.jpeg" height="30px"></img> &nbsp; Add / Edit Contact</Modal.Title>
+                    <Modal.Title> <img src="/img/contacts.png" height="30px"></img> &nbsp; Add / Edit Contact</Modal.Title>
                     </Modal.Header>
                     <Modal.Body  >
                         <br />
