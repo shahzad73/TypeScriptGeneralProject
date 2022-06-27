@@ -132,7 +132,7 @@ bckendDataRouter.get("/getContactRecord", async (req: Request, res: Response) =>
         id: req.query.id,
         userid: req.userid
     });
-    console.log(data[0])
+
     res.json( data[0] );
 })
 

@@ -81,14 +81,12 @@ bckendDataRouter.post("/updateUpdates", async (req: Request, res: Response) => {
 
 });
 
-
 bckendDataRouter.get("/getAllAccounts", async (req: Request, res: Response) => {
     res.send ( await users.find({  
             skip: 0,    // page
             take: 100 })  // number of items
     );
 });
-
 
 bckendDataRouter.get("/getAccount", async (req: Request, res: Response) => {
 

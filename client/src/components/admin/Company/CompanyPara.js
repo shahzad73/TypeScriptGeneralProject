@@ -78,6 +78,15 @@ export default function ProfileContacts(params) {
             console.log(error);
         });
     }  
+    const editPara = id => () => {
+        setShowParagraphLoading(true);
+        axios.get("/accounts/company/getParaData?id=" + id).then(response => {
+            setShowParagraphLoading(false);
+            alert( JSON.stringify( response.data)  );
+        }).catch(function(error) {
+            console.log(error);
+        });
+    }
 
     React.useEffect(() => {
         const id = params.id;
@@ -121,11 +130,11 @@ export default function ProfileContacts(params) {
                                     <br />                                
                                     <div className="row">   
                                         <div className="col-xl-2">  
-                                                <img src="/img/edit.png" className="listIconImage"></img>
+                                                <img src="/img/edit.png" onClick={editPara(data.id)} className="listIconImage"></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <img src="/img/delete.png" className="listIconImage" onClick={deleteRecord(data.id)}></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>                                    
+                                        </div>
                                         <div className="col-xl-4"> {data.title}</div>
                                         <div className="col-xl-6" dangerouslySetInnerHTML={   {__html: data.details}    }></div>
                                     </div>
@@ -191,12 +200,13 @@ export default function ProfileContacts(params) {
                 </Modal.Header>
                 <Modal.Body>
                     <br />
-                    Do you want to delete this record id {deleteRecordID} ?
+                    Do you want to delete this record ?
                     <br /><br />
                 </Modal.Body>
                 <Modal.Footer>
-                <Button positive onClick={() =>  setDeleteModelShow(false) }>Close</Button>
-                <Button color="orange" onClick={() => handleDeleteModelEvent()}>Yes Delete</Button>
+                <Button color="vk" size="tiny" onClick={() => handleDeleteModelEvent()}>Yes</Button>
+                &nbsp;
+                <Button color="red" size="tiny" onClick={() =>  setDeleteModelShow(false) }>Close</Button>
                 </Modal.Footer>
             </Modal>
 

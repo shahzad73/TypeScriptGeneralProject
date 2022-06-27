@@ -58,6 +58,39 @@ companyDataRouter.get("/getcompanydetails", async (req: Request, res: Response) 
     res.json( cmp[0] );
 });
 
+
+companyDataRouter.post("/updatecompanydetails", async (req: Request, res: Response) => {
+    const id = req.body.id;
+
+    const manager = getManager();
+    const newUpdates = manager.create(company, req.body);    
+
+    const errors = await validate(newUpdates, { skipMissingProperties: true });
+
+    if (errors.length > 0) {
+        res.json({id: -1, error: errors});
+    } else {
+        await getConnection()
+        .createQueryBuilder()
+        .update(company)
+        .set(req.body)
+        .where("id = :id and userid = :userid", {  id: id,  userid: req.userid })
+        .execute();
+
+        const cmp = await getConnection()
+        .createQueryBuilder()
+        .select(["*"])
+        .from(company, "company")
+        .where("id = :id", { id: req.body.id })
+        .execute();    
+    
+
+
+        res.json( cmp[0] );
+    }
+})
+
+
 companyDataRouter.get("/getcompanyparagraphs", async (req: Request, res: Response) => {
     const para = await getConnection()
     .createQueryBuilder()
@@ -68,6 +101,19 @@ companyDataRouter.get("/getcompanyparagraphs", async (req: Request, res: Respons
     
     res.json( para );
 });
+
+
+companyDataRouter.get("/getParaData", async (req: Request, res: Response) => {
+    const cmp = await getConnection()
+    .createQueryBuilder()
+    .select(["*"])
+    .from(company_paragraphs, "company_paragraphs")
+    .where("id = :id", { id: req.query.id })
+    .execute();    
+
+    res.json( cmp[0] );
+});
+
 
 
 companyDataRouter.post("/addParamgraph", async (req: Request, res: Response) => {
