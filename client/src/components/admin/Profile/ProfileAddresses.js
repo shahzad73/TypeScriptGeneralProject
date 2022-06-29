@@ -6,7 +6,6 @@ import Loading from "../../common/loading"
 import { useForm } from "react-hook-form";
 import commons from "../../common/commons";
 
-
 export default function ProfileContacts() {
 
     const countries = commons.getCountryNamesJSON();
@@ -281,7 +280,7 @@ export default function ProfileContacts() {
                 <Button color="red" size="tiny" onClick={() => setConfirmationModelShow(false)}>Close</Button>
                 </Modal.Footer>
 
-            </Modal>                    
+            </Modal>
         </div>
 
     );

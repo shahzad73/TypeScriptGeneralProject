@@ -5,7 +5,6 @@ import { Modal } from 'react-bootstrap'
 import Loading from "../../common/loading"
 import { useForm } from "react-hook-form";
 
-
 export default function ProfileContacts() {
 
     // confirmation Button 
@@ -33,7 +32,6 @@ export default function ProfileContacts() {
     const [contactModelShow, setContactModelShow] = useState(false);
     const [showContactLoading, setShowContactLoading] = useState(false);         
     const {register, handleSubmit, reset, formState: { errors }} = useForm();
-
 
     function openEditContact() {
         setOperation(1);

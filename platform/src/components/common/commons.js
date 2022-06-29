@@ -9,6 +9,17 @@ const commons = {
             }                                           
         })
         return objErrors;
+    },
+
+
+    getCountryNamesJSON: function() {
+
+        return [
+            "Pakistan",
+            "India",
+            "Swisszerland"
+        ]
+
     }
 
 }

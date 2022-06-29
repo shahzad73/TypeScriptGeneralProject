@@ -3,15 +3,9 @@ import axios from 'axios';
 import { Button, Form } from 'semantic-ui-react'
 import { Modal } from 'react-bootstrap'
 import Loading from "../../common/loading"
-import DatePicker from "react-datepicker";
-import moment from "moment";
-import { Link } from "react-router-dom";
-import { useNavigate, useLocation } from "react-router-dom";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import CustomTextEditor from "../../common/CustomTextEditor"
 import commons from "../../common/commons"
-import FilesUploader from "../../common/FileUploader";
-import CompanyInfo from "./CompanyInfo"
 
 
 export default function ProfileContacts(params) {
@@ -25,6 +19,8 @@ export default function ProfileContacts(params) {
     const [showErrorMessage, setShowErrorMessage] = useState(0);
     const [deleteRecordID, setDeleteRecordID] = useState(0);
     const [deleteModelShow, setDeleteModelShow] = useState(false);
+    const [operation, setOperation] = useState(0); 
+    const [currentEditID, setCurrentEditID] = useState(0); 
 
 
     const [htmlText, setHtmlText] = useState("");
@@ -34,7 +30,7 @@ export default function ProfileContacts(params) {
     const handleParagraphChange = (e) => {
         updateFormParagraphData({
             ...formParagraphData,
-            [e.target.name]: e.target.value.trim()
+            [e.target.name]: e.target.value
         });
     };
     const addParagraphDataForm = (e) => {
@@ -42,11 +38,16 @@ export default function ProfileContacts(params) {
 
         formParagraphData.details = htmlText;
         formParagraphData.companyID = companyID;
+        var link = "/accounts/company/addParamgraph";
+        if(operation == 1) {
+            link = "/accounts/company/updateParamgraph";
+            formParagraphData.id = currentEditID;
+        }
 
         e.preventDefault()
         setShowParagraphLoading(true);
 
-        axios.post("/accounts/company/addParamgraph", formParagraphData).then(response => {
+        axios.post(link, formParagraphData).then(response => {
             setShowParagraphLoading(false);
             if(response.data.id == -1) {
                 setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
@@ -59,6 +60,11 @@ export default function ProfileContacts(params) {
         });
     };
     function openEditParagraph() {
+        updateFormParagraphData({
+            title: "",
+            details: ""
+        });
+        setOperation(0);        
         setParagraphModelShow(true);
     }
     function closePargraphModelShow() {      
@@ -82,7 +88,13 @@ export default function ProfileContacts(params) {
         setShowParagraphLoading(true);
         axios.get("/accounts/company/getParaData?id=" + id).then(response => {
             setShowParagraphLoading(false);
-            alert( JSON.stringify( response.data)  );
+            updateFormParagraphData({
+                title: response.data.title,
+                details: response.data.details
+            })
+            setOperation(1);            
+            setCurrentEditID(id);
+            setParagraphModelShow(true);
         }).catch(function(error) {
             console.log(error);
         });
@@ -165,6 +177,7 @@ export default function ProfileContacts(params) {
                                                 <input type="text" className="form-control" placeholder="Enter Title" 
                                                     id="title"  
                                                     name="title"
+                                                    value={formParagraphData.title}
                                                     onChange={handleParagraphChange}
                                                 />   
                                             </Form.Field>
@@ -176,7 +189,7 @@ export default function ProfileContacts(params) {
                                 <div className="row">
                                     <div className="col-md-12">
                                         <div className="form-group">
-                                            <CustomTextEditor onChange={textEditorTextChangeEvent} height="100px" />
+                                            <CustomTextEditor defaultHTML={formParagraphData.details}  onChange={textEditorTextChangeEvent} height="100px" />
                                         </div>
                                     </div>
                                     <div className="col-md-1"></div>
@@ -214,3 +227,6 @@ export default function ProfileContacts(params) {
     );
 
 }
+
+
+

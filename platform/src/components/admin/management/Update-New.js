@@ -90,7 +90,7 @@ export default function Home(props) {
             <div className="col-xl-12">
                 <div className="card">
                     <div className="card-header">
-                        <h5>Add / Edit Update Record</h5>
+                        <h5><img width="30px" src="/img/updates.png"></img> &nbsp; Add / Edit Update Record</h5>
                         <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
                     </div>
                     <div className="card-block table-border-style">
@@ -137,13 +137,12 @@ export default function Home(props) {
                                             {errors.details && <p>Please enter details</p>}
                                         </div>
                                         
-
                                 </div>
                             </div>
                             <br />
-                            <Button positive type='submit'>Save</Button> 
+                            <Button color="vk" size="tiny" type='submit'>Save</Button> 
                             &nbsp;&nbsp;&nbsp; 
-                            <Button color="orange" onClick={cancel}>Cancel</Button> 
+                            <Button color="red" size="tiny" onClick={cancel}>Cancel</Button> 
 
                         </Form>
                     </div>

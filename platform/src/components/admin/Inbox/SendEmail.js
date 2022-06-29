@@ -51,7 +51,7 @@ export default function SendEmail() {
                         <div className="col-xl-12">
                             <div className="card">
                                 <div className="card-header">
-                                    <h5>Send Email</h5>
+                                    <h5><img width="30px" src="/img/emailclosed.jpg"></img> &nbsp;  Send Email</h5>
                                 </div>
                                 <div className="card-block table-border-style">
 
@@ -106,9 +106,9 @@ export default function SendEmail() {
 
                                     { !showLoading && (
                                         <span><br />
-                                        <Button positive type='submit'>Send</Button> 
+                                        <Button color="vk" size="tiny" type='submit'>Send</Button> 
                                         &nbsp;&nbsp;&nbsp; 
-                                        <Button color="orange" onClick={cancel}>Cancel</Button> 
+                                        <Button  color="red" size="tiny"  onClick={cancel}>Cancel</Button> 
                                         <br /></span>
                                         )
                                     }

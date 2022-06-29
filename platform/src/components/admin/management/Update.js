@@ -26,7 +26,7 @@ export default function Updates(props) {
       });
   }
 
-  function deleteRecord(id) {
+  var deleteRecord = id => () => {
       setDeleteRecordID(id);
       setDeleteModelShow(true);
   }
@@ -58,58 +58,43 @@ export default function Updates(props) {
                 <div className="card-header">
 
                     <div className="row">
-                        <div className="col-xl-9">
-                            <h5>LIst of Updates</h5>
+                        <div className="col-xl-10">
+                            <h5> <img width="30px" src="/img/updates.png"></img> &nbsp; LIst of Updates</h5>
                             <span className="d-block m-t-5">use className <code>table</code> inside table element</span>                                
                         </div>
-                        <div className="col-xl-3">
+                        <div className="col-xl-2">
                             <Link to="/platformmain/addNewUpdate" 
-                            state = {{update: 0}}> <Button positive size='medium'>Add New Update</Button> </Link>                            
+                            state = {{update: 0}}> <Button color="vk" size='tiny'>Add New Update</Button> </Link>                            
                         </div>
                     </div>
                 </div>
 
                 <div className="card-block table-border-style">
-                    <div className="table-responsive">
-
+                    
                         {showLoading && ( <Loading /> ) }
 
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th width="15%">Update</th>
-                                    <th width="50%">Details</th>
-                                    <th width="15%">Date</th>
-                                    <th width="15%"></th>                                        
-                                </tr>
-                            </thead>
-                            <tbody>
+                        {updateDataSet.map(update => {
+                            return (
+                                <span>                                        
+                                    <div className="row">
 
-                                {updateDataSet.map(update => {
-                                    return (
-                                    <tr>
-                                        <th  scope="row">{update.ID}</th>
-                                        <td >{update.TITLE}</td>
-                                        <td  style = {{"white-space": "pre-wrap"}}> 
-                                                {update.details}    
-                                        </td> 
-                                        <td ></td>
-                                        <td >
-                                            <Link to="/platformmain/addNewUpdate" 
-                                                state = {{id: update.ID, update: 1}} >
-                                            <Button positive size='tiny'>Update</Button> </Link>
-                                            &nbsp;&nbsp;&nbsp;
-                                            <Button onClick= {() => deleteRecord(update.ID)}   color='orange' size='tiny'>Delete</Button>
-                                        </td>
-                                    </tr>
-                                    );
-                                })}
+                                        <div className="col-xl-2">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <img src="/img/delete.png" width="22px" className="listIconImage" onClick={deleteRecord(update.ID)}></img>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                
+                                            <Link to="/platformmain/addNewUpdate" state = {{id: update.ID, update: 1}} >
+                                                <img src="/img/edit.png" width="22px" className="listIconImage"></img>
+                                            </Link>
+                                        </div>
+                                        <div className="col-xl-10">                                        
+                                            {update.TITLE}
+                                        </div>
+                                    </div>
+                                    <br />
+                                </span>
+                            );
+                        })}
 
-                            </tbody>
-                        </table>
-
-                    </div>
                 </div>
 
                 <Modal  show={deleteModelShow} onHide={handleDeleteModelClose}>
@@ -122,11 +107,12 @@ export default function Updates(props) {
                         <br /><br />
                     </Modal.Body>
                     <Modal.Footer>
-                    <Button positive onClick={handleDeleteModelClose}>
+                    <Button color="vk" size="tiny" onClick={handleDeleteModelClose}>
                         Close
                     </Button>
-                    <Button color="orange" onClick={handleDeleteModelEvent}>
-                        Yes Delete
+                    &nbsp;
+                    <Button color="red" size="tiny" onClick={handleDeleteModelEvent}>
+                        Delete
                     </Button>
                     </Modal.Footer>
                 </Modal>

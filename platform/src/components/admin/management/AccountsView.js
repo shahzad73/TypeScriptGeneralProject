@@ -46,7 +46,7 @@ export default function AccountsView(props) {
             <div className="col-xl-12">
                 <div className="card">
                     <div className="card-header">
-                        <h5>Basic Table</h5>
+                        <h5><img src="/img/accounts.png" width="30px"></img> &nbsp;  Account Details</h5>
                         <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
                     </div>
                     <div className="card-block table-border-style">

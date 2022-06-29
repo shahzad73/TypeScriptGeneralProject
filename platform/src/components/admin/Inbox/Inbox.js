@@ -29,7 +29,7 @@ export default function Inbox(props) {
   }, []);
 
 
-  function deleteRecord(id) {
+  var deleteRecord = id => () => {
     setDeleteRecordID(id);
     setDeleteModelShow(true);
 }
@@ -54,54 +54,57 @@ function handleDeleteModelEvent() {
                 <div className="card-header">
                     <div className="row">
                             <div className="col-xl-10">
-                                <h5>My Inbox</h5>
+                                <h5><img width="30px" src="/img/emailclosed.jpg"></img> &nbsp;  My Inbox 1</h5>
                                 <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
                             </div>
                             <div className="col-xl-2">
-                                <Link to="/platformmain/sendemail" > <Button positive size='medium'>Compose</Button> </Link>
+                                <Link to="/platformmain/sendemail" > <Button color="vk" size='tiny'>Compose</Button> </Link>
                             </div>
                     </div>
                 </div>
-                <div className="card-block table-border-style">
+                <div className="card-block">
 
-                    <div className="table-responsive">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th width="2%"></th>
-                                    <th width="65%"></th>
-                                    <th width="15%"></th>                                    
-                                    <th width="15%"></th>                                        
-                                </tr>
-                            </thead>
-                            <tbody>
 
                                 {inboxDataSet.map(inbox => {
                                     return (
-                                        <tr>
-                                            <td>
-                                                {inbox.isResponded === 0 && 
-                                                    <span>
-                                                        <img src="/img/emailclosed.jpg" width="25px;" data-toggle="tooltip" data-placement="top" title="Email is not yet responded by admin"/>
-                                                    </span>
-                                                }                                                  
-                                            </td>
-                                            <td >{inbox.Title}</td>
-                                            <td> {Moment(inbox.DateEmail).format('DD MMM-YYYY')} </td>
-                                            <td >
-                                                <Link to="/platformmain/viewinbox" 
-                                                    state = {{id: inbox.ID, update: 1}} >
-                                                <Button positive size='tiny'>View</Button> </Link>
-                                                &nbsp;&nbsp;
-                                                <Button onClick= {() => deleteRecord(inbox.ID)}   color='orange' size='tiny'>Delete</Button>
-                                            </td>
-                                        </tr>
+
+                                        <span>                                        
+                                            <div className="row">
+    
+                                                <div className="col-xl-1">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <img src="/img/delete.png" width="22px" className="listIconImage" onClick={deleteRecord(inbox.ID)}></img>
+                                                </div>
+
+                                                <div className="col-xl-7">
+                                                        {inbox.isResponded === 0 && 
+                                                            <span>
+                                                                <span className="ErrorLabel"> New </span> &nbsp; &nbsp;
+                                                            </span>
+                                                        }                 
+
+                                                        {inbox.Title}
+                                                </div>
+
+                                                <div className="col-xl-2">
+                                                        {Moment(inbox.DateEmail).format('DD MMM-YYYY')}
+                                                </div>
+
+                                                <div className="col-xl-2">
+                                                        <Link to="/platformmain/viewinbox" state = {{id: inbox.ID, update: 1}} >
+                                                            <Button color="vk" size='tiny'>View</Button>
+                                                        </Link>
+                                                </div>
+                                            
+                                            </div>
+
+                                            <br />
+                                        </span>
+                                        
                                     );
                                 })}
 
-                            </tbody>
-                        </table>
-                    </div>
+
 
                 </div>
             </div>
@@ -118,11 +121,11 @@ function handleDeleteModelEvent() {
                         <br /><br />
                     </Modal.Body>
                     <Modal.Footer>
-                    <Button positive onClick={handleDeleteModelClose}>
+                    <Button color="vk"  size="tiny" onClick={handleDeleteModelClose}>
                         Close
                     </Button>
-                    <Button color="orange" onClick={handleDeleteModelEvent}>
-                        Yes Delete
+                    <Button color="red" size="tiny" onClick={handleDeleteModelEvent}>
+                        Delete
                     </Button>
                     </Modal.Footer>
                 </Modal>

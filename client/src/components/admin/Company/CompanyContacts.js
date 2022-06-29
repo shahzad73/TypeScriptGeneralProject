@@ -3,18 +3,25 @@ import axios from 'axios';
 import { Button, Form } from 'semantic-ui-react'
 import { Modal } from 'react-bootstrap'
 import Loading from "../../common/loading"
-import DatePicker from "react-datepicker";
-import moment from "moment";
-import { Link } from "react-router-dom";
-import { useNavigate, useLocation } from "react-router-dom";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import CustomTextEditor from "../../common/CustomTextEditor"
-import commons from "../../common/commons"
-import FilesUploader from "../../common/FileUploader";
-import CompanyInfo from "./CompanyInfo";
-import CompanyPara from "./CompanyPara";
+import { useForm } from "react-hook-form";
 
 export default function ProfileContacts(params) {
+
+    // confirmation Button 
+    const [confirmationMessage, setConfirmationMessage] = React.useState("");    
+    const [confirmationModelShow, setConfirmationModelShow] = React.useState(false);        
+    const [conformationOption, setConformationOption] = React.useState({});                
+    function confirmationOK() {
+        setConfirmationModelShow(false);
+        setShowContactLoading(true);
+        axios.post("/accounts/company/deleteContact", {id: conformationOption.id, companyID: companyID}).then(response => {
+            setUserContacts ( response.data.userContacts )
+            setShowContactLoading(false);
+        }).catch(function(error) {
+            console.log(error);
+        });
+    }
 
     // Contacts information
     const [companyID, setCompanyID] = useState(0);    
@@ -22,40 +29,52 @@ export default function ProfileContacts(params) {
     const [mobileTypes, setMobileTypes] = useState([]);        
     const [contactModelShow, setContactModelShow] = useState(false);
     const [showContactLoading, setShowContactLoading] = useState(false);         
-    const [formContactData, updateFormContactData] = React.useState([]);
+    const {register, handleSubmit, reset, formState: { errors }} = useForm();
+    const [operation, setOperation] = useState(0);        
+    const [editID, setEditID] = useState(0);        
 
     function openEditContact() {
+        setOperation(0);
         setContactModelShow(true);
+        reset({});
     }
-    const addContactDataForm = (e) => {
-        e.preventDefault()
+
+    const deleteContactDataForm = value => () => {
+        setConfirmationMessage("Are you sure you want to delete ?");
+        setConformationOption({ id: value });
+        setConfirmationModelShow(true);
+    };
+
+    const onFormSubmit = (data) => {
         setContactModelShow(false);
         setShowContactLoading(true);
 
-        formContactData.companyID = companyID;
+        data.companyID = companyID;
 
-        axios.post("/accounts/company/addContact", formContactData).then(response => {
+        var link = "/accounts/company/addContact";
+        if(operation == 1) {
+            data.id = editID;
+            link =  "/accounts/company/editCompanyContact";
+        }
+
+        axios.post(link, data).then(response => {
             setUserContacts ( response.data.userContacts );
             setShowContactLoading(false);
         }).catch(function(error) {
             console.log(error);
         });
     };
-    const handleContactChange = (e) => {
-        updateFormContactData({
-            ...formContactData,
-            [e.target.name]: e.target.value.trim()
-        });
-    };
-    const deleteContactDataForm = value => () => {
-        setShowContactLoading(true);
-        axios.post("/accounts/company/deleteContact", {id: value, companyID: companyID}).then(response => {
-            setUserContacts ( response.data.userContacts )
-            setShowContactLoading(false);
+
+    const openEditButton = value => () => {
+        setOperation(1);
+        setEditID(value)
+        axios.get("/accounts/company/getCompanyContact?id=" + value).then(response => {
+            reset(response.data);
+            setContactModelShow(true);
         }).catch(function(error) {
             console.log(error);
-        });        
-    };
+        });
+    }
 
     React.useEffect(() => {
         const id = params.id;
@@ -94,7 +113,7 @@ export default function ProfileContacts(params) {
                                     <br />
                                     <div className="row">
                                         <div className="col-xl-2"> 
-                                                <img src="/img/edit.png" className="listIconImage"></img>
+                                                <img src="/img/edit.png" className="listIconImage" onClick={openEditButton(dat.id)} ></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <img src="/img/delete.png" className="listIconImage" onClick={deleteContactDataForm(dat.id)}></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -119,14 +138,14 @@ export default function ProfileContacts(params) {
             </div>
 
             <Modal size="lg" show={contactModelShow} onHide={() => setContactModelShow(false)}>
-
-                <Modal.Header closeButton>
-                <Modal.Title><img src="/img/contacts.png" width="33px"/> &nbsp;   Add / Edit Contact</Modal.Title>
-                </Modal.Header>
-                <Modal.Body  >
-                    <br />
-                    <div>
-                        <div className="row">
+                <Form onSubmit={handleSubmit(onFormSubmit)}>
+                    <Modal.Header closeButton>
+                    <Modal.Title><img src="/img/contacts.png" width="33px"/> &nbsp;   Add / Edit Contact</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body  >
+                        <br />
+                        <div>
+                            <div className="row">
 
                                 <div className="row">
                                     <div className="col-md-2"> Person Name </div>
@@ -137,14 +156,14 @@ export default function ProfileContacts(params) {
                                                 <input type="text" className="form-control" placeholder="Enter Title" 
                                                     id="nameOfPerson"  
                                                     name="nameOfPerson"
-                                                    onChange={handleContactChange}
+                                                    {...register("nameOfPerson", { required: true, maxLength: 100 })}    
                                                 />   
                                             </Form.Field>
+                                            {errors.nameOfPerson && <p className="ErrorLabel">Person Name is required</p>}
                                         </div>
                                     </div>
                                     <div className="col-md-1"></div>
                                 </div>
-
 
                                 <div className="row">
                                     <div className="col-md-2"> Type </div>
@@ -154,7 +173,7 @@ export default function ProfileContacts(params) {
                                                     <select 
                                                     id="contactTypeID"  
                                                     name="contactTypeID"
-                                                    onChange={handleContactChange}
+                                                    {...register("contactTypeID")} 
                                                     className="form-control form-select">
                                                         { mobileTypes && mobileTypes.map(dat =>
                                                             <option value={dat.id} label={dat.title} />
@@ -166,7 +185,6 @@ export default function ProfileContacts(params) {
                                     <div className="col-md-1"></div>
                                 </div>
 
-
                                 <div className="row">
                                     <div className="col-md-2"> Contact </div>
                                     <div className="col-md-10">
@@ -176,27 +194,52 @@ export default function ProfileContacts(params) {
                                                 <input type="text" className="form-control" placeholder="Enter Title" 
                                                     id="contact"  
                                                     name="contact"
-                                                    onChange={handleContactChange}
+                                                    {...register("contact", { required: true, maxLength: 100 })}
                                                 />   
                                             </Form.Field>
+                                            {errors.nameOfPerson && <p className="ErrorLabel">contact required</p>}
                                         </div>
                                     </div>
                                     <div className="col-md-1"></div>
                                 </div>
 
+                            </div>
+                        </div>
+                        <br /><br />
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button color="vk" type="submit" size="tiny">Save</Button>
+                    &nbsp;&nbsp;
+                    <Button color="red" type="button" size="tiny" onClick={() => setContactModelShow(false)}>Close</Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
 
+            <Modal size="me" show={confirmationModelShow} onHide={() => setConfirmationModelShow(false)}>
+
+                <Modal.Header closeButton>
+                <Modal.Title> <img src="/img/messagebox.png" width="25px"></img> Confirmation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body  >
+                    <br />
+                    
+                    <div className="row">
+                        <div className="col-md-12">
+                            {confirmationMessage}
                         </div>
                     </div>
+
                     <br /><br />
                 </Modal.Body>
                 <Modal.Footer>
-                <Button color="vk" size="tiny" onClick={addContactDataForm}>Save</Button>
+                <Button color="vk" size="tiny" onClick={confirmationOK}>Yes</Button>
                 &nbsp;&nbsp;
-                <Button color="red"  size="tiny" onClick={() => setContactModelShow(false)}>Close</Button>
+                <Button color="red" size="tiny" onClick={() => setConfirmationModelShow(false)}>Close</Button>
                 </Modal.Footer>
 
-            </Modal>
+            </Modal>            
         </div>
     );
 
 }
+
