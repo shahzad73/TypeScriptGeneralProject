@@ -15,7 +15,7 @@ export default function ProfileContacts() {
     const [confirmationModelShow, setConfirmationModelShow] = React.useState(false);        
     const [conformationOption, setConformationOption] = React.useState({});                
     function confirmationOK() {
-        if(conformationOption.option == 1) {
+        if(conformationOption.option === 1) {
             setShowAddressesLoading(true);
             axios.post("/accounts/backend/deleteAddress", {id: conformationOption.id}).then(response => {
                 setAddressesData ( response.data.usrAddresses );
@@ -28,7 +28,7 @@ export default function ProfileContacts() {
         setConfirmationModelShow(false);
     }
 
-
+    const [profileErrorMessages, setProfileErrorMessages] = useState("");    
     // Address information
     const [operation, setOperation] = useState(0); 
     const [addressesData, setAddressesData] = React.useState([]);    
@@ -40,6 +40,7 @@ export default function ProfileContacts() {
 
     function openEditAddresses() {
         reset({});
+        setProfileErrorMessages("")
         setAddressesModelShow(true);
     }
     const deleteAddressDataForm = value => () => {
@@ -54,6 +55,7 @@ export default function ProfileContacts() {
         setShowAddressesLoading(true);
         axios.get("/accounts/backend/getAddressRecord?id=" + value, {}).then(response => {
             reset(response.data);
+            setProfileErrorMessages("")
             setShowAddressesLoading(false);
             setAddressesModelShow(true);    
             setOperation(2);        
@@ -62,21 +64,22 @@ export default function ProfileContacts() {
         });
     }
     const onFormSubmit = (data) => {
-        setAddressesModelShow(false);
         setShowAddressesLoading(true);
 
         var link = "/accounts/backend/addAddress";
-        if( operation == 2 )
+        if( operation === 2 )
             link = "/accounts/backend/editAddress";
 
         axios.post(link, data).then(response => {
-            reset();
-            if(response.id == -1)
-                alert("We have some error on server side")
-            else {
-                setShowAddressesLoading(false);
+
+            if(response.data.status === -1) {
+                setProfileErrorMessages(  commons.getDBErrorMessagesText(response.data.error)   );
+            } else {
+                setAddressesModelShow(false);
                 setAddressesData ( response.data.usrAddresses );
             }
+
+            setShowAddressesLoading(false);
         }).catch(function(error) {
             console.log(error);
         });
@@ -84,7 +87,7 @@ export default function ProfileContacts() {
 
     React.useEffect(() => {
 
-        axios.get("/accounts/backend/getProfile").then(response => {
+        axios.get("/accounts/backend/getProfileAddress").then(response => {
             setAddressTypes ( response.data.addressTypes );
             setAddressesData ( response.data.usrAddresses )
         }).catch(function(error) {
@@ -126,7 +129,9 @@ export default function ProfileContacts() {
                                             </div>                                            
                                             <div className="col-xl-8">
                                                 {dat.contact} &nbsp; 
-                                                {dat.zip} &nbsp;  
+                                                <br />  
+                                                Zip: {dat.zip} 
+                                                <br />  
                                                 {dat.state} &nbsp; 
                                                 {dat.country} &nbsp; 
                                             </div>
@@ -151,6 +156,8 @@ export default function ProfileContacts() {
                         <br />
                         
                         <div className="row">
+                                    
+                            <span className="ErrorLabel">{profileErrorMessages}</span>
 
                             <div className="row">
                                 <div className="col-md-2"> Address </div>
@@ -161,10 +168,10 @@ export default function ProfileContacts() {
                                             <input type="text" className="form-control" placeholder="Enter Title" 
                                                 id="contact"  
                                                 name="contact"
-                                                {...register("contact", { required: true, maxLength: 100 })}   
+                                                {...register("contact", { required: true, minLength:5, maxLength: 1000 })}   
                                             />   
                                         </Form.Field>
-                                        {errors.contact && <p className="ErrorLabel">Contact needed</p>}
+                                        {errors.contact && <p className="ErrorLabel">Address needed (min 5, max 1000 characters)</p>}
                                     </div>
                                 </div>
                                 <div className="col-md-1"></div>
@@ -183,25 +190,23 @@ export default function ProfileContacts() {
                                                 {...register("state", { required: true, maxLength: 100 })}
                                             />   
                                         </Form.Field>
-                                        {errors.state && <p className="ErrorLabel">State needed</p>}
+                                        {errors.state && <p className="ErrorLabel">State is required (max 100 characters)</p>}
                                     </div>
                                 </div>
 
                                 <div className="col-md-2"> Zip </div>
                                 <div className="col-md-4">
                                     <div className="form-group">
-                                        
                                         <Form.Field>
                                             <input type="text" className="form-control" placeholder="Enter Title" 
                                                 id="zip"  
                                                 name="zip"
-                                                {...register("zip", { required: true, maxLength: 100 })}
+                                                {...register("zip", { required: true, maxLength: 20 })}
                                             />   
                                         </Form.Field>
-                                        {errors.zip && <p className="ErrorLabel">Zip needed</p>}
+                                        {errors.zip && <p className="ErrorLabel">Zip is required (max 20 characters)</p>}
                                     </div>
                                 </div>
-
                             </div>
 
 
@@ -256,7 +261,6 @@ export default function ProfileContacts() {
                     </Modal.Footer>
                 </Form>
             </Modal>
-                    
 
             <Modal size="me" show={confirmationModelShow} onHide={() => setConfirmationModelShow(false)}>
 

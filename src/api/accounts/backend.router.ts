@@ -18,30 +18,9 @@ const uploadFile = require("../../common/fileupload");
 
 export const bckendDataRouter = express.Router();
 
-bckendDataRouter.get("/getProfile", async (req: Request, res: Response) => {
-    const usr = await getUserAddresses(req.userid);
-    res.json(  usr  );
-});
 
 bckendDataRouter.get("/getProfilePersonal", async (req: Request, res: Response) => {
-    const usr = await getConnection()
-    .createQueryBuilder()
-    .select([
-        "ID",
-        "firstname", 
-        "lastname", 
-        "email", 
-        "PassportNumber", 
-        "NationalID", 
-        "MaritalStatus", 
-        "Occupation",
-        "DATE_FORMAT(DOB, '%M %d %Y') as DOB"
-    ])
-    .from(users,"users")
-    .where("id = :id", { id: req.userid })
-    .execute();
-
-    res.json(usr[0]);
+    res.json(  await getUsrProfile(req.userid)  );
 });
 
 bckendDataRouter.get("/getProfileContacts", async (req: Request, res: Response) => {
@@ -55,7 +34,7 @@ bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
     const errors = await validate(newUpdates, { skipMissingProperties: true });
 
     if (errors.length > 0) {
-        res.json({id: -1, error: errors});
+        res.json({status: -1, error: errors});
     } else {
         await getConnection()
         .createQueryBuilder()
@@ -64,27 +43,14 @@ bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
         .where("id = :id", { id: req.userid })
         .execute();
 
-        const usr = await getConnection()
-        .createQueryBuilder()
-        .select([
-            "ID",
-            "firstname", 
-            "lastname", 
-            "email", 
-            "PassportNumber", 
-            "NationalID", 
-            "MaritalStatus", 
-            "Occupation",
-            "DATE_FORMAT(DOB, '%M %d %Y') as DOB"
-        ])
-        .from(users,"users")
-        .where("id = :id", { id: req.userid })
-        .execute();
-        
-        res.json(usr[0]);
+        res.json(  await getUsrProfile(req.userid)  );
     }
 
 });
+
+
+
+
 
 bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
     req.body.userid = req.userid;
@@ -95,7 +61,7 @@ bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
     const errors = await validate(newUpdates);
 
     if (errors.length > 0) {
-        res.json({id: -1, error: errors});
+        res.json({status: -1, error: errors});
     } else {
         const data = await user_contacts.insert ( newUpdates );
         const usr = await getUserContacts(req.userid);
@@ -114,7 +80,7 @@ bckendDataRouter.post("/editContact", async (req: Request, res: Response) => {
     const errors = await validate(newUpdates);
 
     if (errors.length > 0) {
-        res.json({id: -1, error: errors});
+        res.json({status: -1, error: errors});
     } else {
         await getConnection()
         .createQueryBuilder()
@@ -148,21 +114,12 @@ bckendDataRouter.post("/deleteContact", async (req: Request, res: Response) => {
     res.json(  usr  );
 });
 
-bckendDataRouter.post("/addAddress", async (req: Request, res: Response) => {
-    req.body.userid = req.userid;
 
-    const manager = getManager();
-    const newUpdates = manager.create(user_addresses, req.body);    
 
-    const errors = await validate(newUpdates);
 
-    if (errors.length > 0) {
-        res.json({id: -1, error: errors});
-    } else {
-        const data = await user_addresses.insert ( newUpdates );
-        const usr = await getUserAddresses(req.userid);
-        res.json(  usr  ); 
-    }
+bckendDataRouter.get("/getProfileAddress", async (req: Request, res: Response) => {
+    const usr = await getUserAddresses(req.userid);
+    res.json(  usr  );
 });
 
 bckendDataRouter.post("/deleteAddress", async (req: Request, res: Response) => {
@@ -197,7 +154,7 @@ bckendDataRouter.post("/editAddress", async (req: Request, res: Response) => {
     const errors = await validate(newUpdates);
 
     if (errors.length > 0) {
-        res.json({id: -1, error: errors});
+        res.json({status: -1, error: errors});
     } else {
         await getConnection()
         .createQueryBuilder()
@@ -209,6 +166,23 @@ bckendDataRouter.post("/editAddress", async (req: Request, res: Response) => {
         res.json(  await getUserAddresses(req.userid)  ); 
     }
 })
+
+bckendDataRouter.post("/addAddress", async (req: Request, res: Response) => {
+    req.body.userid = req.userid;
+
+    const manager = getManager();
+    const newUpdates = manager.create(user_addresses, req.body);    
+
+    const errors = await validate(newUpdates);
+
+    if (errors.length > 0) {
+        res.json({status: -1, error: errors});
+    } else {
+        const data = await user_addresses.insert ( newUpdates );
+        const usr = await getUserAddresses(req.userid);
+        res.json(  usr  ); 
+    }
+});
 
 
 
@@ -362,4 +336,26 @@ async function getUserAddresses(userid: number) {
     
     return data;
 
+}
+
+
+async function getUsrProfile(userid: number) {
+    const usr = await getConnection()
+    .createQueryBuilder()
+    .select([
+        "ID",
+        "firstname", 
+        "lastname", 
+        "email", 
+        "PassportNumber", 
+        "NationalID", 
+        "MaritalStatus", 
+        "Occupation",
+        "DATE_FORMAT(DOB, '%M %d %Y') as DOB"
+    ])
+    .from(users,"users")
+    .where("id = :id", { id: userid })
+    .execute();
+
+    return usr[0];
 }

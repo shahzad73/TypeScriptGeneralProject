@@ -4,6 +4,7 @@ import { Button, Form } from 'semantic-ui-react'
 import { Modal } from 'react-bootstrap'
 import Loading from "../../common/loading"
 import { useForm } from "react-hook-form";
+import commons from "../../common/commons";
 
 export default function ProfileContacts() {
 
@@ -25,6 +26,7 @@ export default function ProfileContacts() {
         setConfirmationModelShow(false);
     }
 
+    const [profileErrorMessages, setProfileErrorMessages] = useState("");    
     // Contacts information
     const [userContacts, setUserContacts] = useState([]); 
     const [operation, setOperation] = useState(0);        
@@ -35,6 +37,7 @@ export default function ProfileContacts() {
 
     function openEditContact() {
         setOperation(1);
+        setProfileErrorMessages("")
         reset({});
         setContactModelShow(true);
     }
@@ -49,6 +52,7 @@ export default function ProfileContacts() {
     };
     const editContactDataForm = value => () => {
         setShowContactLoading(true);
+        setProfileErrorMessages("")
         axios.get("/accounts/backend/getContactRecord?id=" + value, {}).then(response => {
             reset(response.data);
             setShowContactLoading(false);
@@ -67,9 +71,15 @@ export default function ProfileContacts() {
             link = "/accounts/backend/editContact";
 
         axios.post(link, data).then(response => {
-            setUserContacts ( response.data.userContacts );
-            reset();
-            setShowContactLoading(false);
+
+            if(response.data.status === -1) {
+                setProfileErrorMessages(  commons.getDBErrorMessagesText(response.data.error)   );
+            } else {
+                setUserContacts ( response.data.userContacts );
+                reset();
+                setShowContactLoading(false);
+            }
+
         }).catch(function(error) {
             console.log(error);
         });                
@@ -144,6 +154,8 @@ export default function ProfileContacts() {
                             <div>
                                 <div className="row">
 
+                                        <span className="ErrorLabel">{profileErrorMessages}</span>
+
                                         <div className="row">
                                             <div className="col-md-2"> Contact </div>
                                             <div className="col-md-10">
@@ -153,10 +165,10 @@ export default function ProfileContacts() {
                                                         <input type="text" className="form-control" placeholder="Enter Title" 
                                                             id="contact"  
                                                             name="contact"
-                                                            {...register("contact", { required: true, maxLength: 100 })}                                                        
+                                                            {...register("contact", { required: true, minLength: 5, maxLength: 100 })}                                                        
                                                         />   
                                                     </Form.Field>
-                                                    {errors.contact && <p className="ErrorLabel">Contact needed</p>}
+                                                    {errors.contact && <p className="ErrorLabel">Contact is required (min 5, max 100 characters)</p>}
                                                 </div>
                                             </div>
                                             <div className="col-md-1"></div>

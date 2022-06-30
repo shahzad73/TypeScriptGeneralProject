@@ -6,17 +6,17 @@ export class users extends BaseEntity {
 
    @PrimaryGeneratedColumn() 
    "ID": number; 
-   
+
    @Column() 
    @Length(5, 100)
    password!: string; 
 
    @Column() 
-   @Length(2, 200)
+   @Length(4, 200)
    firstname!: string; 
 
    @Column() 
-   @Length(2, 200)
+   @Length(4, 200)
    lastname!: string; 
    
    @Column() 

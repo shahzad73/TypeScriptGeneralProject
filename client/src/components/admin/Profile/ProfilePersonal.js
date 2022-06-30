@@ -27,7 +27,7 @@ export default function ProfilePersonal() {
         axios.post("/accounts/backend/setProfile", data).then(response => {
 
             setShowLoading(false);
-            if(response.data.id == -1) {
+            if(response.data.status == -1) {
                 setProfileErrorMessages(  commons.getDBErrorMessagesText(response.data.error)   );
             } else 
                 setData( response.data )
@@ -173,10 +173,10 @@ export default function ProfilePersonal() {
                                                 <input type="text" className="form-control" placeholder="Enter Title" 
                                                     id="firstname"  
                                                     name="firstname"
-                                                    {...register("firstname", { required: true, maxLength: 100 })}
+                                                    {...register("firstname", { required: true, minLength:4, maxLength: 200 })}
                                                     />
                                             </Form.Field>
-                                            {errors.firstname && <p className="ErrorLabel">Please enter last name</p>}
+                                            {errors.firstname && <p className="ErrorLabel">Please enter last name (min 4, max 200 characters)</p>}
                                         </div>
                                     </div>
 
@@ -187,10 +187,10 @@ export default function ProfilePersonal() {
                                                 <input type="text" className="form-control" placeholder="Enter Title" 
                                                     id="lastname"  
                                                     name="lastname"
-                                                    {...register("lastname", { required: true, maxLength: 100 })}
+                                                    {...register("lastname", { required: true, minLength:4, maxLength: 200 })}
                                                     />
                                             </Form.Field>
-                                            {errors.lastname && <p className="ErrorLabel">Please enter last name</p>}
+                                            {errors.lastname && <p className="ErrorLabel">Please enter last name  (min 4, max 200 characters)</p>}
                                         </div>
                                     </div>
                                 </div>
@@ -221,6 +221,7 @@ export default function ProfilePersonal() {
                                                     {...register("PassportNumber", { maxLength: 100 })}
                                                     />
                                             </Form.Field>
+                                            {errors.PassportNumber && <p className="ErrorLabel">Passport Number should be less than 100 character</p>}
                                         </div>
                                     </div>
 
@@ -235,6 +236,7 @@ export default function ProfilePersonal() {
                                                     {...register("NationalID", { maxLength: 100 })}
                                                     />
                                             </Form.Field>
+                                            {errors.NationalID && <p className="ErrorLabel">National ID should be less than 100 character</p>}
                                         </div>
 
                                     </div>
@@ -269,11 +271,11 @@ export default function ProfilePersonal() {
                                                     {...register("Occupation", { maxLength: 100 })}
                                                     />
                                             </Form.Field>
+                                            {errors.Occupation && <p className="ErrorLabel">Occupation should be less than 100 character</p>}
                                         </div>
 
                                     </div>
                                 </div>
-                    
                         </div>
                     </div>
 
@@ -282,7 +284,7 @@ export default function ProfilePersonal() {
                 <Modal.Footer>
                 <Button color="vk" type='submit'  size='tiny'>Save</Button>   
                 &nbsp;&nbsp;              
-                <Button color="red"  size='tiny' onClick={() => setProfileModelShow(false)}>Close</Button>
+                <Button color="red" type='button' size='tiny' onClick={() => setProfileModelShow(false)}>Close</Button>
                 </Modal.Footer>
 
             </Form>
