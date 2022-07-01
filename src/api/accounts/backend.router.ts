@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { s3UploadFile } from '../../common/s3';
 import { Exception } from "handlebars";
 import { Web3Storage, getFilesFromPath } from 'web3.storage'
- 
+
 const uploadFile = require("../../common/fileupload");
 
 
@@ -21,10 +21,6 @@ export const bckendDataRouter = express.Router();
 
 bckendDataRouter.get("/getProfilePersonal", async (req: Request, res: Response) => {
     res.json(  await getUsrProfile(req.userid)  );
-});
-
-bckendDataRouter.get("/getProfileContacts", async (req: Request, res: Response) => {
-    res.json( await getUserContacts(req.userid) )
 });
 
 bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
@@ -51,6 +47,9 @@ bckendDataRouter.post("/setProfile", async (req: Request, res: Response) => {
 
 
 
+bckendDataRouter.get("/getProfileContacts", async (req: Request, res: Response) => {
+    res.json( await getUserContacts(req.userid) )
+});
 
 bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
     req.body.userid = req.userid;
@@ -63,7 +62,7 @@ bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
     if (errors.length > 0) {
         res.json({status: -1, error: errors});
     } else {
-        const data = await user_contacts.insert ( newUpdates );
+        await user_contacts.insert ( newUpdates );
         const usr = await getUserContacts(req.userid);
         res.json(  usr  ); 
     }
@@ -77,7 +76,7 @@ bckendDataRouter.post("/editContact", async (req: Request, res: Response) => {
     const manager = getManager();
     const newUpdates = manager.create(user_contacts, req.body);    
 
-    const errors = await validate(newUpdates);
+    const errors = await validate(newUpdates, { skipMissingProperties: true });
 
     if (errors.length > 0) {
         res.json({status: -1, error: errors});
@@ -151,7 +150,7 @@ bckendDataRouter.post("/editAddress", async (req: Request, res: Response) => {
     const manager = getManager();
     const newUpdates = manager.create(user_addresses, req.body);    
 
-    const errors = await validate(newUpdates);
+    const errors = await validate(newUpdates, { skipMissingProperties: true });
 
     if (errors.length > 0) {
         res.json({status: -1, error: errors});

@@ -16,6 +16,9 @@ export default function ProfileContacts(params) {
     const [showLoading, setShowLoading] = useState(false);
     const {register, handleSubmit, reset, formState: { errors }} = useForm();
     const [contactModelShow, setContactModelShow] = useState(false);
+    const [profileErrorMessages, setProfileErrorMessages] = useState("");
+
+
 
     React.useEffect(() => {
         const id = params.id;
@@ -40,17 +43,26 @@ export default function ProfileContacts(params) {
         delete( data.mainImageCaption );
         delete( data.userid );
 
-        setContactModelShow(false);
+        
         setShowLoading(true);
         axios.post("/accounts/company/updatecompanydetails", data).then(response => {
-            setShowLoading(false);
-            setCompanyDataSet(response.data);
+            if(response.data.status == -1) {
+                setShowLoading(false);
+                setProfileErrorMessages(  commons.getDBErrorMessagesText(response.data.error) );
+            } else {
+                setProfileErrorMessages("")
+                setContactModelShow(false);
+                setShowLoading(false);
+                setCompanyDataSet(response.data);
+            }
+
         }).catch(function(error) {
             console.log(error);
         });
     }   
 
     const openEditInfo = () => {
+        setProfileErrorMessages("")
         reset(companyDataSet);
         setContactModelShow(true);
     }
@@ -97,6 +109,8 @@ export default function ProfileContacts(params) {
                             <div>
                                 <div className="row">
 
+                                        <span className="ErrorLabel">{profileErrorMessages}</span>
+
                                         <div className="row">
                                             <div className="col-md-2"> Title </div>
                                             <div className="col-md-10">
@@ -106,10 +120,10 @@ export default function ProfileContacts(params) {
                                                         <input type="text" className="form-control" placeholder="Enter Title" 
                                                             id="title"  
                                                             name="title"
-                                                            {...register("title", { required: true, maxLength: 100 })}                                                        
+                                                            {...register("title", { required: true, minLength:5, maxLength: 500 })}                                                        
                                                         />   
                                                     </Form.Field>
-                                                    {errors.title && <p className="ErrorLabel">Contact needed</p>}
+                                                    {errors.title && <p className="ErrorLabel">Please enter title (min 5, max 500 characters)</p>}
                                                 </div>
                                             </div>
                                             <div className="col-md-1"></div>
@@ -146,10 +160,10 @@ export default function ProfileContacts(params) {
                                                         <textarea className="form-control" placeholder="Enter Title" 
                                                             id="details"  
                                                             name="details"
-                                                            {...register("details", { required: true, maxLength: 100 })}                                                        
+                                                            {...register("details", { required: true, minLength:5, maxLength: 1000 })}                                                        
                                                         />   
                                                     </Form.Field>
-                                                    {errors.details && <p className="ErrorLabel">Contact needed</p>}
+                                                    {errors.details && <p className="ErrorLabel">Please enter details  (min 5, max 1000 characters)</p>}
                                                 </div>
                                             </div>
                                             <div className="col-md-1"></div>

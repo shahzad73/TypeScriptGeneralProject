@@ -5,6 +5,8 @@ import { Modal } from 'react-bootstrap'
 import Loading from "../../common/loading"
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useForm } from "react-hook-form";
+import commons from "../../common/commons";
+
 
 export default function ProfileContacts(params) {
 
@@ -31,10 +33,13 @@ export default function ProfileContacts(params) {
     const [showContactLoading, setShowContactLoading] = useState(false);         
     const {register, handleSubmit, reset, formState: { errors }} = useForm();
     const [operation, setOperation] = useState(0);        
-    const [editID, setEditID] = useState(0);        
+    const [editID, setEditID] = useState(0);      
+    const [errorMessages, setErrorMessages] = useState("");
+
 
     function openEditContact() {
         setOperation(0);
+        setErrorMessages("");
         setContactModelShow(true);
         reset({});
     }
@@ -46,7 +51,6 @@ export default function ProfileContacts(params) {
     };
 
     const onFormSubmit = (data) => {
-        setContactModelShow(false);
         setShowContactLoading(true);
 
         data.companyID = companyID;
@@ -58,8 +62,14 @@ export default function ProfileContacts(params) {
         }
 
         axios.post(link, data).then(response => {
-            setUserContacts ( response.data.userContacts );
-            setShowContactLoading(false);
+            if(response.data.status == -1) {
+                setErrorMessages(  commons.getDBErrorMessagesText(response.data.error) );
+                setShowContactLoading(false);
+            } else {
+                setContactModelShow(false);
+                setUserContacts ( response.data.userContacts );
+                setShowContactLoading(false);
+            }
         }).catch(function(error) {
             console.log(error);
         });
@@ -67,8 +77,9 @@ export default function ProfileContacts(params) {
 
     const openEditButton = value => () => {
         setOperation(1);
-        setEditID(value)
-        axios.get("/accounts/company/getCompanyContact?id=" + value).then(response => {
+        setEditID(value);
+        setErrorMessages("");
+        axios.get(`/accounts/company/getCompanyContact?id=${value}&companyID=${companyID}`).then(response => {
             reset(response.data);
             setContactModelShow(true);
         }).catch(function(error) {
@@ -147,6 +158,8 @@ export default function ProfileContacts(params) {
                         <div>
                             <div className="row">
 
+                            <span className="ErrorLabel">{errorMessages}</span>
+
                                 <div className="row">
                                     <div className="col-md-2"> Person Name </div>
                                     <div className="col-md-10">
@@ -156,10 +169,10 @@ export default function ProfileContacts(params) {
                                                 <input type="text" className="form-control" placeholder="Enter Title" 
                                                     id="nameOfPerson"  
                                                     name="nameOfPerson"
-                                                    {...register("nameOfPerson", { required: true, maxLength: 100 })}    
+                                                    {...register("nameOfPerson", { required: true, minLength:5, maxLength: 100 })}    
                                                 />   
                                             </Form.Field>
-                                            {errors.nameOfPerson && <p className="ErrorLabel">Person Name is required</p>}
+                                            {errors.nameOfPerson && <p className="ErrorLabel">Person Name is required (min 5, max 100 characters) </p>}
                                         </div>
                                     </div>
                                     <div className="col-md-1"></div>
@@ -194,10 +207,10 @@ export default function ProfileContacts(params) {
                                                 <input type="text" className="form-control" placeholder="Enter Title" 
                                                     id="contact"  
                                                     name="contact"
-                                                    {...register("contact", { required: true, maxLength: 100 })}
+                                                    {...register("contact", { required: true, minLength:5, maxLength: 100 })}
                                                 />   
                                             </Form.Field>
-                                            {errors.nameOfPerson && <p className="ErrorLabel">contact required</p>}
+                                            {errors.contact && <p className="ErrorLabel">contact is required (min 5, max 100 characters) </p>}
                                         </div>
                                     </div>
                                     <div className="col-md-1"></div>

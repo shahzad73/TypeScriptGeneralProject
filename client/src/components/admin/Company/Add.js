@@ -13,8 +13,7 @@ export default function Company() {
     const [showLoading, setShowLoading] = useState(false);
     const [inputs, setInputs] = useState({});
     const countries = commons.getCountryNamesJSON();
-    const [showErrorMessage, setShowErrorMessage] = useState(0);
-    const [errorMessage, setErrorMessage] = useState("");        
+    const [profileErrorMessages, setProfileErrorMessages] = useState("");
 
     
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
@@ -41,9 +40,8 @@ export default function Company() {
         setShowLoading(true);
         axios.post("/accounts/company/createcompany", data).then(response => {
             setShowLoading(false);
-            if(response.data.id == -1) {
-                setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
-                setShowErrorMessage(1)
+            if(response.data.status == -1) {
+                setProfileErrorMessages(  commons.getDBErrorMessagesText(response.data.error) )                
             } else                
                 navigate('/adminmain/company', { replace: true });
 
@@ -69,6 +67,8 @@ export default function Company() {
                                 </div>
                                 <div className="card-block table-border-style">
  
+                                    <span className="ErrorLabel">{profileErrorMessages}</span>
+
                                     <Form onSubmit={handleSubmit(onFormSubmit)}>
 
                                             <div className="row">
@@ -81,10 +81,10 @@ export default function Company() {
                                                                 id="title"  
                                                                 name="title"
                                                                 defaultValue={inputs.title}
-                                                                {...register("title", { required: true, maxLength: 100 })}
+                                                                {...register("title", { required: true, minLength:5, maxLength: 500 })}
                                                                 />
                                                         </Form.Field>
-                                                        {errors.title && <p>Please enter title</p>}
+                                                        {errors.title && <p className="ErrorLabel">Please enter title (min 5, max 500 characters)</p>}
                                                     </div>
 
                                                     <div className="form-group">
@@ -93,12 +93,12 @@ export default function Company() {
                                                             <textarea className="form-control" rows="3"
                                                                 name="details"
                                                                 id="details"
-                                                                {...register("details", { required: true, maxLength: 100 })}
+                                                                {...register("details", { required: true, minLength:5, maxLength: 1000 })}
                                                                 defaultValue={inputs.details}
                                                                 placeholder="Describe your event!"
                                                             ></textarea>
                                                         </Form.Field>
-                                                        {errors.details && <p>Please enter details</p>}
+                                                        {errors.details && <p className="ErrorLabel">Please enter details  (min 5, max 1000 characters)</p>}
                                                     </div>     
 
 

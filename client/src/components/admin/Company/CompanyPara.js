@@ -16,7 +16,6 @@ export default function ProfileContacts(params) {
     const [showParagraphLoading, setShowParagraphLoading] = useState(false); 
     const [paragraphModelShow, setParagraphModelShow] = useState(false); 
     const [errorMessage, setErrorMessage] = useState("");        
-    const [showErrorMessage, setShowErrorMessage] = useState(0);
     const [deleteRecordID, setDeleteRecordID] = useState(0);
     const [deleteModelShow, setDeleteModelShow] = useState(false);
     const [operation, setOperation] = useState(0); 
@@ -34,7 +33,20 @@ export default function ProfileContacts(params) {
         });
     };
     const addParagraphDataForm = (e) => {
-        setParagraphModelShow(false);
+        
+        if(htmlText.length > 4000) {
+            setErrorMessage("Details cannot be greater than 4000 characters");
+            return;
+        }
+        if(htmlText.length < 5) {
+            setErrorMessage("Please enter some details");
+            return;
+        }        
+        if(formParagraphData.title < 5) {
+            setErrorMessage("Please enter title");
+            return;
+        }        
+
 
         formParagraphData.details = htmlText;
         formParagraphData.companyID = companyID;
@@ -49,12 +61,14 @@ export default function ProfileContacts(params) {
 
         axios.post(link, formParagraphData).then(response => {
             setShowParagraphLoading(false);
-            if(response.data.id == -1) {
-                setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
-                setShowErrorMessage(1)
-            } else 
+
+            if(response.data.status == -1) {
+                setErrorMessage(  commons.getDBErrorMessagesText(response.data.error)  )
+            } else {
                 setParamgraphDataSet( response.data );
-            
+                setParagraphModelShow(false);
+            }
+
         }).catch(function(error) {
             console.log(error);
         });
@@ -64,7 +78,9 @@ export default function ProfileContacts(params) {
             title: "",
             details: ""
         });
-        setOperation(0);        
+        setOperation(0);   
+        setHtmlText("");     
+        setErrorMessage("");
         setParagraphModelShow(true);
     }
     function closePargraphModelShow() {      
@@ -86,6 +102,7 @@ export default function ProfileContacts(params) {
     }  
     const editPara = id => () => {
         setShowParagraphLoading(true);
+        setErrorMessage("");
         axios.get("/accounts/company/getParaData?id=" + id).then(response => {
             setShowParagraphLoading(false);
             updateFormParagraphData({
@@ -168,6 +185,8 @@ export default function ProfileContacts(params) {
 
                     <div>
                         <div className="row">
+                                <span className="ErrorLabel">{errorMessage}</span>
+                                <br/>
 
                                 <div className="row">
                                     <div className="col-md-12">
@@ -177,6 +196,7 @@ export default function ProfileContacts(params) {
                                                 <input type="text" className="form-control" placeholder="Enter Title" 
                                                     id="title"  
                                                     name="title"
+                                                    maxLength={800}
                                                     value={formParagraphData.title}
                                                     onChange={handleParagraphChange}
                                                 />   
@@ -189,12 +209,15 @@ export default function ProfileContacts(params) {
                                 <div className="row">
                                     <div className="col-md-12">
                                         <div className="form-group">
-                                            <CustomTextEditor defaultHTML={formParagraphData.details}  onChange={textEditorTextChangeEvent} height="100px" />
+                                            <CustomTextEditor                                                 
+                                                defaultHTML={formParagraphData.details}  
+                                                onChange={textEditorTextChangeEvent} 
+                                                height="100px" 
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-1"></div>
                                 </div>
-
                         </div>
                     </div>
 

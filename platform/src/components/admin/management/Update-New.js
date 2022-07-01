@@ -20,7 +20,6 @@ export default function Home(props) {
 
     const [inputs, setInputs] = useState({});
     const [isUpdateOperation, setIsUpdateOperation] = useState(0);
-    const [showErrorMessage, setShowErrorMessage] = useState(0);
     const [errorMessage, setErrorMessage] = useState("");        
 
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
@@ -30,9 +29,8 @@ export default function Home(props) {
 
         if( isUpdateOperation == 0) {
             axios.post("/platform/backend/addNewUpdates", data).then(response => {
-                if(response.data.id == -1) {                    
+                if(response.data.status == -1) {                    
                     setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
-                    setShowErrorMessage(1)
                 } else 
                     navigate('/platformmain/update', { replace: true });                
             }).catch(function(error) {
@@ -43,9 +41,8 @@ export default function Home(props) {
             data.stoid = 0;
 
             axios.post("/platform/backend/updateUpdates", data).then(response => {
-                if(response.data.id == -1) {
+                if(response.data.status == -1) {
                     setErrorMessage(  commons.getDBErrorMessagesText(response.data.error) )
-                    setShowErrorMessage(1)
                 } else                
                     navigate('/platformmain/update', { replace: true });
             }).catch(function(error) {
@@ -54,9 +51,6 @@ export default function Home(props) {
         }
     }
 
-    function handleCloseErrorMessage() {
-        setShowErrorMessage(0)
-    }
 
     function cancel() {
         navigate('/platformmain/update', { replace: true })
@@ -98,6 +92,8 @@ export default function Home(props) {
                             <div className="row">
                                 <div className="col-md-12">
 
+                                        <span className="ErrorLabel">{errorMessage}</span>
+
                                         <div className="form-group">
                                             <label>Title</label>
                                             <Form.Field>
@@ -105,10 +101,10 @@ export default function Home(props) {
                                                     id="TITLE"  
                                                     name="TITLE"
                                                     defaultValue={inputs.TITLE}
-                                                    {...register("TITLE", { required: true, maxLength: 100 })}
+                                                    {...register("TITLE", { required: true, minLength:10, maxLength: 250 })}
                                                     />
                                             </Form.Field>
-                                            {errors.TITLE && <p>Please enter title 11</p>}
+                                            {errors.TITLE && <p className="ErrorLabel">Please enter title (min 10, max 250 characters)</p>}
                                         </div>
 
                                         <div className="form-group">
@@ -129,12 +125,12 @@ export default function Home(props) {
                                                 <textarea className="form-control" rows="3"
                                                     name="details"
                                                     id="details"
-                                                    {...register("details", { required: true, maxLength: 100 })}
+                                                    {...register("details", { required: true, minLength:10, maxLength: 8000 })}
                                                     defaultValue={inputs.details}
                                                     placeholder="Describe your event!"
                                                 ></textarea>
                                             </Form.Field>
-                                            {errors.details && <p>Please enter details</p>}
+                                            {errors.details && <p className="ErrorLabel">Please enter details  (min 10, max 8000 characters)</p>}
                                         </div>
                                         
                                 </div>
@@ -149,23 +145,6 @@ export default function Home(props) {
                 </div>
             </div>
 
-            <Modal  show={showErrorMessage} onHide={handleCloseErrorMessage}>
-                <Modal.Header closeButton>
-                <Modal.Title>Update Record</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <br />
-                    Errors occurred on server while adding new record
-                    <br /><br />
-                    {errorMessage}                      
-                    <br /><br />
-                </Modal.Body>
-                <Modal.Footer>
-                <Button positive onClick={handleCloseErrorMessage}>
-                    Close
-                </Button>
-                </Modal.Footer>
-            </Modal>
         </div>
     );
 

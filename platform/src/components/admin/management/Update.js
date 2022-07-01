@@ -10,10 +10,14 @@ export default function Updates(props) {
   const [updateDataSet, setUpdateDataSet] = useState([]);
   const [deleteModelShow, setDeleteModelShow] = useState(false);
   const [deleteRecordID, setDeleteRecordID] = useState(0);
-
   const [showLoading, setShowLoading] = useState(true);
-
   const handleDeleteModelClose = () => setDeleteModelShow(false);  
+  
+  const [updateModelShow, setUpdateModelShow] = useState(false);
+  const [updateContents, setUpdateContents] = useState("");
+  const [updateTitle, setUpdateTitle] = useState("");
+
+
 
 
   function handleDeleteModelEvent() {
@@ -30,6 +34,26 @@ export default function Updates(props) {
       setDeleteRecordID(id);
       setDeleteModelShow(true);
   }
+
+  var showUpdatesContents = id => () => {
+
+    axios.get("/platform/backend/getUpdate?id=" + id).then(response => {
+        setUpdateContents(response.data[0].details);
+        setUpdateTitle( response.data[0].TITLE )
+        setUpdateModelShow(true);
+    }).catch(function(error) {
+        console.log(error);
+    }); 
+
+
+  }
+
+  var handleViewModelClose = () => {
+    setUpdateModelShow(false);
+ }
+
+
+   
 
   React.useEffect((props) => {
       //alert("This is where you initialization code is execute");
@@ -86,9 +110,12 @@ export default function Updates(props) {
                                                 <img src="/img/edit.png" width="22px" className="listIconImage"></img>
                                             </Link>
                                         </div>
-                                        <div className="col-xl-10">                                        
+                                        <div className="col-xl-8">                                        
                                             {update.TITLE}
                                         </div>
+                                        <div className="col-xl-2">                                        
+                                            <Button color="vk" size="tiny" onClick={showUpdatesContents(update.ID)}>View</Button> 
+                                        </div>                                        
                                     </div>
                                     <br />
                                 </span>
@@ -116,6 +143,26 @@ export default function Updates(props) {
                     </Button>
                     </Modal.Footer>
                 </Modal>
+
+
+                <Modal size="xl" show={updateModelShow} onHide={handleViewModelClose}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Delete Record</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <br />
+                        {updateTitle}
+                        <br /><br />
+                        {updateContents}
+                        <br /><br />
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button color="vk" size="tiny" onClick={handleViewModelClose}>
+                        Close
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
+
 
             </div>
         </div>

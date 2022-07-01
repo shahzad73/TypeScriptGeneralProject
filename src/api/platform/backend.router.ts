@@ -39,7 +39,7 @@ bckendDataRouter.post("/addNewUpdates", async (req: Request, res: Response) => {
     const errors = await validate(newUpdates);
 
     if (errors.length > 0) {
-        res.json({id: -1, error: errors});
+        res.json({status: -1, error: errors});
     } else {
         const data = await updates.insert ( newUpdates );
         res.json({id: data.raw.insertId});
@@ -64,10 +64,10 @@ bckendDataRouter.post("/updateUpdates", async (req: Request, res: Response) => {
     
     const manager = getManager();
     const newUpdates = manager.create(updates, req.body);    
-    const errors = await validate(newUpdates);
+    const errors = await validate(newUpdates, { skipMissingProperties: true });
 
     if (errors.length > 0) {
-        res.json({id: -1, error: errors});
+        res.json({status: -1, error: errors});
     } else {
         await getConnection()
         .createQueryBuilder()
@@ -80,6 +80,10 @@ bckendDataRouter.post("/updateUpdates", async (req: Request, res: Response) => {
     }
 
 });
+
+
+
+
 
 bckendDataRouter.get("/getAllAccounts", async (req: Request, res: Response) => {
     res.send ( await users.find({  

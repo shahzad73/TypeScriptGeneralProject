@@ -23,7 +23,7 @@ export class company extends BaseEntity {
    mainImageCaption!: string; 
 
    @Column() 
-   @Length(5, 150)
+   @Length(2, 150)
    country!: string; 
 
    @Column() 

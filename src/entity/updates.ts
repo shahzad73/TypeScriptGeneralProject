@@ -7,21 +7,22 @@ export class updates extends BaseEntity {
 
    @PrimaryGeneratedColumn() 
    ID: number; 
-   
+
+
    @Column() 
-   @Length(10, 200)
+   @Length(10, 250)
    TITLE: string; 
 
 
    @Column() 
    @IsInt()
    @Min(0)
-   @Max(1000)   
+   @Max(10000)
    stoid: number; 
 
-   
+
    @Column() 
-   @Length(10, 200)   
+   @Length(10, 8000)   
    details: string; 
 
 
