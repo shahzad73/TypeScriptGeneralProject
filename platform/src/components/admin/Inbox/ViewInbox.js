@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import Loading from '../../common/loading';
+import CustomTextEditor from "../../common/CustomTextEditor"
 
  
 export default function ViewInbox(props) {
@@ -20,17 +21,18 @@ export default function ViewInbox(props) {
     const [emailData, setEmailData] = useState({});
     const [userData, setUserData] = useState({});    
     const [showResposeSection, setShowResposeSection] = useState(false);    
-
-    const [inputs, setInputs] = useState({});    
+    const [htmlText, setHtmlText] = useState("");
     const [showLoading, setShowLoading] = useState(false);
 
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
 
     const onFormSubmit = (data) => {
-        // setShowLoading(true);
+        setShowLoading(true);
+        data.details = htmlText;
         data.userID = emailData.UserID;
         data.ID = emailData.ID;        
         setShowLoading(true);
+
         axios.post("/platform/others/respondEmail", data).then(response => {
             setShowLoading(false);
 
@@ -48,6 +50,12 @@ export default function ViewInbox(props) {
     function cancel() {
         navigate('/platformmain/inbox', { replace: true })
     } 
+
+
+    function textEditorTextChangeEvent(data) {
+        setHtmlText(data)
+    }    
+
 
     React.useEffect(() => {   
         
@@ -96,11 +104,11 @@ export default function ViewInbox(props) {
                         <br /><br />
 
 
-                        {emailData.Title} 
+                        {emailData.Title}
                         <br />
-                        {emailData.Details}
+                        <span dangerouslySetInnerHTML={   {__html: emailData.Details}    }></span>                        
                         <br /><br />
-                        {emailData.email}
+                        <span dangerouslySetInnerHTML={   {__html: emailData.email}    }></span>                                                
                         <br />
 
                         { !showResposeSection && (
@@ -124,18 +132,18 @@ export default function ViewInbox(props) {
                                                 {errors.TITLE && <p>Please enter title</p>}
                                             </div>
 
-                                            <div className="form-group">
-                                                <label>Details</label>
-                                                <Form.Field>
-                                                    <textarea className="form-control" rows="3"
-                                                        name="details"
-                                                        id="details"
-                                                        {...register("details", { required: true, maxLength: 100 })}
-                                                        placeholder="Describe your event!"
-                                                    ></textarea>
-                                                </Form.Field>
-                                                {errors.details && <p>Please enter details</p>}
-                                            </div>                                                
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <CustomTextEditor                                                 
+                                                            defaultHTML={htmlText}  
+                                                            onChange={textEditorTextChangeEvent} 
+                                                            height="100px" 
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-1"></div>
+                                            </div>                                        
 
                                         </div>
                                     </div>
@@ -161,7 +169,7 @@ export default function ViewInbox(props) {
 
                         { showResposeSection && (
                             <span>
-                                {emailData.Response}
+                                <span dangerouslySetInnerHTML={   {__html: emailData.Response}    }></span>                                                                                
                                 <br /> <br />
                                 <Button  color="vk" size="tiny" onClick={cancel}>Back</Button> 
                             </span>

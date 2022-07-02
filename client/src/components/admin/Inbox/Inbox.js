@@ -55,7 +55,7 @@ function handleDeleteModelEvent() {
                 <div className="card-header">
                     <div className="row">
                         <div className="col-xl-10">
-                            <h5>My Inbox</h5>
+                            <h5><img width="30px" src="/img/emailclosed.jpg"></img> &nbsp;  My Inbox</h5>
                             <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
                         </div>
                         <div className="col-xl-2">
@@ -75,14 +75,10 @@ function handleDeleteModelEvent() {
                                             <img src="/img/delete.png" className="listIconImage" onClick={deleteRecord(inbox.ID)}/>                                                  
                                         </div>
                                         <div className="col-xl-7">       
-                                            {inbox.isResponded === 0 && 
-                                                <span>
-                                                    &nbsp;&nbsp;
-                                                    <img src="/img/new.png" className="listIconImage" data-toggle="tooltip" data-placement="top" title="Email is not yet responded by admin"/>
-                                                </span>
-                                            }    
-                                            &nbsp; &nbsp;                                                                         
                                             {inbox.Title}
+                                            {inbox.isResponded === 0 && 
+                                                <span className="ErrorLabel" > &nbsp;( New yet Responded )</span>
+                                            }                                                
                                         </div>
                                         <div className="col-xl-2">
                                             {Moment(inbox.DateEmail).format('DD MMM-YYYY')} 
@@ -108,16 +104,12 @@ function handleDeleteModelEvent() {
             </Modal.Header>
             <Modal.Body>
                 <br />
-                Do you want to delete this record id {deleteRecordID} ?
+                Do you want to delete this record ?
                 <br /><br />
             </Modal.Body>
             <Modal.Footer>
-            <Button positive onClick={() => setDeleteModelShow(false)}>
-                Close
-            </Button>
-            <Button color="orange" onClick={() => setDeleteModelShow(false)}>
-                Yes Delete
-            </Button>
+            <Button color="vk" size="tiny" onClick={() => setDeleteModelShow(false)}>Close</Button>
+            <Button color="red" size="tiny" onClick={handleDeleteModelEvent}>Delete</Button>
             </Modal.Footer>
         </Modal>
 

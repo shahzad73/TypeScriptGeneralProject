@@ -47,21 +47,20 @@ export default function ViewInbox(props) {
             <div className="col-xl-12">
                 <div className="card">
                     <div className="card-header">
-                        <h5>View Inbox</h5>
+                        <h5><img width="30px" src="/img/emailclosed.jpg"></img> &nbsp;  View Inbox</h5>
                         <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
                     </div>
                     <div className="card-block table-border-style">
 
-                        {emailData.Title} 
-                        <br />
-                        {emailData.Details}
+                        <span style={{"font-size": "22px"}}> {emailData.Title} </span>
+                        <br /><br />
+                        <div  dangerouslySetInnerHTML={   {__html: emailData.Details}    }></div>
                         <br /><br /><br /><br />
 
                         <h4>Admin Response</h4>
-
                         { showResposeSection && (
                             <span>
-                                {emailData.Response}
+                                <div  dangerouslySetInnerHTML={   {__html: emailData.Response}    }></div>
                                 <br /><br />
                             </span>
                         )}

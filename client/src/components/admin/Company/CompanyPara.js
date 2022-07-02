@@ -155,19 +155,23 @@ export default function ProfileContacts(params) {
                     <div className="card-block table-border-style">
                         {paramgraphDataSet.map(data => {
                             return (
-                                <div>
-                                    <br />                                
+                                <span>                               
                                     <div className="row">   
                                         <div className="col-xl-2">  
                                                 <img src="/img/edit.png" onClick={editPara(data.id)} className="listIconImage"></img>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <img src="/img/delete.png" className="listIconImage" onClick={deleteRecord(data.id)}></img>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                 <img src="/img/up.png" className="listIconImage" ></img>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <img src="/img/down.png" className="listIconImage" ></img>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;                                                                                               
                                         </div>
-                                        <div className="col-xl-4"> {data.title}</div>
-                                        <div className="col-xl-6" dangerouslySetInnerHTML={   {__html: data.details}    }></div>
+                                        <div className="col-xl-10"> {data.title}</div>
                                     </div>
-                                </div>
+                                    <br />                                     
+                                </span>
                             )
                         })}
                         { showParagraphLoading && ( <Loading message="Saving Paragraph Information" /> ) }

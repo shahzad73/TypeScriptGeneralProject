@@ -6,6 +6,7 @@ import { Button } from 'semantic-ui-react'
 import Loading from '../../common/loading';
 
 
+
 export default function Updates(props) {
   const [updateDataSet, setUpdateDataSet] = useState([]);
   const [deleteModelShow, setDeleteModelShow] = useState(false);
@@ -16,8 +17,9 @@ export default function Updates(props) {
   const [updateModelShow, setUpdateModelShow] = useState(false);
   const [updateContents, setUpdateContents] = useState("");
   const [updateTitle, setUpdateTitle] = useState("");
+  const [UpdateDate, setUpdateDate] = useState("");  
 
-
+  
 
 
   function handleDeleteModelEvent() {
@@ -40,6 +42,7 @@ export default function Updates(props) {
     axios.get("/platform/backend/getUpdate?id=" + id).then(response => {
         setUpdateContents(response.data[0].details);
         setUpdateTitle( response.data[0].TITLE )
+        setUpdateDate(  response.data[0].UpdateDate  )
         setUpdateModelShow(true);
     }).catch(function(error) {
         console.log(error);
@@ -83,7 +86,7 @@ export default function Updates(props) {
 
                     <div className="row">
                         <div className="col-xl-10">
-                            <h5> <img width="30px" src="/img/updates.png"></img> &nbsp; LIst of Updates</h5>
+                            <h5> <img width="30px" src="/img/updates.png"></img> &nbsp; LIst of Updates / News</h5>
                             <span className="d-block m-t-5">use className <code>table</code> inside table element</span>                                
                         </div>
                         <div className="col-xl-2">
@@ -130,7 +133,7 @@ export default function Updates(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <br />
-                        Do you want to delete this record id {deleteRecordID} ?
+                        Do you want to delete this update / news ?
                         <br /><br />
                     </Modal.Body>
                     <Modal.Footer>
@@ -147,14 +150,17 @@ export default function Updates(props) {
 
                 <Modal size="xl" show={updateModelShow} onHide={handleViewModelClose}>
                     <Modal.Header closeButton>
-                    <Modal.Title>Delete Record</Modal.Title>
+                    <Modal.Title><img width="30px" src="/img/updates.png"></img> &nbsp;  {updateTitle}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        <div className="row">
+                            <div className="col-xl-10"></div>
+                            <div className="col-xl-2">{UpdateDate}</div>                            
+                        </div>
+                                
+
+                        <span dangerouslySetInnerHTML={   {__html: updateContents}    }></span>
                         <br />
-                        {updateTitle}
-                        <br /><br />
-                        {updateContents}
-                        <br /><br />
                     </Modal.Body>
                     <Modal.Footer>
                     <Button color="vk" size="tiny" onClick={handleViewModelClose}>

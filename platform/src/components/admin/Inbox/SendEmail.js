@@ -5,18 +5,22 @@ import { Form, Button } from 'semantic-ui-react';
 import { useForm } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
 import Loading from '../../common/loading';
+import CustomTextEditor from "../../common/CustomTextEditor"
+
 
 export default function SendEmail() {
 
     const [inputs, setInputs] = useState({});
     const navigate = useNavigate();    
     const [showLoading, setShowLoading] = useState(false);
-
-
+    const [htmlText, setHtmlText] = useState("");
     const { register, handleSubmit, trigger, setValue, reset, formState: { errors } } = useForm();
 
     const onFormSubmit = (data) => {
         setShowLoading(true);
+
+        data.details = htmlText;
+
         axios.post("/platform/others/sendEmail", data).then(response => {
             setShowLoading(false);
            if(response.data.status == 0) {
@@ -34,6 +38,9 @@ export default function SendEmail() {
         navigate('/platformmain/inbox', { replace: true })
     } 
 
+    function textEditorTextChangeEvent(data) {
+        setHtmlText(data)
+    }    
 
     React.useEffect(() => {
 
@@ -86,19 +93,18 @@ export default function SendEmail() {
                                                 {errors.TITLE && <p>Please enter title</p>}
                                             </div>
 
-                                            <div className="form-group">
-                                                <label>Details</label>
-                                                <Form.Field>
-                                                    <textarea className="form-control" rows="3"
-                                                        name="details"
-                                                        id="details"
-                                                        {...register("details", { required: true, maxLength: 100 })}
-                                                        defaultValue={inputs.details}
-                                                        placeholder="Describe your event!"
-                                                    ></textarea>
-                                                </Form.Field>
-                                                {errors.details && <p>Please enter details</p>}
-                                            </div>                                                
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <CustomTextEditor                                                 
+                                                            defaultHTML={htmlText}  
+                                                            onChange={textEditorTextChangeEvent} 
+                                                            height="100px" 
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-1"></div>
+                                            </div>                                        
 
                                         </div>
                                     </div>

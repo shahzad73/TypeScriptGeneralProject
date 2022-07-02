@@ -34,3 +34,7 @@ div.card-header {
   background-color: #F5F5F5 !important;
 }
 
+
+.wrapper{
+  border: 1px solid rgb(206,212,218);
+}

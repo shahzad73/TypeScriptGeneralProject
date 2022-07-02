@@ -14,7 +14,8 @@ import FilesUploader from "../../common/FileUploader";
 import CompanyInfo from "./CompanyInfo";
 import CompanyPara from "./CompanyPara";
 import CompanyContacts from "./CompanyContacts"
-
+import Documents from "./documents";
+import Images from "./images";
 
 export default function EditCompany(props) {
     const [companyID, setCompanyID] = useState(0);
@@ -45,6 +46,10 @@ export default function EditCompany(props) {
             <CompanyInfo id={location.state.id}></CompanyInfo>
             <CompanyPara id={location.state.id}></CompanyPara>
             <CompanyContacts id={location.state.id}></CompanyContacts>
+            <Documents id={location.state.id}></Documents>
+            <Images id={location.state.id}></Images>            
+
+
 
             <div className="row">
                 <div className="col-xl-12">
@@ -52,7 +57,7 @@ export default function EditCompany(props) {
                             <div className="card-header">
                                 <div className="row">
                                     <div className="col-10">
-                                        <h5>Company Contacts</h5>
+                                        <h5>Test</h5>
                                     </div> 
                                     <div className="col-2">
 

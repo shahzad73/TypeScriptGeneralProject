@@ -73,7 +73,6 @@ bckOtherRouters.get("/getInboxDetails", async (req: Request, res: Response) => {
     .where("id = :id", { id: email[0].UserID })
     .execute();
 
-    console.log( email )
 
     res.send( {
         "email": email[0],
@@ -93,8 +92,6 @@ bckOtherRouters.post("/respondEmail", async (req: Request, res: Response) => {
     .from(users)
     .where("id = :id", { id: req.body.userID })
     .execute();
-
-    console.log(user);
 
     try {
         await sendEmail("Shah Aslam", "sender@hot.com", user[0].email, req.body.Title, req.body.details  )
