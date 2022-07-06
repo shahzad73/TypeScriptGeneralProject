@@ -2,10 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from 'semantic-ui-react'
 import axios from 'axios';
 
+/*
+Destination Codes
+  1 = internal
+  2 = inftmaker
+  3 = inftmakerprivate
+  4 = IPFS
+*/
+
 const FileUploader = (props) => {
+
   const [selectedFiles, setSelectedFiles] = useState(undefined);
   const [selectedFilesNames, setSelectedFilesNames] = useState("");
-
 
   const [progressInfos, setProgressInfos] = useState({ val: [] });
   const [message, setMessage] = useState([]);
@@ -33,7 +41,7 @@ const FileUploader = (props) => {
   };
 
   const upload = (idx, file) => {
-      // alert(file.size / 1000)
+      //alert(file.size / 1000)
 
       let _progressInfos = [...progressInfosRef.current.val];
       let formData = new FormData();
@@ -69,7 +77,7 @@ const FileUploader = (props) => {
           setProgressInfos({ val: [] });
           event({"status": 0});
       });
-    
+
   };
 
   const upLoadFileButtonClickEvent = () => {

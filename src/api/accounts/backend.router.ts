@@ -184,15 +184,13 @@ bckendDataRouter.post("/addAddress", async (req: Request, res: Response) => {
 });
 
 
-
-
 // ............... Files management 
 bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
     try {
         await uploadFile(req, res);
 
-        if (req.file == undefined) 
-            return res.status(400).send({ message: "Please upload a file!" });
+        //if (req.file == undefined) 
+        //    return res.status(400).send({ message: "Please upload a file!" });
 
         const filname = uuidv4() + path.extname( req.file.originalname );
 
@@ -314,7 +312,6 @@ async function getUserContacts(userid: number) {
     return data;
 }
 
-
 async function getUserAddresses(userid: number) {
     var data = {}
         
@@ -336,7 +333,6 @@ async function getUserAddresses(userid: number) {
     return data;
 
 }
-
 
 async function getUsrProfile(userid: number) {
     const usr = await getConnection()
