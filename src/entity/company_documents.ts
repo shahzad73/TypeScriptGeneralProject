@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import {Contains, IsInt, Length, IsEmail, IsFQDN, IsDateString, IsDate, Min, Max} from "class-validator";
 
-@Entity('user_contacts') 
-export class user_contacts extends BaseEntity {   
+@Entity('company_documents') 
+export class company_documents extends BaseEntity {   
 
    @PrimaryGeneratedColumn() 
    id!: number; 
@@ -21,5 +21,11 @@ export class user_contacts extends BaseEntity {
    @Column() 
    @Length(5, 4000)
    description!: string; 
+
+   @Column() 
+   destination!: number; 
+
+   @Column() 
+   type!: number; 
 
 }

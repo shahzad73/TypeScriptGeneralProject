@@ -88,8 +88,7 @@ export default function ProfileContacts(params) {
     }
 
     React.useEffect(() => {
-        const id = params.id;
-        setCompanyID(id);
+        setCompanyID(params.id);
 
         axios.get("/accounts/company/getdetails?id=" + params.id).then(response => {
             setMobileTypes ( response.data.mobileTypes );        

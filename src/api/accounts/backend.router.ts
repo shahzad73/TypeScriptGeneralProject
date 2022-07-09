@@ -12,9 +12,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { s3UploadFile } from '../../common/s3';
 import { Exception } from "handlebars";
 import { Web3Storage, getFilesFromPath } from 'web3.storage'
+import { deleteFileFromuploadedLocation } from '../../common/commons';
+import { company_documents } from "../../entity/company_documents";
 
 const uploadFile = require("../../common/fileupload");
-
 
 export const bckendDataRouter = express.Router();
 
@@ -197,7 +198,6 @@ bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
         fs.rename(__dirname + "/../../uploads/" + req.file.originalname, __dirname + "/../../uploads/" + filname, async function(err) {
 
             if(req.query.destination == "1") {
-                console.log("here.....")
                 fs.rename(__dirname + "/../../uploads/" + filname, __dirname + "/../../../public/files/" + filname, function(err) {
                     console.log("file in internal puvlic");
                     res.send({'status': 1, fileName: filname});
@@ -223,14 +223,13 @@ bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
                     res.send({'status': 0});
                 }
             }
-        
+
             if(req.query.destination == "4") {
                 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDY2QjdjRDgxNTRlNkI2REI1ZDZFMjQ4N2EwNGZGNzM3NTNiYUE1MjYiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTU0NDY5NzIxNDksIm5hbWUiOiJJTkZUTWFrZXIifQ.4nvG3j2ebgjpJkMe_23j1nebw0oElxF2ajFxQo418uE";
                 const client = new Web3Storage({ token })
                 
                 const files = await getFilesFromPath(__dirname + "/../../uploads/" + filname)
                 const cid = await client.put(files)
-                console.log(cid);
 
                 fs.unlink(__dirname + "/../../uploads/" + filname, async function() {
                     res.send({'status': 1, fileName: filname});
@@ -254,41 +253,32 @@ bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
     }
 });
 
-// bckendDataRouter.post("/transferUploadedFile", async (req: Request, res: Response) => {
+bckendDataRouter.get("/getDocuments", async (req: Request, res: Response) => {
 
-//     if(req.body.fileDestination == "1") {
-//         //  move file to public files directory
-//         fs.rename(__dirname + "/../../uploads/" + req.body.fileName, __dirname + "/../../../public/files/" + req.body.fileName, function(err) {
-//             console.log("file in internal puvlic");
-//             res.send({'status': 1});
-//         });
-//     }  
+    if(req.query.targetTable == "company_documents")    
+        res.json( await getDocuments("company_documents", req.query.companyID, req.query.type) );
     
-//     if(req.body.fileDestination == "2") {
-//         // var newPath:String = await uploadFile(req.body.fileName, __dirname + "/../../uploads");
-//         try {
-//             const newPath = await s3UploadFile(req.body.fileName, __dirname + "/../../uploads");
-//             res.send({'status': 1});
-//         } catch (e:any) {
-//             console.log("failed to upload files to s3")
-//             res.send({'status': 0});
-//         }
-//     }
+});
 
-//     if(req.body.fileDestination == "3") {
-//         const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDY2QjdjRDgxNTRlNkI2REI1ZDZFMjQ4N2EwNGZGNzM3NTNiYUE1MjYiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTU0NDY5NzIxNDksIm5hbWUiOiJJTkZUTWFrZXIifQ.4nvG3j2ebgjpJkMe_23j1nebw0oElxF2ajFxQo418uE";
-//         const client = new Web3Storage({ token })
-        
-//         console.log("cloud storage is going to happen");
-//         const files = await getFilesFromPath(__dirname + "/../../uploads/" + req.body.fileName)
-//         const cid = await client.put(files)
-//         console.log(cid);
-//         res.send({'status': 1});
-//     }
+bckendDataRouter.post("/saveDocument", async (req: Request, res: Response) => {
+    const manager = getManager();
+    const newUpdates = manager.create(company_documents, req.body);    
 
-// });
-// //...................
+    const errors = await validate(newUpdates);
 
+    if (errors.length > 0) {
+        res.json({status: -1, error: errors});
+    } else {
+        const data = await company_documents.insert ( newUpdates );
+        res.json( await getDocuments("company_documents", req.body.companyID, req.body.type) );
+    }
+
+});
+
+bckendDataRouter.post("/deleteUploadedfile", async (req: Request, res: Response) => {
+    await deleteFileFromuploadedLocation(req.body.filename, req.body.destination);
+    res.send({'status': 1});
+});
 
 
 
@@ -353,4 +343,18 @@ async function getUsrProfile(userid: number) {
     .execute();
 
     return usr[0];
+}
+
+async function getDocuments(targetTable: string, companyID: string, type: string) {
+
+    if(targetTable == "company_documents") {
+        const docs = await getConnection()
+        .createQueryBuilder()
+        .select(["*"])
+        .from(company_documents, "company_documents")
+        .where("companyID = :id and type = :type", { id: companyID, type: type })
+        .execute();
+
+        return docs;
+    }
 }

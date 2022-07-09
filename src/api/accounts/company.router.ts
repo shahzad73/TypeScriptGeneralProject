@@ -70,8 +70,6 @@ companyDataRouter.post("/updatecompanydetails", async (req: Request, res: Respon
 
 
 
-
-
 companyDataRouter.get("/getcompanyparagraphs", async (req: Request, res: Response) => {
     const para = await getConnection()
     .createQueryBuilder()
@@ -213,6 +211,7 @@ companyDataRouter.post("/addContact", async (req: Request, res: Response) => {
         const data = await company_contacts.insert ( newUpdates );
         res.json(   await getCompanyContacts(req.body.companyID)  );
     }
+
 });
 
 companyDataRouter.get("/getCompanyContact", async (req: Request, res: Response) => {
@@ -253,6 +252,7 @@ companyDataRouter.post("/editCompanyContact", async (req: Request, res: Response
 
 
 
+
 async function getCompanyContacts(companyid: number) {
     var data = {}
 
@@ -273,3 +273,5 @@ async function getCompanyContacts(companyid: number) {
 
     return data;
 }
+
+

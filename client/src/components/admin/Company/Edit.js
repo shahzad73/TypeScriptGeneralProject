@@ -1,26 +1,13 @@
 import React, { useState } from "react";
-import axios from 'axios';
-import { Button, Form } from 'semantic-ui-react'
-import { Modal } from 'react-bootstrap'
-import Loading from "../../common/loading"
-import DatePicker from "react-datepicker";
-import moment from "moment";
-import { Link } from "react-router-dom";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import CustomTextEditor from "../../common/CustomTextEditor"
-import commons from "../../common/commons"
-import FilesUploader from "../../common/FileUploader";
 import CompanyInfo from "./CompanyInfo";
 import CompanyPara from "./CompanyPara";
 import CompanyContacts from "./CompanyContacts"
-import Documents from "./documents";
-import Images from "./images";
+import Documents from "../documents";
 
 export default function EditCompany(props) {
     const [companyID, setCompanyID] = useState(0);
-
-
     const location = useLocation();
 
     React.useEffect((props) => {
@@ -34,47 +21,31 @@ export default function EditCompany(props) {
     }, []);
 
 
-    const filesUploadedEvent = (data) => {
-        if(data.status == 0) {
-            alert("Some issues uploading file. please try again")
-        } else 
-            alert( JSON.stringify(data.file) );
-    }
-
     return (
         <div>
             <CompanyInfo id={location.state.id}></CompanyInfo>
             <CompanyPara id={location.state.id}></CompanyPara>
             <CompanyContacts id={location.state.id}></CompanyContacts>
-            <Documents id={location.state.id}></Documents>
-            <Images id={location.state.id}></Images>            
-
-
-
-            <div className="row">
-                <div className="col-xl-12">
-                    <div className="card">
-                            <div className="card-header">
-                                <div className="row">
-                                    <div className="col-10">
-                                        <h5>Test</h5>
-                                    </div> 
-                                    <div className="col-2">
-
-                                    </div>                                
-                                </div>   
-                            </div>
-                            <div className="card-block table-border-style">
-                                <div className="row">
-                                    <div className="col-xl-6">
-                                        <FilesUploader event={filesUploadedEvent} fileDestination="2" />
-                                    </div>
-                                </div>
-                            </div>
-                            
-                    </div>
-                </div>
-            </div>
+            <Documents 
+                id={location.state.id} 
+                caption="List of Company Document"
+                typeDocuments="1"
+                destination="2"
+                serverLocation="/accounts/backend"
+                targetTable="company_documents"
+                buttonCaption="Upload Document"
+                icon = "document.png"
+            ></Documents>
+            <Documents 
+                id={location.state.id} 
+                caption="List of Company Images"
+                typeDocuments="2"
+                destination="2"
+                serverLocation="/accounts/backend"
+                targetTable="company_documents"
+                buttonCaption="Upload Image"   
+                icon = "image.png"             
+            ></Documents>            
         </div>
     );
 

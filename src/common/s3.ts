@@ -2,7 +2,6 @@ import AWS from 'aws-sdk';
 import { bool } from 'aws-sdk/clients/signer';
 import fs from 'fs';
 
-
 async function s3GetBucketsList(): Promise<any> {
 
     let promise = new Promise<any>((resolve, reject) => {
@@ -24,7 +23,7 @@ async function s3UploadFile(fileName: string, filePath: string, bucket: string):
     let promise = new Promise<any>((resolve, reject) => {
 
         const s3 = new AWS.S3({apiVersion: '2006-03-01'});
-        const fileContent = fs.readFileSync(filePath + "/" +fileName)
+        const fileContent = fs.readFileSync(filePath + "/" +fileName);
 
         const params = {
             Bucket: bucket,
@@ -45,20 +44,20 @@ async function s3UploadFile(fileName: string, filePath: string, bucket: string):
 
 }
 
-async function s3DeleteFile(fileName: string): Promise<bool> {
+async function s3DeleteFile(fileName: string, bucket: string): Promise<bool> {
 
     let promise = new Promise<any>((resolve, reject) => {
 
         const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
         const params = {
-            Bucket: "inftmaker",
-            Key: `${fileName}`,
+            Bucket: bucket,
+            Key: fileName,
         }
-
 
         s3.deleteObject(params, (err: any, data: any ) => {
             if (err) {
+                console.log(err.toString());
                 reject(err)
             }
             resolve( true );
@@ -104,7 +103,6 @@ async function s3UploadFileFileBase(fileName: string, filePath: string): Promise
         resolve( "success" );
     });
 }
-
 
 export {
     s3GetBucketsList,
