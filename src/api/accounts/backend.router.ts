@@ -254,10 +254,7 @@ bckendDataRouter.post("/uploadfile", async (req: Request, res: Response) => {
 });
 
 bckendDataRouter.get("/getDocuments", async (req: Request, res: Response) => {
-
-    if(req.query.targetTable == "company_documents")    
-        res.json( await getDocuments("company_documents", req.query.companyID, req.query.type) );
-    
+    res.json( await getDocuments(req.query.targetTable, req.query.companyID, req.query.type) );    
 });
 
 bckendDataRouter.post("/saveDocument", async (req: Request, res: Response) => {
@@ -279,6 +276,50 @@ bckendDataRouter.post("/deleteUploadedfile", async (req: Request, res: Response)
     await deleteFileFromuploadedLocation(req.body.filename, req.body.destination);
     res.send({'status': 1});
 });
+
+bckendDataRouter.get("/deleteDocuments", async (req: Request, res: Response) => {
+    console.log( req.query.id + " " + req.query.companyID)
+    
+    await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(company_documents)
+    .where("id = :id and companyID = :companyID", { id: req.query.id, companyID: req.query.companyID })
+    .execute();
+
+    res.json( await getDocuments(req.query.targetTable, req.query.companyID, req.query.type) );
+});
+
+bckendDataRouter.get("/getDocument", async (req: Request, res: Response) => {
+    const data = await company_documents.find ({
+        id: req.query.id
+    });
+    res.json( data[0] );
+});
+
+bckendDataRouter.post("/updateDocument", async (req: Request, res: Response) => {
+    const data = {};
+    data.title = req.body.title;
+    data.description = req.body.description;
+
+    const manager = getManager();
+    const newUpdates = manager.create(company_documents, data);    
+
+    const errors = await validate(newUpdates, { skipMissingProperties: true });
+
+    if (errors.length > 0) {
+        res.json({status: -1, error: errors});
+    } else {
+        await getConnection()
+        .createQueryBuilder()
+        .update(company_documents)
+        .set(data)
+        .where("id = :id and companyID = :companyID", {  id: req.body.id,  companyID: req.body.companyID })
+        .execute();
+
+        res.json(  await getDocuments(req.body.targetTable, req.body.companyID, req.body.type)  ); 
+    }
+})
 
 
 
@@ -348,6 +389,7 @@ async function getUsrProfile(userid: number) {
 async function getDocuments(targetTable: string, companyID: string, type: string) {
 
     if(targetTable == "company_documents") {
+
         const docs = await getConnection()
         .createQueryBuilder()
         .select(["*"])
@@ -358,3 +400,4 @@ async function getDocuments(targetTable: string, companyID: string, type: string
         return docs;
     }
 }
+

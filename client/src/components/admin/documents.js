@@ -12,6 +12,9 @@ export default function Documents(params) {
     const [errorMessages, setErrorMessages] = useState("");       
     const [showContactLoading, setShowContactLoading] = useState(false);              
     const [userDocuments, setUserDocuments] = useState([]); 
+    const [confirmationModelShow, setConfirmationModelShow] = useState(0);      
+    const [recordID, setRecordID] = useState(0);          
+    const [isEditMode, setIsEditMode] = useState(false);              
 
     const [companyID, setCompanyID] = useState(0);  
     const [typeDocuments, setTypeDocuments] = useState(0);  
@@ -22,7 +25,6 @@ export default function Documents(params) {
     const [buttonCaption, setButtonCaption] = useState("");         
     const [icon, setIcon] = useState("");             
 
-    
     const {register, handleSubmit, reset, formState: { errors }} = useForm();     
     const [isFileIsUploaded, setIsFileIsUploaded] = useState(false);
     const [uploadedFile, setUploadedFile] = useState("");
@@ -60,6 +62,7 @@ export default function Documents(params) {
     }, []);
 
     var openDocumentUpload = () => {
+        setIsEditMode(false);
         setIsFileIsUploaded(false);
         setPercent(0);
         setUploadedFile("");
@@ -75,7 +78,11 @@ export default function Documents(params) {
         data.type = typeDocuments;
         data.targetTable = targetTable;
 
-        axios.post(`${serverLocation}/saveDocument`, data).then(response => {
+        var link = `${serverLocation}/saveDocument`;
+        if(isEditMode == true)
+            link = `${serverLocation}/updateDocument`;
+
+        axios.post(link, data).then(response => {
             if(response.data.status == -1) {
                 setErrorMessages(  commons.getDBErrorMessagesText(response.data.error) );
                 setShowContactLoading(false);
@@ -90,7 +97,7 @@ export default function Documents(params) {
     };
 
     const closeUploadDialog = () => {
-        if(isFileIsUploaded == true) {   
+        if(isFileIsUploaded == true && isEditMode == false) {   
             setShowContactLoading(true);         
             axios.post(`${serverLocation}/deleteUploadedfile`, {filename: uploadedFile, destination: destination}).then(response => {
                 setShowContactLoading(false);
@@ -102,9 +109,41 @@ export default function Documents(params) {
             setDocumentModelShow(false);
     }
 
+    const openDeleteDIalog = (id) => {
+        setRecordID(id);
+        setConfirmationModelShow(true);
+    }
+
+    const editDocumentDialog = (id) => {
+        setShowContactLoading(true);  
+
+        axios.get(`${serverLocation}/getDocument?id=${id}`).then(response => {
+            reset(response.data);
+            setShowContactLoading(false);  
+            setIsEditMode(true);
+            setIsFileIsUploaded(true);
+            setPercent(0);
+            setUploadedFile("");
+            setDocumentModelShow(true);            
+        }).catch(function(error) {
+            console.log(error);
+        });
+    }
+
+    const confirmationOK = () => {
+        setShowContactLoading(true);  
+        
+        axios.get(`${serverLocation}/deleteDocuments?id=${recordID}&companyID=${companyID}&type=${typeDocuments}&targetTable=${targetTable}`).then(response => {
+            setUserDocuments ( response.data );
+            setShowContactLoading(false);
+            setConfirmationModelShow(false);
+        }).catch(function(error) {
+            console.log(error);
+        });
+    }
+
     return (  
         <div>
-
             <div>
                 <div className="row">
                     <div className="col-xl-12">
@@ -129,9 +168,9 @@ export default function Documents(params) {
                                             <span>                               
                                                 <div className="row">   
                                                     <div className="col-xl-2">  
-                                                            <img src="/img/edit.png"  className="listIconImage"></img>
+                                                            <img src="/img/edit.png" onClick={()=> editDocumentDialog(data.id)}  className="listIconImage"></img>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;
-                                                            <img src="/img/delete.png" className="listIconImage" ></img>
+                                                            <img src="/img/delete.png" onClick={() => openDeleteDIalog(data.id)} className="listIconImage" ></img>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;                                                                                             
                                                     </div>
                                                     <div className="col-xl-10"> {data.title}</div>
@@ -255,6 +294,29 @@ export default function Documents(params) {
                 </Form>                
             </Modal>
 
+            <Modal size="me" show={confirmationModelShow} onHide={() => setConfirmationModelShow(false)}>
+
+                <Modal.Header closeButton>
+                <Modal.Title> <img src="/img/messagebox.png" width="25px"></img> Confirmation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body  >
+                    <br />
+                    
+                    <div className="row">
+                        <div className="col-md-12">
+                            Are you sure you want to delete ?
+                        </div>
+                    </div>
+
+                    <br /><br />
+                </Modal.Body>
+                <Modal.Footer>
+                <Button color="vk" size="tiny" onClick={confirmationOK}>Yes</Button>
+                &nbsp;&nbsp;
+                <Button color="red" size="tiny" onClick={() => setConfirmationModelShow(false)}>Close</Button>
+                </Modal.Footer>
+
+            </Modal>
         </div>
     );
 
