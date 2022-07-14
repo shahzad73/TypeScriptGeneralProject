@@ -16,15 +16,6 @@ export default function Documents(params) {
     const [recordID, setRecordID] = useState(0);          
     const [isEditMode, setIsEditMode] = useState(false);              
 
-    const [companyID, setCompanyID] = useState(0);  
-    const [typeDocuments, setTypeDocuments] = useState(0);  
-    const [caption, setCaption] = useState("");  
-    const [destination, setDestination] = useState("");  
-    const [serverLocation, setServerLocation] = useState("");    
-    const [targetTable, setTargetTable] = useState("");     
-    const [buttonCaption, setButtonCaption] = useState("");         
-    const [icon, setIcon] = useState("");             
-
     const {register, handleSubmit, reset, formState: { errors }} = useForm();     
     const [isFileIsUploaded, setIsFileIsUploaded] = useState(false);
     const [uploadedFile, setUploadedFile] = useState("");
@@ -38,6 +29,20 @@ export default function Documents(params) {
         }
     }
 
+    // Configurations 
+    const [companyID, setCompanyID] = useState(0);  
+    const [typeDocuments, setTypeDocuments] = useState(0);  
+    const [caption, setCaption] = useState("");  
+    const [destination, setDestination] = useState("");  
+    const [serverLocation, setServerLocation] = useState("");    
+    const [targetTable, setTargetTable] = useState("");     
+    const [buttonCaption, setButtonCaption] = useState("");         
+    const [icon, setIcon] = useState("");             
+    const [uploadDialogMessage, setUploadDialogMessage] = useState("");     
+    const [sectionHelperText, setSectionHelperText] = useState("");         
+    
+
+
     React.useEffect(() => {
         setCompanyID(params.id);
         setTypeDocuments(params.typeDocuments);
@@ -47,6 +52,8 @@ export default function Documents(params) {
         setTargetTable(params.targetTable);
         setButtonCaption(params.buttonCaption);
         setIcon("/img/" + params.icon);
+        setUploadDialogMessage(params.uploadDialogMessage);
+        setSectionHelperText(params.sectionHelperText)
 
         setShowContactLoading(true);       
         axios.get(`${params.serverLocation}/getDocuments?companyID=${params.id}&type=${params.typeDocuments}&targetTable=${params.targetTable}`).then(response => {
@@ -153,7 +160,7 @@ export default function Documents(params) {
                                 <div className="row">
                                     <div className="col-xl-10">
                                         <h5><img src={icon} width="35px"></img> &nbsp; {caption}</h5>
-                                        <span className="d-block m-t-5">use className <code>table</code> inside table element</span>
+                                        <span className="d-block m-t-5">{sectionHelperText}</span>
                                     </div>
                                     <div className="col-xl-2">
                                         <Button color="vk" onClick={openDocumentUpload}  size='tiny'> {buttonCaption} </Button>
@@ -190,7 +197,7 @@ export default function Documents(params) {
             <Modal size="lg" show={documentModelShow} onHide={closeUploadDialog}>
                 <Form onSubmit={handleSubmit(onFormSubmit)}>                
                     <Modal.Header closeButton>
-                    <Modal.Title><img src="/img/document.png" width="30px" /> &nbsp;  Add / Edit Company Paragraph</Modal.Title>
+                    <Modal.Title><img src={icon} width="30px" /> &nbsp;  {uploadDialogMessage}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body  >
                         <br />

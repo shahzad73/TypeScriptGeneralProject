@@ -35,6 +35,8 @@ export default function EditCompany(props) {
                 targetTable="company_documents"
                 buttonCaption="Upload Document"
                 icon = "document.png"
+                uploadDialogMessage="Upload Document"
+                sectionHelperText="Please uplaod documents for uploading in cloud"
             ></Documents>
             <Documents 
                 id={location.state.id} 
@@ -44,7 +46,9 @@ export default function EditCompany(props) {
                 serverLocation="/accounts/backend"
                 targetTable="company_documents"
                 buttonCaption="Upload Image"   
-                icon = "image.png"             
+                icon = "image.png"           
+                uploadDialogMessage="Upload Image"                  
+                sectionHelperText="Please uplaod images for uploading"                
             ></Documents>            
         </div>
     );

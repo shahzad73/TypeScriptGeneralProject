@@ -6,14 +6,15 @@ import {contacts_types} from "../../entity/contact_types";
 import {user_contacts} from "../../entity/user_contacts";
 import {user_addresses} from "../../entity/user_addresses";
 import { findMany } from "../../core/mysql";
+import { update } from "../../core/mysql";
 import fs from "fs";
 import path from "path";
 import { v4 as uuidv4 } from 'uuid';
 import { s3UploadFile } from '../../common/s3';
-import { Exception } from "handlebars";
 import { Web3Storage, getFilesFromPath } from 'web3.storage'
 import { deleteFileFromuploadedLocation } from '../../common/commons';
 import { company_documents } from "../../entity/company_documents";
+import { json } from "stream/consumers";
 
 const uploadFile = require("../../common/fileupload");
 
@@ -67,7 +68,7 @@ bckendDataRouter.post("/addContact", async (req: Request, res: Response) => {
         const usr = await getUserContacts(req.userid);
         res.json(  usr  ); 
     }
-})
+});
 
 bckendDataRouter.post("/editContact", async (req: Request, res: Response) => {
     const id = req.body.id;
@@ -91,7 +92,7 @@ bckendDataRouter.post("/editContact", async (req: Request, res: Response) => {
 
         res.json(  await getUserContacts(req.userid)  ); 
     }
-})
+});
 
 bckendDataRouter.get("/getContactRecord", async (req: Request, res: Response) => {
     const data = await user_contacts.find ({
@@ -100,7 +101,7 @@ bckendDataRouter.get("/getContactRecord", async (req: Request, res: Response) =>
     });
 
     res.json( data[0] );
-})
+});
 
 bckendDataRouter.post("/deleteContact", async (req: Request, res: Response) => {
     await getConnection()
@@ -278,7 +279,15 @@ bckendDataRouter.post("/deleteUploadedfile", async (req: Request, res: Response)
 });
 
 bckendDataRouter.get("/deleteDocuments", async (req: Request, res: Response) => {
-    console.log( req.query.id + " " + req.query.companyID)
+    const data = await company_documents.find ({
+        id: req.query.id
+    });
+
+    try {
+        await deleteFileFromuploadedLocation(data[0].document , data[0].destination);
+    } catch (e:any) {
+        console.log(e)
+    }
     
     await getConnection()
     .createQueryBuilder()
@@ -288,6 +297,7 @@ bckendDataRouter.get("/deleteDocuments", async (req: Request, res: Response) => 
     .execute();
 
     res.json( await getDocuments(req.query.targetTable, req.query.companyID, req.query.type) );
+
 });
 
 bckendDataRouter.get("/getDocument", async (req: Request, res: Response) => {
@@ -319,7 +329,19 @@ bckendDataRouter.post("/updateDocument", async (req: Request, res: Response) => 
 
         res.json(  await getDocuments(req.body.targetTable, req.body.companyID, req.body.type)  ); 
     }
-})
+});
+
+
+bckendDataRouter.post("/updateImageRecord", async (req: Request, res: Response) => {
+    var sql = "";
+
+    if(req.body.targetID == 1)
+        sql = "update company set mainImage = ? where id = ?"
+
+    await update(sql, [req.body.image, req.body.id]);   
+    
+    res.json({"status": 1});
+});
 
 
 

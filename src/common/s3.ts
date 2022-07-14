@@ -1,6 +1,8 @@
 import AWS from 'aws-sdk';
 import { bool } from 'aws-sdk/clients/signer';
 import fs from 'fs';
+import { Exception } from 'handlebars';
+import { json } from 'stream/consumers';
 
 async function s3GetBucketsList(): Promise<any> {
 
@@ -44,28 +46,29 @@ async function s3UploadFile(fileName: string, filePath: string, bucket: string):
 
 }
 
-async function s3DeleteFile(fileName: string, bucket: string): Promise<bool> {
+async function s3DeleteFile(fileName: string, bucket: string): Promise<void> {
 
-    let promise = new Promise<any>((resolve, reject) => {
+    let promise = new Promise<any>(async (resolve, reject) => {
+
 
         const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
         const params = {
             Bucket: bucket,
             Key: fileName,
-        }
+        };
 
-        s3.deleteObject(params, (err: any, data: any ) => {
-            if (err) {
-                console.log(err.toString());
-                reject(err)
-            }
-            resolve( true );
-        })
+        try {
+            await s3.deleteObject(params);
+            resolve("done");
+        } catch (e:any) {
+            console.log("first catch")
+            reject("error");
+        }
 
     });
 
-    return await promise;       
+    return await promise;  
 
 }
 
@@ -102,6 +105,8 @@ async function s3UploadFileFileBase(fileName: string, filePath: string): Promise
 
         resolve( "success" );
     });
+
+    return promise;
 }
 
 export {

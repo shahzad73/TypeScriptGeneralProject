@@ -134,3 +134,63 @@ export default function ProfileContacts() {
     );
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------
+file uploading 
+---------------------------------------------------------------------------------------------------------
+1.  import commons from "../common/commons";
+
+2. 
+<div className="row">
+    <div className="col-xl-8">
+        <input type="file" 
+            id="documentFileUploadFileInput"
+            style={{ 
+                'border': '0px',
+                'font-size':'18px',
+                'padding': '0px'
+            }} 
+            onChange={commons.setUploadFilesSelectionEvent} 
+        />
+    </div>
+    <div className="col-xl-2">
+        <Button type="button" color="vk" size="tiny" onClick={ () => commons.uploadFile("accounts/backend/uploadfile", "documentFileUploadFileInput", destination, setPercent, documentFilesUploadedEvent1) }>Upload</Button> 
+    </div>
+</div>
+<br /><br />
+{(percent > 0) && (
+    <div className="progress">
+        <div
+            className="progress-bar progress-bar-info"
+            role="progressbar"
+            aria-valuenow="50"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            style={{ width: percent + "%" }}>
+        {percent}% </div>
+    </div>
+)}
+
+
+3.      
+const [percent, setPercent] = useState(0); 
+const documentFilesUploadedEvent1 = (data) =>  {
+    if(data.status == 0) {
+        alert("Some issues uploading file. please try again")
+    } else {
+        setUploadedFile( data.file );
+        setIsFileIsUploaded(true);
+    }
+}
+---------------------------------------------------------------------------------------------------------

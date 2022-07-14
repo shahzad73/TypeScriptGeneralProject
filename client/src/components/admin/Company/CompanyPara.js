@@ -160,15 +160,17 @@ export default function ProfileContacts(params) {
                                         <div className="col-xl-2">  
                                                 <img src="/img/edit.png" onClick={editPara(data.id)} className="listIconImage"></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <img src="/img/view.png" style={{width: "22px"}} ></img>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;                                                
                                                 <img src="/img/delete.png" className="listIconImage" onClick={deleteRecord(data.id)}></img>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                 <img src="/img/up.png" className="listIconImage" ></img>
+                                        </div>
+                                        <div className="col-xl-8"> {data.title}</div>
+                                        <div className="col-xl-1">
+                                                <img src="/img/up.png" className="listIconImage" ></img>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <img src="/img/down.png" className="listIconImage" ></img>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;                                                                                               
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
                                         </div>
-                                        <div className="col-xl-10"> {data.title}</div>
                                     </div>
                                     <br />                                     
                                 </span>
@@ -190,7 +192,6 @@ export default function ProfileContacts(params) {
                     <div>
                         <div className="row">
                                 <span className="ErrorLabel">{errorMessage}</span>
-                                <br/>
 
                                 <div className="row">
                                     <div className="col-md-12">

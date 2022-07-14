@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import commons from "../../common/commons";
 
 
-
 export default function ProfileContacts(params) {
     const countries = commons.getCountryNamesJSON();
 
@@ -18,7 +17,20 @@ export default function ProfileContacts(params) {
     const [contactModelShow, setContactModelShow] = useState(false);
     const [profileErrorMessages, setProfileErrorMessages] = useState("");
 
-
+    const [percent, setPercent] = useState(0); 
+    const companyInfoUploadEvent = (data) =>  {
+        if(data.status == 0) {
+            alert("Some issues uploading file. please try again")
+        } else {
+            setShowLoading(true);
+            axios.post("/accounts/backend/updateImageRecord", {targetID: 1, image:data.file, id:companyID}).then(response => {
+                alert("db is updated");
+                setShowLoading(false);
+            }).catch(function(error) {
+                console.log(error);
+            });
+        }
+    }
 
     React.useEffect(() => {
         const id = params.id;
@@ -43,7 +55,6 @@ export default function ProfileContacts(params) {
         delete( data.mainImageCaption );
         delete( data.userid );
 
-        
         setShowLoading(true);
         axios.post("/accounts/company/updatecompanydetails", data).then(response => {
             if(response.data.status == -1) {
@@ -55,7 +66,6 @@ export default function ProfileContacts(params) {
                 setShowLoading(false);
                 setCompanyDataSet(response.data);
             }
-
         }).catch(function(error) {
             console.log(error);
         });
@@ -84,13 +94,50 @@ export default function ProfileContacts(params) {
                         </div>
                     </div>      
 
-
                     <div className="card-block table-border-style">
-                        {companyDataSet.title}
-                        <br />
-                        {companyDataSet.country}
-                        <br />
-                        {companyDataSet.details}
+                        <div className="row">
+                            <div className="col-xl-8">
+                                {companyDataSet.title}
+                                <br />
+                                {companyDataSet.country}
+                                <br />
+                                {companyDataSet.details}
+                            </div>
+                            <div className="col-xl-4">
+                                
+                                    <div className="row">
+                                        <div className="col-xl-8">
+                                            <input type="file" 
+                                                id="documentFileUploadFileInput"
+                                                style={{ 
+                                                    'border': '0px',
+                                                    'font-size':'12px',
+                                                    'padding': '0px'
+                                                }} 
+                                                onChange={commons.setUploadFilesSelectionEvent} 
+                                            />
+                                        </div>
+                                        <div className="col-xl-4">
+                                            <Button type="button" color="vk" size="tiny" onClick={ () => commons.uploadFile("accounts/backend/uploadfile", "documentFileUploadFileInput", 2, setPercent, companyInfoUploadEvent) }>Upload</Button> 
+                                        </div>
+                                    </div> 
+                                    <br />
+
+                                    {(percent > 0) && (
+                                        <div className="progress">
+                                            <div
+                                                className="progress-bar progress-bar-info"
+                                                role="progressbar"
+                                                aria-valuenow="50"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100"
+                                                style={{ width: percent + "%" }}>
+                                            {percent}% </div>
+                                        </div>
+                                    )}
+                                
+                            </div>
+                        </div>
                     </div>
 
                     { showLoading && ( <Loading message="Loading Company Information" /> ) }
@@ -128,7 +175,6 @@ export default function ProfileContacts(params) {
                                             </div>
                                             <div className="col-md-1"></div>
                                         </div>
-
 
 
                                         <div className="row">
