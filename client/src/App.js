@@ -25,6 +25,7 @@ export default function App() {
       setLoginUserName(val)
     };
 
+    const s3DocumentBaseURL = "https://inftmaker.s3.amazonaws.com/";
 
     const globalSettings = {
       count,
@@ -34,7 +35,8 @@ export default function App() {
       showDashboardHomeLink,
       setDashboardHomeLink,
       loginUserName,
-      setLoginedUsername
+      setLoginedUsername,
+      s3DocumentBaseURL
     };
 
     React.useEffect((props) => {

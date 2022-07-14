@@ -41,8 +41,6 @@ export default function Documents(params) {
     const [uploadDialogMessage, setUploadDialogMessage] = useState("");     
     const [sectionHelperText, setSectionHelperText] = useState("");         
     
-
-
     React.useEffect(() => {
         setCompanyID(params.id);
         setTypeDocuments(params.typeDocuments);
@@ -212,7 +210,7 @@ export default function Documents(params) {
                                         <div className="col-xl-12">
 
                                             <div className="row">
-                                                <div className="col-xl-8">
+                                                <div className="col-xl-10">
                                                     <input type="file" 
                                                         id="documentFileUploadFileInput"
                                                         style={{ 

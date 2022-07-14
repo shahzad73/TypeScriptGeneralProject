@@ -21,6 +21,7 @@ export default function ProfileContacts(params) {
     const [operation, setOperation] = useState(0); 
     const [currentEditID, setCurrentEditID] = useState(0); 
 
+    const [viewModelShow, setViewModelShow] = useState(false);
 
     const [htmlText, setHtmlText] = useState("");
     function textEditorTextChangeEvent(data) {
@@ -100,7 +101,7 @@ export default function ProfileContacts(params) {
             console.log(error);
         });
     }  
-    const editPara = id => () => {
+    const editPara = (id, op) => () => {
         setShowParagraphLoading(true);
         setErrorMessage("");
         axios.get("/accounts/company/getParaData?id=" + id).then(response => {
@@ -109,9 +110,14 @@ export default function ProfileContacts(params) {
                 title: response.data.title,
                 details: response.data.details
             })
-            setOperation(1);            
-            setCurrentEditID(id);
-            setParagraphModelShow(true);
+            if(op == 1) {
+                setOperation(1);            
+                setCurrentEditID(id);
+                setParagraphModelShow(true);
+            } else if(op == 2) {
+                setViewModelShow(true);
+            }
+
         }).catch(function(error) {
             console.log(error);
         });
@@ -158,10 +164,10 @@ export default function ProfileContacts(params) {
                                 <span>                               
                                     <div className="row">   
                                         <div className="col-xl-2">  
-                                                <img src="/img/edit.png" onClick={editPara(data.id)} className="listIconImage"></img>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                <img src="/img/view.png" style={{width: "22px"}} ></img>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;                                                
+                                                <img src="/img/view.png" onClick={editPara(data.id, 2)} style={{width: "25px"}} ></img>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;                                         
+                                                <img src="/img/edit.png" onClick={editPara(data.id, 1)} className="listIconImage"></img>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;                                               
                                                 <img src="/img/delete.png" className="listIconImage" onClick={deleteRecord(data.id)}></img>
                                         </div>
                                         <div className="col-xl-8"> {data.title}</div>
@@ -172,7 +178,6 @@ export default function ProfileContacts(params) {
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                         </div>
                                     </div>
-                                    <br />                                     
                                 </span>
                             )
                         })}
@@ -180,7 +185,6 @@ export default function ProfileContacts(params) {
                     </div>
                 </div>
             </div>
-
 
             <Modal size="xl" show={paragraphModelShow} onHide={() => setParagraphModelShow(false)}>
                 <Modal.Header closeButton>
@@ -248,6 +252,22 @@ export default function ProfileContacts(params) {
                 <Button color="vk" size="tiny" onClick={() => handleDeleteModelEvent()}>Yes</Button>
                 &nbsp;
                 <Button color="red" size="tiny" onClick={() =>  setDeleteModelShow(false) }>Close</Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal  size="xl" show={viewModelShow} onHide={() => setViewModelShow(false)}>
+                <Modal.Header closeButton>
+                <Modal.Title><img src="/img/paragraph.png" width="23px" /> &nbsp; Paragraph Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <br />
+                    <span style={{"font-size":"25px"}}>{formParagraphData.title}</span>
+                    <br /><br />
+                    <span dangerouslySetInnerHTML={   {__html: formParagraphData.details}    }></span>                      
+                    <br /><br />                    
+                </Modal.Body>
+                <Modal.Footer>
+                <Button color="red" size="tiny" onClick={() =>  setViewModelShow(false) }>Close</Button>
                 </Modal.Footer>
             </Modal>
 
