@@ -134,3 +134,180 @@ ALTER TABLE company ADD COLUMN `country` varchar(150) default null;
 
 ALTER TABLE company ADD COLUMN `details` varchar(1000) default null;
 
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS `blockchain` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `title` varchar(1000) DEFAULT NULL,        
+    `rpcLink` varchar(4000) DEFAULT NULL,
+    `isTest` tinyint  DEFAULT NULL,    
+    PRIMARY KEY (`id`)
+)
+
+
+
+CREATE TABLE IF NOT EXISTS `token` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `title` varchar(1000) DEFAULT NULL,        
+    `details` varchar(4000) DEFAULT NULL,
+    `userID` int,    
+    `blockchainID` int  DEFAULT NULL,
+    `isSecurityToken` tinyint  DEFAULT NULL,         
+    `tokenProtocol` int  DEFAULT NULL,    
+    `companyID` int  DEFAULT NULL,            
+    PRIMARY KEY (`id`),
+    
+    FOREIGN KEY(`companyID`) REFERENCES company(`ID`),
+    FOREIGN KEY(`userID`) REFERENCES users(`ID`)
+)
+
+
+CREATE TABLE IF NOT EXISTS `token_custom_interfaces` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `tokenID` int NOT NULL,    
+    `title` varchar(1000) DEFAULT NULL,        
+    `details` varchar(4000) DEFAULT NULL,
+    `interface` varchar(100) DEFAULT NULL,            
+    `isSecure` tinyint  DEFAULT NULL,  
+    `currentValue` varchar(4000) DEFAULT NULL,
+    `type` tinyint  DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY(`tokenID`) REFERENCES token(`ID`)    
+)
+
+
+
+
+CREATE TABLE IF NOT EXISTS `token_paragraphs` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `tokenID` int DEFAULT NULL,
+    `title` varchar(1000) DEFAULT NULL,        
+    `details` varchar(4000) DEFAULT NULL,        
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`tokenID`) REFERENCES token(`ID`)
+)
+
+
+
+
+CREATE TABLE IF NOT EXISTS `token_docs` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `tokenID` int DEFAULT NULL,
+    `document` varchar(1000) DEFAULT NULL,    
+    `title` varchar(1000) DEFAULT NULL,        
+    `description` varchar(4000) DEFAULT NULL,        
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`tokenID`) REFERENCES token(`ID`)
+)
+
+
+
+
+CREATE TABLE IF NOT EXISTS `token_pics` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `tokenID` int DEFAULT NULL,
+    `image` varchar(1000) DEFAULT NULL,    
+    `title` varchar(1000) DEFAULT NULL,        
+    `description` varchar(4000) DEFAULT NULL,        
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`tokenID`) REFERENCES token(`ID`)
+)
+
+
+
+CREATE TABLE IF NOT EXISTS `token_contacts` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `tokenID` int DEFAULT NULL,
+    `contactTypeID` int DEFAULT NULL,
+    `contact` varchar(100) DEFAULT NULL,    
+    `nameOfPerson` varchar(100) DEFAULT NULL,        
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`tokenID`) REFERENCES token(`ID`),
+    FOREIGN KEY(`contactTypeID`) REFERENCES contacts_types(`id`)
+)
+
+
+CREATE TABLE IF NOT EXISTS `token_kyc` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `tokenID` int DEFAULT NULL,
+    `title` varchar(1000) DEFAULT NULL,        
+    `details` varchar(4000) DEFAULT NULL,        
+    `type` tinyint DEFAULT NULL,    
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`tokenID`) REFERENCES token(`ID`)
+)
+
+
+CREATE TABLE IF NOT EXISTS `token_company_kyc` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `companyID` int DEFAULT NULL,
+    `title` varchar(1000) DEFAULT NULL,        
+    `details` varchar(4000) DEFAULT NULL,        
+    `type` tinyint DEFAULT NULL,    
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`companyID`) REFERENCES company(`ID`)
+)
+
+
+
+
+CREATE TABLE IF NOT EXISTS `user_token` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `userid` int DEFAULT NULL,
+    `tokenid` int DEFAULT NULL,
+    `admin_details` varchar(1000) DEFAULT NULL,               
+    `kycSubmitted` tinyint DEFAULT NULL,    
+    `iskYC` tinyint DEFAULT NULL,        
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`userid`) REFERENCES users(`ID`),
+    FOREIGN KEY(`tokenid`) REFERENCES token(`ID`)    
+)
+
+
+
+
+CREATE TABLE IF NOT EXISTS `token_kyc_data` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `userid` int NOT NULL,    
+    `token_kyc_id` int DEFAULT NULL,
+    `value` varchar(8000) DEFAULT NULL,               
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`token_kyc_id`) REFERENCES token_kyc(`ID`)
+)
+
+
+
+CREATE TABLE IF NOT EXISTS `token_company_kyc_data` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `userid` int NOT NULL,    
+    `token_company_kyc_id` int DEFAULT NULL,
+    `value` varchar(8000) DEFAULT NULL,               
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`token_company_kyc_id`) REFERENCES token_company_kyc(`ID`)
+)
+
+
+
+
+CREATE TABLE IF NOT EXISTS `_user_shares` (
+    `id` int AUTO_INCREMENT NOT NULL,
+    `userid` int DEFAULT NULL,
+    `tokenid` int DEFAULT NULL,
+    `publicKey` varchar(1000) DEFAULT NULL,               
+    `isOnBlockchain` tinyint DEFAULT NULL,    
+    `shares` int DEFAULT NULL,        
+    PRIMARY KEY (`id`),    
+    FOREIGN KEY(`userid`) REFERENCES users(`ID`),
+    FOREIGN KEY(`tokenid`) REFERENCES token(`ID`)    
+)
+
