@@ -145,7 +145,7 @@ ALTER TABLE company ADD COLUMN `details` varchar(1000) default null;
 
 
 
-
+---
 CREATE TABLE IF NOT EXISTS `blockchain` (
     `id` int AUTO_INCREMENT NOT NULL,
     `title` varchar(1000) DEFAULT NULL,        
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `blockchain` (
 )
 
 
-
+---
 CREATE TABLE IF NOT EXISTS `token` (
     `id` int AUTO_INCREMENT NOT NULL,
     `title` varchar(1000) DEFAULT NULL,        
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `token` (
     FOREIGN KEY(`userID`) REFERENCES users(`ID`)
 )
 
-
+---
 CREATE TABLE IF NOT EXISTS `token_custom_interfaces` (
     `id` int AUTO_INCREMENT NOT NULL,
     `tokenID` int NOT NULL,    
@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `token_custom_interfaces` (
 
 
 
-
+---
 CREATE TABLE IF NOT EXISTS `token_paragraphs` (
     `id` int AUTO_INCREMENT NOT NULL,
     `tokenID` int DEFAULT NULL,
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `token_paragraphs` (
 
 
 
-
+--
 CREATE TABLE IF NOT EXISTS `token_docs` (
     `id` int AUTO_INCREMENT NOT NULL,
     `tokenID` int DEFAULT NULL,
@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `token_docs` (
 
 
 
-
+---
 CREATE TABLE IF NOT EXISTS `token_pics` (
     `id` int AUTO_INCREMENT NOT NULL,
     `tokenID` int DEFAULT NULL,
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `token_pics` (
 )
 
 
-
+---
 CREATE TABLE IF NOT EXISTS `token_contacts` (
     `id` int AUTO_INCREMENT NOT NULL,
     `tokenID` int DEFAULT NULL,
@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `token_contacts` (
     FOREIGN KEY(`contactTypeID`) REFERENCES contacts_types(`id`)
 )
 
-
+----
 CREATE TABLE IF NOT EXISTS `token_kyc` (
     `id` int AUTO_INCREMENT NOT NULL,
     `tokenID` int DEFAULT NULL,
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `token_kyc` (
     FOREIGN KEY(`tokenID`) REFERENCES token(`ID`)
 )
 
-
+---
 CREATE TABLE IF NOT EXISTS `token_company_kyc` (
     `id` int AUTO_INCREMENT NOT NULL,
     `companyID` int DEFAULT NULL,
@@ -299,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `token_company_kyc_data` (
 
 
 
-CREATE TABLE IF NOT EXISTS `_user_shares` (
+CREATE TABLE IF NOT EXISTS `user_shares` (
     `id` int AUTO_INCREMENT NOT NULL,
     `userid` int DEFAULT NULL,
     `tokenid` int DEFAULT NULL,
